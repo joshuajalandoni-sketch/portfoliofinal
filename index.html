@@ -7,7 +7,7 @@
 <meta name="description" content="Joshua Jalandoni. Digital operations specialist moving into AI operations, automation, and data annotation. Bacolod City, Philippines.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&family=Bangers&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0d0906;
@@ -375,6 +375,17 @@
     transition:color .25s ease, filter .25s ease;
   }
   .work-row:hover .work-title-icon{color:#8ee9ff; filter:drop-shadow(0 0 9px rgba(142,233,255,0.85));}
+  .work-title-comic{
+    font-family:'Bangers', var(--sans);
+    font-weight:400;
+    font-size:1.7em;
+    letter-spacing:0.04em;
+    color:#ffe000;
+    -webkit-text-stroke:2px #1d4fd8;
+    text-stroke:2px #1d4fd8;
+    text-shadow:3px 3px 0 #1d4fd8;
+  }
+  .work-row:hover .work-title-comic{color:#fff05c; text-shadow:4px 4px 0 #1d4fd8, 0 0 18px rgba(29,79,216,0.6);}
   .work-tag-pill{
     font-family:var(--mono);
     font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
@@ -471,6 +482,10 @@
   .pattern-d{background:
       repeating-linear-gradient(0deg, rgba(79,214,255,0.14) 0 2px, transparent 2px 4px),
       linear-gradient(160deg,#0a1a2e,#050a14);
+  }
+  .pattern-e{background:
+      repeating-linear-gradient(-30deg, rgba(255,224,0,0.14) 0 10px, transparent 10px 20px),
+      linear-gradient(160deg,#0a1230,#050510);
   }
   @media (hover:none){
     .cursor-preview{display:none;}
@@ -1008,6 +1023,17 @@ const PROJECTS = [
     tag: "live",
     pattern: "d",
     templeos: true
+  },
+  {
+    kicker: "Fan Project",
+    title: "X - 97",
+    meta: "Personal project · 2026",
+    desc: "A cinematic fan site built around Nightcrawler — dark, moody visuals and animation-driven storytelling exploring his powers and history.",
+    url: "https://xplorer97.vercel.app/",
+    domain: "xplorer97.vercel.app",
+    tag: "live",
+    pattern: "e",
+    comic: true
   }
   // Example — copy this shape to add the next site you publish:
   // {
@@ -1031,7 +1057,7 @@ function renderWork(){
       <span class="work-index">0${i + 1}</span>
       <div class="work-row-main">
         <div class="work-title-row">
-          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}
+          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}${p.comic ? ' work-title-comic' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}
           <span class="work-tag-pill">${p.tag}</span>
           <span class="work-meta">${p.meta}</span>
         </div>
