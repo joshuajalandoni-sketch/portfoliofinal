@@ -7,7 +7,7 @@
 <meta name="description" content="Joshua Jalandoni. Digital operations specialist moving into AI operations, automation, and data annotation. Bacolod City, Philippines.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&family=Bangers&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&family=Bangers&family=Permanent+Marker&family=Caveat:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0d0906;
@@ -386,6 +386,27 @@
     text-shadow:3px 3px 0 #1d4fd8;
   }
   .work-row:hover .work-title-comic{color:#fff05c; text-shadow:4px 4px 0 #1d4fd8, 0 0 18px rgba(29,79,216,0.6);}
+  .work-title-pizza{
+    font-family:'Permanent Marker', var(--sans);
+    font-weight:400;
+    font-size:1.55em;
+    letter-spacing:0.01em;
+    color:#e8432f;
+    text-shadow:2px 2px 0 #f4e4c1, 4px 4px 0 rgba(0,0,0,0.25);
+    transform:rotate(-2deg);
+    display:inline-block;
+  }
+  .work-row:hover .work-title-pizza{color:#ff5a41; text-shadow:2px 2px 0 #fff2cf, 5px 5px 0 rgba(0,0,0,0.3);}
+  .work-title-grass{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:2em;
+    letter-spacing:0.01em;
+    color:#6fbf3f;
+    text-shadow:1px 1px 0 rgba(35,70,20,0.4);
+  }
+  .work-row:hover .work-title-grass{color:#8bdc57;}
+  .work-title-emoji{font-size:0.7em; margin-left:8px; display:inline-block; vertical-align:middle;}
   .work-tag-pill{
     font-family:var(--mono);
     font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
@@ -486,6 +507,14 @@
   .pattern-e{background:
       repeating-linear-gradient(-30deg, rgba(255,224,0,0.14) 0 10px, transparent 10px 20px),
       linear-gradient(160deg,#0a1230,#050510);
+  }
+  .pattern-f{background:
+      repeating-linear-gradient(70deg, rgba(111,191,63,0.16) 0 3px, transparent 3px 14px),
+      linear-gradient(160deg,#0f2210,#08120a);
+  }
+  .pattern-g{background:
+      repeating-linear-gradient(45deg, rgba(232,67,47,0.15) 0 6px, transparent 6px 16px),
+      linear-gradient(160deg,#2a1408,#12090a);
   }
   @media (hover:none){
     .cursor-preview{display:none;}
@@ -982,6 +1011,28 @@
    ========================================================= */
 const PROJECTS = [
   {
+    kicker: "Client Work",
+    title: "Ruben's Removal LLC",
+    meta: "Client project · 2026",
+    desc: "A clean, no-nonsense business site for a removal and hauling company — built to turn local visitors into calls and booked jobs.",
+    url: "https://rubensremoval-llc.vercel.app/",
+    domain: "rubensremoval-llc.vercel.app",
+    tag: "live",
+    pattern: "f",
+    grass: true
+  },
+  {
+    kicker: "Client Work",
+    title: "Rusty Mule Pizza",
+    meta: "Client project · 2026",
+    desc: "A warm, rustic single-page site for a neighborhood pizzeria — menu highlights, hours, and contact info built to drive local orders.",
+    url: "https://rustymulepizza.vercel.app/",
+    domain: "rustymulepizza.vercel.app",
+    tag: "live",
+    pattern: "g",
+    pizza: true
+  },
+  {
     kicker: "Interactive",
     title: "NEO's Type Test",
     meta: "Personal project · 2026",
@@ -1057,7 +1108,7 @@ function renderWork(){
       <span class="work-index">0${i + 1}</span>
       <div class="work-row-main">
         <div class="work-title-row">
-          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}${p.comic ? ' work-title-comic' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}
+          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}${p.comic ? ' work-title-comic' : ''}${p.grass ? ' work-title-grass' : ''}${p.pizza ? ' work-title-pizza' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}${p.grass ? '<span class="work-title-emoji">🌱</span>' : ''}${p.pizza ? '<span class="work-title-emoji">🍕</span>' : ''}
           <span class="work-tag-pill">${p.tag}</span>
           <span class="work-meta">${p.meta}</span>
         </div>
