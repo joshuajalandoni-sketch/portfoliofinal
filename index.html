@@ -7,7 +7,7 @@
 <meta name="description" content="Joshua Jalandoni. Digital operations specialist moving into AI operations, automation, and data annotation. Bacolod City, Philippines.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&family=Bangers&family=Permanent+Marker&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Anton&family=Kaushan+Script&family=VT323&family=Bangers&family=Permanent+Marker&family=Caveat:wght@700&family=Metal+Mania&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0d0906;
@@ -407,6 +407,15 @@
   }
   .work-row:hover .work-title-grass{color:#8bdc57;}
   .work-title-emoji{font-size:0.7em; margin-left:8px; display:inline-block; vertical-align:middle;}
+  .work-title-berserk{
+    font-family:'Metal Mania', cursive;
+    font-weight:400;
+    font-size:1.85em;
+    letter-spacing:0.03em;
+    color:#c41e3a;
+    text-shadow:2px 2px 0 #000, 0 0 14px rgba(196,30,58,0.55);
+  }
+  .work-row:hover .work-title-berserk{color:#e8394f; text-shadow:2px 2px 0 #000, 0 0 22px rgba(232,57,79,0.75);}
   .work-tag-pill{
     font-family:var(--mono);
     font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
@@ -515,6 +524,10 @@
   .pattern-g{background:
       repeating-linear-gradient(45deg, rgba(232,67,47,0.15) 0 6px, transparent 6px 16px),
       linear-gradient(160deg,#2a1408,#12090a);
+  }
+  .pattern-h{background:
+      repeating-linear-gradient(100deg, rgba(196,30,58,0.18) 0 2px, transparent 2px 24px),
+      linear-gradient(160deg,#1a0508,#050202);
   }
   @media (hover:none){
     .cursor-preview{display:none;}
@@ -1011,6 +1024,17 @@
    ========================================================= */
 const PROJECTS = [
   {
+    kicker: "Fan Project",
+    title: "Berserk",
+    meta: "Personal project · 2026",
+    desc: "A dark, atmospheric fan site built around Berserk — leaning into the series' brutal, gothic fantasy tone across the visuals and layout.",
+    url: "https://berserk-jj.vercel.app/",
+    domain: "berserk-jj.vercel.app",
+    tag: "live",
+    pattern: "h",
+    berserk: true
+  },
+  {
     kicker: "Client Work",
     title: "Ruben's Removal LLC",
     meta: "Client project · 2026",
@@ -1108,7 +1132,7 @@ function renderWork(){
       <span class="work-index">0${i + 1}</span>
       <div class="work-row-main">
         <div class="work-title-row">
-          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}${p.comic ? ' work-title-comic' : ''}${p.grass ? ' work-title-grass' : ''}${p.pizza ? ' work-title-pizza' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}${p.grass ? '<span class="work-title-emoji">🌱</span>' : ''}${p.pizza ? '<span class="work-title-emoji">🍕</span>' : ''}
+          <span class="work-title${p.weave ? ' work-title-weave' : ''}${p.templeos ? ' work-title-templeos' : ''}${p.comic ? ' work-title-comic' : ''}${p.grass ? ' work-title-grass' : ''}${p.pizza ? ' work-title-pizza' : ''}${p.berserk ? ' work-title-berserk' : ''}">${p.title}</span>${p.templeos ? '<svg class="work-title-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter"><line x1="24" y1="8" x2="24" y2="16"/><line x1="9" y1="16" x2="39" y2="16"/><line x1="13" y1="16" x2="9" y2="27"/><line x1="13" y1="16" x2="17" y2="27"/><line x1="9" y1="27" x2="17" y2="27"/><line x1="35" y1="16" x2="31" y2="27"/><line x1="35" y1="16" x2="39" y2="27"/><line x1="31" y1="27" x2="39" y2="27"/><line x1="7" y1="43" x2="39" y2="9"/><line x1="10" y1="35" x2="16" y2="29"/></svg>' : ''}${p.grass ? '<span class="work-title-emoji">🌱</span>' : ''}${p.pizza ? '<span class="work-title-emoji">🍕</span>' : ''}
           <span class="work-tag-pill">${p.tag}</span>
           <span class="work-meta">${p.meta}</span>
         </div>
