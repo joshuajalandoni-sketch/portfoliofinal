@@ -929,14 +929,6 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <a href="#top" class="nav-brand">JJ</a>
-    <div class="nav-right">
-      <span class="status-pill"><span class="status-dot"></span>Open to work</span>
-      <button class="menu-btn" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-        Menu
-        <span class="bars"><span></span><span></span><span></span></span>
-      </button>
-    </div>
   </div>
 </header>
 
@@ -1515,13 +1507,15 @@ if(heroPhotoImg && !reduceMotion){
 
 /* ---------- overlay menu ---------- */
 const menuToggle = document.getElementById('menuToggle');
-menuToggle.addEventListener('click', () => {
-  const open = document.body.classList.toggle('menu-open');
-  menuToggle.setAttribute('aria-expanded', open);
-});
+if(menuToggle){
+  menuToggle.addEventListener('click', () => {
+    const open = document.body.classList.toggle('menu-open');
+    menuToggle.setAttribute('aria-expanded', open);
+  });
+}
 document.querySelectorAll('#overlayMenu [data-close]').forEach(a => a.addEventListener('click', () => {
   document.body.classList.remove('menu-open');
-  menuToggle.setAttribute('aria-expanded', 'false');
+  if(menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
 }));
 
 /* ---------- cursor-follow work preview: removed, cards now show cover art directly ---------- */
