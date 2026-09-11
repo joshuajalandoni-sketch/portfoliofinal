@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,17 @@
 <title>Joshua Jalandoni: Web Designer and Developer</title>
 <meta name="description" content="I design and build fast, clean websites for restaurants, service businesses, and creators. Based in Bacolod City, Philippines. Available for work.">
 <link rel="canonical" href="https://jjoshua.vercel.app/">
-<meta name="theme-color" content="#FAFAF7">
+<meta name="theme-color" content="#0D0F13" id="themeColor">
+
+<!-- Applies the saved theme before first paint so there is no flash of the
+     wrong one. Dark is the default for a first visit. -->
+<script>
+  (function(){
+    var t;
+    try{ t = localStorage.getItem('theme'); }catch(e){}
+    document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  })();
+</script>
 
 <!-- Monogram favicon, inline so it costs no request. Ink ground, Paper letters. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231A1D24'/%3E%3Ctext x='16' y='22' font-family='Helvetica,Arial,sans-serif' font-size='15' font-weight='700' letter-spacing='-0.5' fill='%23FAFAF7' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
@@ -30,17 +40,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
+  /* Dark is the default. Every token exists in both themes, so no component
+     below this block ever names a colour directly. */
   :root{
-    --paper:#FAFAF7;
-    --ink:#1A1D24;
-    --graphite:#5E6472;
-    --hairline:#E4E4DE;
-    --signal:#2F5BFF;
+    color-scheme:dark;
+
+    --bg:#0D0F13;
+    --surface-1:#14171D;
+    --surface-2:#1B1F27;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --text:#F2F3F5;
+    --text-2:#9AA1AD;
+    --text-3:#6B7280;
+    --accent:#5B7CFF;
+    --accent-soft:rgba(91,124,255,0.14);
+    --available:#22C55E;
+
+    /* Depth in dark comes from surface steps, so the float shadow is off. */
+    --shadow-float:none;
+
+    --maxw:1200px;
+    --pad:24px;
+    --section:140px;
+    --nav-h:68px;
+
+    --r-card:20px;
+    --r-img:16px;
+    --r-pill:999px;
+  }
+
+  :root[data-theme="light"]{
+    color-scheme:light;
+
+    --bg:#FAFAF7;
+    --surface-1:#FFFFFF;
+    --surface-2:#F2F2EE;
+    --border:#E4E4DE;
+    --border-strong:#CFCFC7;
+    --text:#1A1D24;
+    --text-2:#5E6472;
+    --text-3:#8A909B;
+    --accent:#2F5BFF;
+    --accent-soft:rgba(47,91,255,0.10);
     --available:#1F9D55;
 
-    --maxw:1120px;
-    --pad:24px;
-    --section:128px;
+    --shadow-float:0 16px 34px rgba(26,29,36,.13);
+  }
+
+  /* The colour cross-fade is only armed while the toggle is switching, so it
+     never taxes hover or scroll. */
+  :root.theme-switching,
+  :root.theme-switching *{
+    transition:background-color .15s ease, color .15s ease, border-color .15s ease !important;
   }
 
   *,*::before,*::after{box-sizing:border-box;}
@@ -52,23 +104,23 @@
 
   body{
     margin:0;
-    background:var(--paper);
-    color:var(--ink);
+    background:var(--bg);
+    color:var(--text);
     font-family:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
     font-size:17px;
     font-weight:400;
-    line-height:1.6;
+    line-height:1.65;
     -webkit-font-smoothing:antialiased;
   }
 
   img{max-width:100%;display:block;}
 
-  a{color:var(--signal);text-decoration:none;}
+  a{color:var(--accent);text-decoration:none;}
   a:hover{text-decoration:underline;}
 
   /* One visible focus treatment everywhere, in the single accent. */
   :focus-visible{
-    outline:2px solid var(--signal);
+    outline:2px solid var(--accent);
     outline-offset:3px;
     border-radius:2px;
   }
@@ -95,17 +147,29 @@
   h1,h2,h3{margin:0;}
 
   h2.section-title{
-    font-size:32px;
+    font-size:clamp(32px,4vw,48px);
     font-weight:700;
-    letter-spacing:-0.015em;
-    line-height:1.15;
-    margin-bottom:40px;
+    letter-spacing:-0.03em;
+    line-height:1.08;
+    margin-bottom:48px;
+  }
+
+  /* Two-tone headings are the one typographic device: line 1 in --text,
+     line 2 in --text-2. Nothing else gets colour inside a heading. */
+  .l2{display:block;color:var(--text-2);}
+
+  .section-lede{
+    color:var(--text-2);
+    max-width:62ch;
+    margin:-32px 0 48px;
   }
 
   .prose{max-width:62ch;}
 
   /* Anchors clear the sticky bar rather than hiding under it. */
-  #work,#about,#contact{scroll-margin-top:88px;}
+  #work,#about,#certifications,#experience,#contact{
+    scroll-margin-top:calc(var(--nav-h) + 20px);
+  }
 
   /* ---------- Nav ---------- */
 
@@ -113,22 +177,36 @@
     position:sticky;
     top:0;
     z-index:50;
-    background:var(--paper);
-    border-bottom:1px solid var(--hairline);
+    background:var(--bg);
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
   }
+
+  /* The blur only turns on where it is supported; everywhere else the bar
+     stays fully opaque rather than translucent and unreadable. */
+  @supports (backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px)){
+    .nav{
+      background:color-mix(in srgb, var(--bg) 72%, transparent);
+      -webkit-backdrop-filter:blur(12px);
+      backdrop-filter:blur(12px);
+    }
+  }
+
+  /* The bottom hairline only appears once the page has moved. */
+  .nav.is-scrolled{border-bottom-color:var(--border);}
 
   .nav-inner{
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:24px;
-    min-height:68px;
+    min-height:var(--nav-h);
   }
 
   .nav-name{
     font-size:17px;
-    font-weight:500;
-    color:var(--ink);
+    font-weight:600;
+    color:var(--text);
     letter-spacing:-0.01em;
   }
   .nav-name:hover{text-decoration:none;}
@@ -136,50 +214,74 @@
   .nav-links{
     display:flex;
     align-items:center;
-    gap:32px;
+    gap:30px;
   }
 
   .nav-links a{
-    color:var(--ink);
+    position:relative;
+    color:var(--text-2);
     font-size:15px;
-    font-weight:400;
+    transition:color .18s ease;
   }
-  .nav-links a:hover{color:var(--signal);text-decoration:none;}
+  .nav-links a:hover{color:var(--text);text-decoration:none;}
 
-  .pill{
-    display:inline-flex;
+  /* Active section: the label goes to full strength over a short accent rule.
+     No pill and no fill, so the bar stays quiet while you scroll. */
+  .nav-links a.is-active{color:var(--text);}
+  .nav-links a.is-active::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-8px;
+    height:2px;
+    border-radius:2px;
+    background:var(--accent);
+  }
+
+  .nav-actions{
+    display:flex;
     align-items:center;
-    gap:8px;
-    padding:6px 14px 6px 12px;
-    border:1px solid var(--hairline);
-    border-radius:999px;
-    font-size:14px;
-    color:var(--graphite);
-    white-space:nowrap;
+    gap:10px;
   }
 
-  .dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--available);
-    flex-shrink:0;
-  }
+  .icon-btn.nav-burger{display:none;}
+  .nav-burger[aria-expanded="true"] .icon-menu{display:none;}
+  .nav-burger[aria-expanded="false"] .icon-close{display:none;}
 
-  .nav-toggle{
+  /* ---------- Mobile menu sheet ---------- */
+
+  .nav-sheet{
+    position:fixed;
+    inset:var(--nav-h) 0 0;
+    z-index:45;
     display:none;
-    align-items:center;
-    gap:8px;
-    padding:8px 14px;
-    background:none;
-    border:1px solid var(--hairline);
-    border-radius:10px;
-    font:inherit;
-    font-size:15px;
-    color:var(--ink);
-    cursor:pointer;
+    flex-direction:column;
+    background:var(--bg);
+    padding:8px var(--pad) calc(28px + env(safe-area-inset-bottom));
+    overflow-y:auto;
+    overscroll-behavior:contain;
   }
-  .nav-toggle:hover{border-color:var(--ink);}
+  .nav-sheet.is-open{display:flex;}
+
+  .sheet-link{
+    display:block;
+    padding:18px 0;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:-0.02em;
+  }
+  .sheet-link:hover{color:var(--accent);text-decoration:none;}
+  /* No trailing rule under the last link: it would hang over empty space. */
+  .sheet-link:last-of-type{border-bottom:0;}
+
+  /* Spec 3.1: the CTA sits at the bottom of the sheet. */
+  .sheet-cta{margin-top:auto;padding-top:36px;}
+  .sheet-cta .btn{width:100%;}
+
+  body.menu-open{overflow:hidden;}
 
   /* ---------- Buttons ---------- */
 
@@ -187,8 +289,9 @@
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    padding:13px 22px;
-    border-radius:10px;
+    gap:8px;
+    padding:13px 24px;
+    border-radius:var(--r-pill);
     font-size:16px;
     font-weight:500;
     line-height:1;
@@ -198,18 +301,43 @@
   }
   .btn:hover{text-decoration:none;}
 
+  .btn-sm{padding:9px 18px;font-size:15px;}
+
+  /* The only filled button. White label in both themes, per the token rules. */
   .btn-solid{
-    background:var(--ink);
-    color:var(--paper);
+    background:var(--accent);
+    color:#fff;
   }
-  .btn-solid:hover{background:var(--signal);}
+  .btn-solid:hover{filter:brightness(1.08);}
 
   .btn-outline{
     background:transparent;
-    color:var(--ink);
-    border-color:var(--hairline);
+    color:var(--text);
+    border-color:var(--border);
   }
-  .btn-outline:hover{border-color:var(--signal);color:var(--signal);}
+  .btn-outline:hover{border-color:var(--border-strong);}
+
+  /* Square icon button: theme toggle and the mobile menu trigger. */
+  .icon-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    flex-shrink:0;
+    padding:0;
+    background:transparent;
+    border:1px solid var(--border);
+    border-radius:var(--r-pill);
+    color:var(--text-2);
+    cursor:pointer;
+    transition:border-color .18s ease, color .18s ease, background-color .18s ease;
+  }
+  .icon-btn:hover{border-color:var(--border-strong);color:var(--text);}
+  .icon-btn svg{width:17px;height:17px;display:block;}
+
+  :root[data-theme="dark"] .icon-moon{display:none;}
+  :root:not([data-theme="dark"]) .icon-sun{display:none;}
 
   /* ---------- Hero ---------- */
 
@@ -231,7 +359,7 @@
   }
 
   .hero-sub{
-    color:var(--graphite);
+    color:var(--text-2);
     max-width:46ch;
     margin:0 0 36px;
   }
@@ -257,9 +385,9 @@
     margin-left:32%;
     aspect-ratio:4/5;
     border-radius:16px;
-    border:1px solid var(--hairline);
+    border:1px solid var(--border);
     overflow:hidden;
-    background:var(--hairline);
+    background:var(--surface-2);
   }
   .stack-photo img{width:100%;height:100%;object-fit:cover;}
 
@@ -270,9 +398,9 @@
     aspect-ratio:16/10;
     border-radius:12px;
     overflow:hidden;
-    border:1px solid var(--hairline);
-    box-shadow:0 16px 34px rgba(26,29,36,.13);
-    background:var(--paper);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow-float);
+    background:var(--surface-1);
   }
   .stack-shot img{width:100%;height:100%;object-fit:cover;}
 
@@ -282,8 +410,8 @@
   /* ---------- Client strip ---------- */
 
   .clients{
-    border-top:1px solid var(--hairline);
-    border-bottom:1px solid var(--hairline);
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
     padding-block:26px;
   }
 
@@ -295,7 +423,7 @@
     margin:0;
     padding:0;
     list-style:none;
-    color:var(--graphite);
+    color:var(--text-2);
     font-size:15px;
   }
 
@@ -311,10 +439,10 @@
     display:block;
     aspect-ratio:16/10;
     border-radius:16px;
-    border:1px solid var(--hairline);
+    border:1px solid var(--border);
     overflow:hidden;
     margin-bottom:20px;
-    background:var(--hairline);
+    background:var(--surface-2);
   }
   .project-shot img{
     width:100%;
@@ -332,7 +460,7 @@
   }
 
   .project p{
-    color:var(--graphite);
+    color:var(--text-2);
     margin:0 0 12px;
     max-width:46ch;
   }
@@ -353,33 +481,34 @@
     letter-spacing:-0.01em;
     margin-bottom:10px;
   }
-  .service p{color:var(--graphite);margin:0;}
+  .service p{color:var(--text-2);margin:0;}
 
   /* ---------- About ---------- */
 
-  .about p{color:var(--graphite);}
-  .about p strong{color:var(--ink);font-weight:500;}
+  .about p{color:var(--text-2);}
+  .about p strong{color:var(--text);font-weight:500;}
   .about .tools{margin-top:28px;font-size:15px;}
 
   /* ---------- Contact ---------- */
 
   .contact-block{
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:16px;
+    background:var(--surface-1);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:24px;
     padding:72px 56px;
   }
 
   .contact-block h2{
-    font-size:32px;
+    font-size:clamp(32px,4vw,48px);
     font-weight:700;
-    letter-spacing:-0.015em;
-    line-height:1.15;
+    letter-spacing:-0.03em;
+    line-height:1.08;
     margin-bottom:16px;
   }
 
   .contact-block p{
-    color:#B9BDC7;
+    color:var(--text-2);
     margin:0 0 32px;
     max-width:50ch;
   }
@@ -391,8 +520,8 @@
     gap:14px 28px;
   }
 
-  .btn-paper{background:var(--paper);color:var(--ink);}
-  .btn-paper:hover{background:var(--signal);color:var(--paper);}
+  .btn-paper{background:var(--accent);color:#fff;}
+  .btn-paper:hover{filter:brightness(1.08);}
 
   .contact-socials{
     display:flex;
@@ -400,13 +529,13 @@
     gap:22px;
     font-size:15px;
   }
-  .contact-socials a{color:#B9BDC7;}
-  .contact-socials a:hover{color:var(--paper);}
+  .contact-socials a{color:var(--text-2);}
+  .contact-socials a:hover{color:var(--text);}
 
   /* ---------- Footer ---------- */
 
   .footer{
-    border-top:1px solid var(--hairline);
+    border-top:1px solid var(--border);
     padding-block:32px 44px;
     margin-top:var(--section);
   }
@@ -417,11 +546,11 @@
     justify-content:space-between;
     gap:12px 32px;
     font-size:14px;
-    color:var(--graphite);
+    color:var(--text-2);
   }
 
-  .footer-inner a{color:var(--graphite);}
-  .footer-inner a:hover{color:var(--signal);}
+  .footer-inner a{color:var(--text-2);}
+  .footer-inner a:hover{color:var(--accent);}
 
   .footer-links{display:flex;flex-wrap:wrap;gap:20px;}
 
@@ -461,6 +590,14 @@
 
   /* ---------- Responsive ---------- */
 
+  /* Five links, a CTA and a toggle stop fitting well before the layout
+     breakpoint, so the nav collapses on its own. */
+  @media (max-width:940px){
+    .nav-links{display:none;}
+    .nav-cta{display:none;}
+    .icon-btn.nav-burger{display:inline-flex;}
+  }
+
   @media (max-width:960px){
     .hero-grid{gap:48px;}
     .services-grid{grid-template-columns:1fr;gap:32px;}
@@ -468,26 +605,7 @@
   }
 
   @media (max-width:768px){
-    :root{--pad:20px;--section:80px;}
-
-    .nav-links{
-      display:none;
-      position:absolute;
-      left:0;
-      right:0;
-      top:100%;
-      flex-direction:column;
-      align-items:flex-start;
-      gap:0;
-      background:var(--paper);
-      border-bottom:1px solid var(--hairline);
-      padding:8px var(--pad) 20px;
-    }
-    .nav-links.is-open{display:flex;}
-    .nav-links a{padding:12px 0;font-size:17px;}
-    .nav-links .pill{margin-top:10px;}
-    .nav-toggle{display:inline-flex;}
-    .nav-inner{position:relative;}
+    :root{--pad:20px;--section:88px;}
 
     .hero{padding-block:56px 72px;}
 
@@ -526,30 +644,58 @@
 
 <noscript>
   <style>
-    /* No JS means no toggle, so the links stay where they can be reached. */
-    @media (max-width:768px){
-      .nav-links{display:flex;position:static;padding:0 0 16px;border:0;}
-      .nav-toggle{display:none;}
+    /* No JS means the sheet can never open and the theme toggle does nothing,
+       so the links come back inline and the toggle is withdrawn. */
+    #themeToggle{display:none;}
+    @media (max-width:940px){
+      .nav-links{display:flex;flex-wrap:wrap;gap:8px 20px;}
+      .icon-btn.nav-burger{display:none;}
+      .nav-inner{flex-wrap:wrap;padding-block:10px;}
     }
   </style>
 </noscript>
 </head>
 <body>
 
-<header class="nav">
+<header class="nav" id="nav">
   <div class="wrap nav-inner">
     <a class="nav-name" href="#top">Joshua Jalandoni</a>
-
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
 
     <nav class="nav-links" id="navLinks" aria-label="Main">
       <a href="#work">Work</a>
       <a href="#about">About</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#experience">Experience</a>
       <a href="#contact">Contact</a>
-      <span class="pill"><span class="dot" aria-hidden="true"></span>Available for work</span>
     </nav>
+
+    <div class="nav-actions">
+      <a class="btn btn-solid btn-sm nav-cta" href="#contact">Let&rsquo;s talk</a>
+
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to light theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.4A8.6 8.6 0 0 1 9.6 3.5a8.6 8.6 0 1 0 10.9 10.9Z"/></svg>
+      </button>
+
+      <button class="icon-btn nav-burger" id="navToggle" type="button" aria-expanded="false" aria-controls="navSheet" aria-label="Open menu">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- Mobile menu. Same destinations as the bar, with the CTA at the bottom. -->
+<div class="nav-sheet" id="navSheet">
+  <a class="sheet-link" href="#work">Work</a>
+  <a class="sheet-link" href="#about">About</a>
+  <a class="sheet-link" href="#certifications">Certifications</a>
+  <a class="sheet-link" href="#experience">Experience</a>
+  <a class="sheet-link" href="#contact">Contact</a>
+  <div class="sheet-cta">
+    <a class="btn btn-solid" href="#contact">Let&rsquo;s talk</a>
+  </div>
+</div>
 
 <main id="top">
 
@@ -717,26 +863,126 @@
 </footer>
 
 <script>
-  /* The only script on the page: the mobile menu toggle. Everything else is
-     already rendered HTML, so nothing here gates what a visitor or a crawler
-     sees. */
+  /* Everything the page needs at runtime: the theme toggle, the nav's scroll
+     border, active-section highlighting, and the mobile sheet. The page is
+     already rendered HTML, so none of this gates what a visitor or a crawler
+     sees — with JS off the site is fully readable in the default dark theme. */
   (function(){
-    var btn = document.getElementById('navToggle');
-    var links = document.getElementById('navLinks');
-    if(!btn || !links) return;
+    var root = document.documentElement;
 
-    btn.addEventListener('click', function(){
-      var open = links.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
+    /* ---------- Theme ---------- */
 
-    /* Tapping a link should close the panel behind it. */
-    links.addEventListener('click', function(e){
-      if(e.target.tagName === 'A'){
-        links.classList.remove('is-open');
-        btn.setAttribute('aria-expanded','false');
+    var toggle = document.getElementById('themeToggle');
+    var meta   = document.getElementById('themeColor');
+    var GROUND = { dark:'#0D0F13', light:'#FAFAF7' };
+
+    function applyTheme(theme, persist){
+      root.setAttribute('data-theme', theme);
+      if (meta) meta.setAttribute('content', GROUND[theme]);
+      if (toggle) toggle.setAttribute('aria-label',
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+      if (persist){ try{ localStorage.setItem('theme', theme); }catch(e){} }
+    }
+
+    /* The head script already set the attribute; this only syncs the label
+       and the address-bar colour to whatever it landed on. */
+    applyTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+
+    if (toggle){
+      toggle.addEventListener('click', function(){
+        var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.classList.add('theme-switching');
+        applyTheme(next, true);
+        window.setTimeout(function(){ root.classList.remove('theme-switching'); }, 200);
+      });
+    }
+
+    /* ---------- Nav border after 8px ---------- */
+
+    var nav = document.getElementById('nav');
+    if (nav){
+      var onScroll = function(){ nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive:true });
+    }
+
+    /* ---------- Mobile sheet ---------- */
+
+    var burger = document.getElementById('navToggle');
+    var sheet  = document.getElementById('navSheet');
+    var main   = document.querySelector('main');
+    var footer = document.querySelector('footer');
+
+    function setMenu(open){
+      sheet.classList.toggle('is-open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.classList.toggle('menu-open', open);
+
+      /* Keep tab order and the screen reader inside the sheet while it is up. */
+      [main, footer].forEach(function(el){ if (el) el.inert = open; });
+
+      if (open){
+        var first = sheet.querySelector('a');
+        if (first) first.focus();
       }
+    }
+
+    if (burger && sheet){
+      burger.addEventListener('click', function(){
+        var open = !sheet.classList.contains('is-open');
+        setMenu(open);
+        if (!open) burger.focus();
+      });
+
+      sheet.addEventListener('click', function(e){
+        if (e.target.closest('a')) setMenu(false);
+      });
+
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && sheet.classList.contains('is-open')){
+          setMenu(false);
+          burger.focus();
+        }
+      });
+
+      /* Rotating past the breakpoint must not leave a hidden sheet holding
+         focus and the scroll lock. */
+      window.addEventListener('resize', function(){
+        if (window.innerWidth > 940 && sheet.classList.contains('is-open')) setMenu(false);
+      });
+    }
+
+    /* ---------- Active section ---------- */
+
+    var links = [].slice.call(document.querySelectorAll('.nav-links a'));
+    var byId = {};
+    var targets = [];
+
+    links.forEach(function(a){
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el){ byId[el.id] = a; targets.push(el); }
     });
+
+    function setActive(id){
+      links.forEach(function(a){
+        var on = byId[id] === a;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    }
+
+    if (targets.length && 'IntersectionObserver' in window){
+      /* A thin band across the middle of the viewport: whichever section
+         crosses it owns the highlight. At the top of the page nothing does,
+         which is right — the hero is not a nav destination. */
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting) setActive(en.target.id); });
+      }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+
+      targets.forEach(function(el){ io.observe(el); });
+    }
   })();
 </script>
 

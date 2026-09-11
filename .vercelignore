@@ -1,0 +1,4 @@
+# Raw sources and working files: kept in git, never deployed.
+_source/
+DESIGN.md
+.screenshots/
