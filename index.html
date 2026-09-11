@@ -341,38 +341,92 @@
 
   /* ---------- Hero ---------- */
 
-  .hero{padding-block:96px 104px;}
+  .hero{
+    position:relative;
+    padding-block:96px 104px;
+  }
+
+  /* Dot texture, hero only, faded out toward the edges by a radial mask so it
+     never reads as a background pattern with a hard edge. */
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    color:var(--text);
+    opacity:.06;
+    background-image:radial-gradient(currentColor 1px, transparent 1px);
+    background-size:24px 24px;
+    -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, #000 25%, transparent 78%);
+    mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, #000 25%, transparent 78%);
+    pointer-events:none;
+  }
 
   .hero-grid{
+    position:relative;
+    z-index:1;
     display:grid;
-    grid-template-columns:1.2fr 1fr;
-    gap:72px;
+    grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+    gap:56px;
     align-items:center;
   }
 
+  /* Both halves of the two-tone headline are blocks, so the break lands
+     where it is written rather than wherever the column happens to run out.
+     The cap is 72px because "I design websites" has to hold one line inside
+     this column, and at 76px it does not. */
   .hero h1{
-    font-size:clamp(40px,6vw,64px);
+    font-size:clamp(44px,6.4vw,72px);
     font-weight:700;
-    line-height:1.05;
-    letter-spacing:-0.025em;
+    line-height:1.02;
+    letter-spacing:-0.035em;
     margin-bottom:24px;
   }
+  .hero h1 .l1{display:block;}
 
   .hero-sub{
     color:var(--text-2);
     max-width:46ch;
-    margin:0 0 36px;
+    margin:0 0 32px;
   }
 
   .hero-actions{display:flex;flex-wrap:wrap;gap:12px;}
 
-  /* ---------- The work stack ---------- */
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--available);
+    flex-shrink:0;
+  }
+
+  .availability{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:24px 0 0;
+    font-size:15px;
+    color:var(--text-2);
+  }
+
+  /* ---------- The work stack (signature) ---------- */
 
   .stack{
     position:relative;
     width:100%;
-    max-width:480px;
+    max-width:500px;
     margin-left:auto;
+  }
+
+  /* The one glow on this half of the page. It sits behind everything in the
+     stack and bleeds past it, so the edges of the screenshots catch light. */
+  .stack-glow{
+    position:absolute;
+    z-index:0;
+    inset:-22% -14% -14% -30%;
+    background:radial-gradient(farthest-side at 42% 48%, var(--accent), transparent);
+    opacity:.18;
+    pointer-events:none;
   }
 
   /* The photo sits right of centre so the screenshots behind it keep a wide
@@ -384,14 +438,13 @@
     width:68%;
     margin-left:32%;
     aspect-ratio:4/5;
-    border-radius:16px;
+    border-radius:var(--r-card);
     border:1px solid var(--border);
     overflow:hidden;
     background:var(--surface-2);
   }
   .stack-photo img{width:100%;height:100%;object-fit:cover;}
 
-  /* The only shadow on the page, and it sits under these two. */
   .stack-shot{
     position:absolute;
     width:60%;
@@ -401,11 +454,46 @@
     border:1px solid var(--border);
     box-shadow:var(--shadow-float);
     background:var(--surface-1);
+    transition:transform .45s cubic-bezier(.22,.61,.36,1);
   }
   .stack-shot img{width:100%;height:100%;object-fit:cover;}
 
-  .stack-shot--a{z-index:1;left:-6%;top:7%;transform:rotate(-4deg);}
-  .stack-shot--b{z-index:2;left:2%;top:50%;transform:rotate(3deg);}
+  .stack-shot--a{z-index:1;left:-6%;top:6%;transform:rotate(-6deg);}
+  .stack-shot--b{z-index:2;left:2%;top:50%;transform:rotate(4deg);}
+
+  /* Hover fans the stack open, like flipping through finished work. Pointer
+     devices only: there is no hover state to leave on a touch screen. */
+  @media (hover:hover) and (pointer:fine){
+    .stack:hover .stack-shot--a{transform:rotate(-10deg) translate(-9%,-4%);}
+    .stack:hover .stack-shot--b{transform:rotate(8deg) translate(-7%,4%);}
+  }
+
+  /* ---------- Floating chips (two, and only two) ---------- */
+
+  .chip{
+    position:absolute;
+    z-index:4;
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+    padding:11px 18px;
+    border:1px solid var(--border);
+    border-radius:var(--r-pill);
+    background:color-mix(in srgb, var(--surface-1) 85%, transparent);
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+    box-shadow:var(--shadow-float);
+    line-height:1.3;
+    white-space:nowrap;
+  }
+  .chip strong{font-size:15px;font-weight:600;color:var(--text);}
+  .chip span{font-size:12.5px;color:var(--text-3);}
+
+  a.chip{transition:border-color .18s ease;}
+  a.chip:hover{border-color:var(--border-strong);text-decoration:none;}
+
+  .chip--yrs{top:3%;left:4%;}
+  .chip--certs{bottom:6%;right:-5%;}
 
   /* ---------- Client strip ---------- */
 
@@ -571,16 +659,30 @@
   @keyframes slideB{
     from{opacity:0;transform:translate(32%,-18%) rotate(0deg);}
   }
+  @keyframes chipIn{
+    from{opacity:0;transform:translateY(6px);}
+  }
 
-  .hero h1{animation:rise .30s ease-out both;}
-  .hero-sub{animation:rise .30s ease-out .08s both;}
-  .hero-actions{animation:rise .30s ease-out .14s both;}
-  .stack-photo{animation:photoIn .30s ease-out .15s both;}
-  .stack-shot--a{animation:slideA .34s ease-out .28s both;}
-  .stack-shot--b{animation:slideB .34s ease-out .34s both;}
+  /* Fill is "backwards", never "both": a forward fill would keep transform
+     under the animation's control and the hover fan would never apply. The
+     implicit end state is the resting rule above, so nothing jumps. */
+  .hero h1{animation:rise .30s ease-out backwards;}
+  .hero-sub{animation:rise .30s ease-out .08s backwards;}
+  .hero-actions{animation:rise .30s ease-out .14s backwards;}
+  .availability{animation:rise .30s ease-out .20s backwards;}
+  .stack-photo{animation:photoIn .30s ease-out .15s backwards;}
+  .stack-shot--a{animation:slideA .34s ease-out .30s backwards;}
+  .stack-shot--b{animation:slideB .34s ease-out .38s backwards;}
+  .chip--yrs{animation:chipIn .28s ease-out .56s backwards;}
+  .chip--certs{animation:chipIn .28s ease-out .64s backwards;}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
+
+    /* The stack rests where it lands; hover does not move it. */
+    .stack:hover .stack-shot--a{transform:rotate(-6deg);}
+    .stack:hover .stack-shot--b{transform:rotate(4deg);}
+
     *,*::before,*::after{
       animation-duration:.001ms !important;
       animation-delay:0ms !important;
@@ -624,6 +726,13 @@
     .stack-shot--a{left:2%;top:6%;}
     .stack-shot--b{left:8%;top:50%;}
 
+    /* The chips come in with the stack rather than hanging off a gutter. */
+    .chip{padding:9px 15px;}
+    .chip strong{font-size:14px;}
+    .chip span{font-size:11.5px;}
+    .chip--yrs{top:2%;left:3%;}
+    .chip--certs{bottom:4%;right:-2%;}
+
     .work-grid{grid-template-columns:1fr;gap:48px;}
 
     h2.section-title{margin-bottom:32px;}
@@ -637,8 +746,11 @@
   }
 
   @media (max-width:400px){
-    .hero-actions{width:100%;}
-    .hero-actions .btn{width:100%;}
+    /* The primary takes the full width; the two outline buttons share the
+       row under it rather than making a stack of three slabs. */
+    .hero-actions{width:100%;gap:10px;}
+    .hero-actions .btn-solid{flex:1 0 100%;}
+    .hero-actions .btn-outline{flex:1 1 0;padding-inline:12px;}
   }
 </style>
 
@@ -703,16 +815,19 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <h1>I design websites that make small businesses look legit.</h1>
-        <p class="hero-sub">Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched.</p>
+        <h1><span class="l1">I design websites</span><span class="l2">that make small businesses look legit.</span></h1>
+        <p class="hero-sub">Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched from Bacolod City, Philippines.</p>
         <div class="hero-actions">
           <a class="btn btn-solid" href="#work">See my work</a>
-          <a class="btn btn-outline" href="mailto:joshuajalandoni@gmail.com">Email me</a>
+          <a class="btn btn-outline" href="#contact">Let&rsquo;s talk</a>
+          <a class="btn btn-outline" href="public/resume.pdf" target="_blank" rel="noopener">Resume &#8599;</a>
         </div>
+        <p class="availability"><span class="dot" aria-hidden="true"></span>Available for new projects</p>
       </div>
 
       <div class="hero-visual">
         <div class="stack">
+          <div class="stack-glow" aria-hidden="true"></div>
           <div class="stack-shot stack-shot--a">
             <img src="public/work/rusty-mule.webp" width="1200" height="750" alt="The Rusty Mule Pizza website, showing the wood-fired oven hero and ordering buttons.">
           </div>
@@ -722,6 +837,15 @@
           <div class="stack-photo">
             <img src="public/me.webp" width="640" height="800" fetchpriority="high" alt="Joshua Jalandoni, web designer and developer.">
           </div>
+
+          <div class="chip chip--yrs">
+            <strong>4+ years</strong>
+            <span>building sites and automations</span>
+          </div>
+          <a class="chip chip--certs" href="#certifications">
+            <strong>12 certifications</strong>
+            <span>Anthropic and Google</span>
+          </a>
         </div>
       </div>
     </div>
