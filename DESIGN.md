@@ -1,326 +1,313 @@
-# Portfolio design spec v2: jjoshua.vercel.app
+# DESIGN.md
 
-This is the source of truth for the site's design. When code and this file disagree, this file wins. When this file is silent, choose the quieter, more restrained option.
+Design direction for **jjoshua.vercel.app** — the portfolio of Joshua Jalandoni.
 
-Version 2 replaces the light-only minimal version. The goal is to move from "clean but plain" to "elevated and credible" while keeping what already works: the typography, the spacing discipline, and the hero work stack.
-
----
-
-## 1. Direction
-
-**Name:** Night studio
-
-**In one sentence:** A dark, layered, proof-heavy portfolio where my face builds trust, my real client sites prove the work, and every section adds evidence that I'm the right person to hire.
-
-### Principles
-
-1. **Proof over promises.** Every section should add evidence: live sites, real numbers, tools, credentials, activity. Cut anything that is only decoration.
-2. **One signature element.** The hero work stack is the memorable thing. Everything else supports it and stays disciplined.
-3. **Depth through layers, not effects.** Depth comes from surfaces stepping up in lightness, hairline borders, and one soft glow. No neon, no heavy blur, no gradients on text.
-4. **Real numbers only.** Never invent or round up a stat. If a number is small, show a different proof point instead.
-5. **Borrow structure, never identity.** This design takes inspiration from the polish and density of modern developer portfolios (for example danielzanbaltazar.com). Do not copy any code, text, images, colors, or distinctive treatments from any reference site. Specifically: no yellow accent, no highlighter underline on the headline, no all-caps eyebrow labels, no line-grid background.
+This file is the source of truth for visual decisions. If code and this file disagree, this
+file wins. If I change my mind, I update this file first.
 
 ---
 
-## 2. Design tokens
+## 1. Brief
 
-Dark is the default theme. Light is available through a toggle, and the light theme is essentially the v1 site.
+**Subject.** A freelance web designer and developer in Bacolod City, Philippines, who builds
+small sites for small businesses, plus a growing side in AI operations work.
 
-### Dark theme (default)
+**Audience.** Two groups, and they want different things:
 
-| Token | Value | Use |
+- **Small business owners** — a pizzeria in Texas, a land-clearing company in Florida, a home
+  kitchen, a painter. They are not technical. They are deciding whether to trust a stranger
+  overseas with their business's front door. They want evidence of finished work and a
+  process that feels safe.
+- **AI ops / contract recruiters** — skimming for credentials, tools, and whether the work is
+  real.
+
+**The page's job.** Make a business owner think *this person is real, has done this before,
+and will not waste my time.* Everything else is secondary.
+
+**What is wrong with the current site.** Everything is set at display size, so nothing reads
+as more important than anything else. Section spacing is arbitrary — some gaps are 400px of
+nothing. The page has four sections where it needs nine. There is no evidence layer: no
+logos, no stats, no experience, no certifications, no testimonials.
+
+---
+
+## 2. Principles
+
+1. **Density over drama.** The fix for "looks fat" is more information at smaller sizes, not
+   bigger type. Aim for roughly three times the current information per screen.
+2. **Evidence beats adjectives.** Five real screenshots, twelve real certificates, and one
+   real contract say more than any headline. Lead with artifacts.
+3. **Spend boldness once.** One element on the page is allowed to be loud. Everything else
+   stays quiet. Currently that element is the hero headline.
+4. **Plain words.** The audience owns a pizzeria. Write the way you'd talk to them on the
+   phone. No "leveraging," no "solutions," no "crafting digital experiences."
+5. **Finished, not clever.** Every section fully built and responsive beats an ambitious
+   section left half-done.
+
+---
+
+## 3. Typography
+
+### Family
+
+**Archivo** (Google Fonts, variable) — one family for the entire site, using its width and
+weight axes instead of a second typeface.
+
+- Display: `Archivo Expanded`, weight 700
+- Body and UI: `Archivo`, weights 400 / 500 / 600
+
+Rationale: the current site uses a very heavy grotesque, which is where "fat" comes from.
+Archivo keeps that confident grotesque character but gets its impact from the *width* axis
+rather than a Black weight, so headlines read as authoritative rather than bloated. Using one
+variable family also keeps the font payload small.
+
+Fallback stack: `'Archivo', 'Helvetica Neue', Arial, sans-serif`
+
+### Scale
+
+| Role | Size | Weight | Line height | Tracking |
+|---|---|---|---|---|
+| Hero | `clamp(2.5rem, 5.5vw, 4.25rem)` | 700 Expanded | 0.98 | -0.03em |
+| Section heading | `clamp(1.9rem, 3vw, 2.6rem)` | 700 | 1.05 | -0.02em |
+| Card title | `1.25rem` | 600 | 1.25 | -0.01em |
+| Body large | `1.0625rem` | 400 | 1.6 | 0 |
+| Body | `1rem` | 400 | 1.6 | 0 |
+| Small / meta | `0.875rem` | 500 | 1.45 | 0 |
+| Label | `0.75rem` | 600 | 1.3 | 0.06em |
+
+**Hard rule: the hero is the only thing on the page above 2.6rem.** No exceptions.
+
+Body copy maxes at **68 characters** per line. Use `max-width: 34em`, not a pixel value.
+
+### Section labels
+
+Small labels above section headings, in sentence case with a short hairline rule to their
+left — not tracked-out all caps.
+
+```
+──  Selected work
+    Sites that ship and get used.
+```
+
+Reason for the change: tracked-out ALL-CAPS eyebrows above every heading are the single most
+common tell of a generated page right now. The label still does its structural job in
+sentence case, and the hairline carries the visual weight instead of letterspacing.
+
+---
+
+## 4. Color
+
+Six values. Do not add a seventh without updating this file.
+
+| Token | Hex | Use |
 |---|---|---|
-| `--bg` | `#0D0F13` | Page background |
-| `--surface-1` | `#14171D` | Cards, chips |
-| `--surface-2` | `#1B1F27` | Raised elements inside cards, hover states |
-| `--border` | `rgba(255,255,255,0.08)` | Default hairline |
-| `--border-strong` | `rgba(255,255,255,0.16)` | Hover and emphasis |
-| `--text` | `#F2F3F5` | Headings and primary text |
-| `--text-2` | `#9AA1AD` | Secondary text, second line of two-tone headings |
-| `--text-3` | `#6B7280` | Captions and metadata |
-| `--accent` | `#5B7CFF` | The only accent: primary buttons, links, focus rings, heatmap |
-| `--accent-soft` | `rgba(91,124,255,0.14)` | Accent-tinted backgrounds and tags |
-| `--available` | `#22C55E` | Availability dot only |
+| `--ink` | `#0E1116` | Page background |
+| `--surface` | `#171B22` | Cards, raised panels |
+| `--line` | `#262C36` | Borders, dividers, hairlines |
+| `--text` | `#E9ECF1` | Primary text |
+| `--muted` | `#98A2B0` | Body copy, meta, labels |
+| `--accent` | `#4F63E8` | Links, primary buttons, active nav |
+| `--signal` | `#E0A340` | Available status, certification marks, highlights |
 
-### Light theme
+**On `--accent`:** restrict it to interactive elements only — links, the primary button, the
+active nav state, and focus rings. It is currently applied to decoration as well, which
+dilutes it. If it isn't clickable, it isn't blue.
 
-| Token | Value |
-|---|---|
-| `--bg` | `#FAFAF7` |
-| `--surface-1` | `#FFFFFF` |
-| `--surface-2` | `#F2F2EE` |
-| `--border` | `#E4E4DE` |
-| `--border-strong` | `#CFCFC7` |
-| `--text` | `#1A1D24` |
-| `--text-2` | `#5E6472` |
-| `--text-3` | `#8A909B` |
-| `--accent` | `#2F5BFF` |
-| `--accent-soft` | `rgba(47,91,255,0.10)` |
-| `--available` | `#1F9D55` |
+**On `--signal`:** the amber gives the page a second voice so it doesn't read as the standard
+near-black-plus-one-bright-accent layout. It also ties visually to the Rusty Mule gold and
+the Pinoy Eats cream in the project screenshots. Use it sparingly: the availability dot, the
+certification count, and nothing else at first.
 
-Rules:
-- One accent color. Never introduce a second one.
-- Text on accent-filled buttons is white in both themes.
-- Every token must work in both themes. Never hardcode a hex value in a component.
-
-### Typography
-
-- **Typeface:** Schibsted Grotesk for everything, weights 400, 500, and 700. Self-host it or use the framework's font loader with `font-display: swap`.
-- **Scale:**
-  - Hero headline: `clamp(44px, 6.4vw, 76px)`, weight 700, line-height 1.02, letter-spacing -0.035em
-  - Section heading: `clamp(32px, 4vw, 48px)`, weight 700, line-height 1.08, letter-spacing -0.03em
-  - Card title: 20px, weight 600 (or 700 if 600 isn't loaded)
-  - Body: 17px, line-height 1.65
-  - Small: 14px. Captions: 13px.
-- **Two-tone headings:** the hero, section headings, and contact heading are two lines. Line 1 uses `--text`, line 2 uses `--text-2`. This is the main typographic device, so don't add other accents inside headings (no colored words, no underlines, no italics).
-- **No eyebrow labels** above headings. No all-caps anywhere except official acronyms.
-- Body text max width: 62ch.
-
-### Shape and space
-
-- Max content width: 1200px, side padding 24px (20px on mobile)
-- Section spacing: 140px desktop, 88px mobile
-- Radius: 20px cards, 16px images inside cards, 999px buttons, pills, and chips
-- Borders: 1px `--border` on all cards. On hover, change to `--border-strong`. Project cards shift toward the accent at about 40% opacity.
-- Shadows: dark theme uses none, because depth comes from surface steps. Light theme uses one soft shadow for floating chips and the work stack only.
-
-### Texture and light
-
-- **Dot texture:** a faint dot grid (1px dots, 24px spacing, about 6% opacity of `--text`) behind the hero only. Mask it with a radial fade so it disappears toward the edges.
-- **Glow:** one soft radial glow in `--accent` at about 18% opacity, placed behind the work stack. It's the only glow on the page apart from a smaller one in the contact card.
-
-### Motion
-
-Motion is purposeful and limited:
-1. **Page load (once):** the headline fades up, the photo appears, then the two screenshots slide out from behind the photo into their stacked positions. About 700ms total, ease-out.
-2. **Work stack hover:** on desktop, the screenshots fan out slightly (rotate a few more degrees and translate outward). It feels like flipping through finished work.
-3. **Client marquee:** a slow infinite scroll that pauses on hover.
-4. **Card hover:** the border brightens and the image scales to 1.03. There is no card lift.
-5. **Theme toggle:** a quick cross-fade of colors (150ms).
-
-No scroll-triggered fade-ins on every section. No count-up animations on numbers. With `prefers-reduced-motion`, all motion is removed: the marquee becomes a static wrapped row and the stack appears in its final position.
+**Light mode.** The theme toggle already exists. Every new section must work in both modes.
+Define light values as a `[data-theme="light"]` override on the same token names — never
+hardcode a color anywhere in the CSS.
 
 ---
 
-## 3. Page structure (in order)
+## 5. Spacing
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│ Joshua Jalandoni   Work About Certifications Experience Contact [Let's talk] ◐ │  sticky, blurred
-├───────────────────────────────────────────────────────────────┤
-│ · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·    │
-│  I design websites            ┌─────┐┌────────────┐   ◯ glow   │
-│  that make small businesses   │shot ││   PHOTO    │[4+ yrs]    │
-│  look legit.                  │shot ││  (front)   │            │
-│  Subline                      └─────┘└────────────┘[12 certs]  │
-│  [See my work] [Let's talk]                                   │
-├───────────────────────────────────────────────────────────────┤
-│ [ GitHub activity card: heatmap in blue ramp ]   (optional)   │
-├───────────────────────────────────────────────────────────────┤
-│ ← Rusty Mule · Rubens Removal · Pinoy Eats · Mann Cayona ... →│  marquee
-├───────────────────────────────────────────────────────────────┤
-│ Real sites for / real businesses.                              │
-│ ┌──────────────── featured project (wide) ─────────────────┐  │
-│ └──────────────────────────────────────────────────────────┘  │
-│ ┌───────────┐ ┌───────────┐                                   │
-│ └───────────┘ └───────────┘   2×2 grid                        │
-│ ┌───────────┐ ┌───────────┐                                   │
-│ └───────────┘ └───────────┘                                   │
-├───────────────────────────────────────────────────────────────┤
-│ What you get / when we work together.   [card][card][card]    │
-├───────────────────────────────────────────────────────────────┤
-│ Designer's eye / and an operator's discipline.                 │
-│ About text + pills              [ profile card + stats ]      │
-├───────────────────────────────────────────────────────────────┤
-│ Certified in AI / by Anthropic and Google.                     │
-│ [featured][featured][featured]   + compact list of the rest   │
-├───────────────────────────────────────────────────────────────┤
-│ My toolkit / from first sketch to live site.  icon tile grid  │
-├───────────────────────────────────────────────────────────────┤
-│ Where I've worked / and what I did there.   timeline          │
-├───────────────────────────────────────────────────────────────┤
-│ ┌─── Need a website? / Let's build it.  [Email] [Copy] ─────┐ │
-│ └───────────────────────────────────────────────────────────┘ │
-│ Footer                                                        │
-└───────────────────────────────────────────────────────────────┘
+One scale. Every margin, padding, and gap on the site comes from it.
+
+```css
+--sp-1:  0.5rem;   /*  8px */
+--sp-2:  0.75rem;  /* 12px */
+--sp-3:  1rem;     /* 16px */
+--sp-4:  1.5rem;   /* 24px */
+--sp-5:  2rem;     /* 32px */
+--sp-6:  3rem;     /* 48px */
+--sp-7:  4rem;     /* 64px */
+--sp-8:  6rem;     /* 96px */
+--sp-9:  8rem;     /* 128px */
 ```
 
-### 3.1 Nav
-- Sticky. Background is `--bg` at 72% opacity with `backdrop-filter: blur(12px)`, plus a bottom border that only appears after scrolling 8px.
-- Left: "Joshua Jalandoni" (weight 600). No logo mark needed.
-- Center/right: Work, About, Certifications, Experience, Contact. The active section is highlighted as you scroll.
-- Right: "Let's talk" pill button (accent) and a theme toggle icon button (sun/moon, with an aria-label).
-- The "Available for work" status moves into the hero chips so the nav stays clean.
-- Mobile: name and menu button. The menu opens a full-width sheet with large links, and the CTA sits at the bottom.
+- Section vertical padding: `--sp-8` on mobile, `--sp-9` on desktop. **Nothing larger.**
+- Container: `max-width: 1180px`, side padding `--sp-4` mobile / `--sp-6` desktop.
+- Grid gutter: `--sp-5`.
 
-### 3.2 Hero
-- Two columns on desktop (text about 52%, stack about 48%). On mobile the stack comes first, scaled down, then the text.
-- Headline, two-tone:
-  - Line 1 (`--text`): "I design websites"
-  - Line 2 (`--text-2`): "that make small businesses look legit."
-- Subline: "Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched from Bacolod City, Philippines."
-- Buttons: "See my work" (accent pill, scrolls to Work) and "Let's talk" (outline pill, scrolls to Contact). Add a third outline button "Resume ↗" that opens `/public/resume.pdf` in a new tab (hide it if the file is missing).
-- Availability line under the buttons: green dot + "Available for new projects".
-- **Work stack (signature):** my photo `/public/me.jpg` in front in a 4:5 frame with 20px radius. The rusty-mule and rubens-removal screenshots sit behind it, offset left and rotated about -6° and 4°, with the accent glow behind them.
-- **Floating chips (maximum two)** on the photo edges, using `--surface-1` at 85% opacity, a 1px border, and blur:
-  - Top-left: "4+ years" / "building sites and automations"
-  - Bottom-right: "12 certifications" / "Anthropic and Google" (links to the Certifications section)
-  - These must stay true. Update them if the facts change.
-
-### 3.3 GitHub activity (optional)
-- A card showing my contribution heatmap for the last 12 months (username `joshuajalandoni-sketch`), with cells in a 5-step `--accent` ramp and empty cells in `--surface-2`.
-- Header: GitHub icon, "GitHub activity", "[N] contributions in the last year", and a "View profile ↗" link.
-- **Data:** fetch at build time or on the server with revalidation. If a token is needed, keep it in a server-only Vercel environment variable (`GITHUB_TOKEN`). Never ship it to the browser.
-- **Show/hide rule:** controlled by a single config flag `SHOW_GITHUB_ACTIVITY`. If the fetch fails, the section is hidden entirely. It never shows an error or an empty grid. Only turn it on if the activity looks healthy, because a sparse heatmap is anti-proof.
-
-### 3.4 Client marquee
-- One line of small `--text-3` text above it: "Sites I've designed and built for".
-- An infinite horizontal marquee of client wordmarks or logos in `/public/logos/` if present (grayscale, full color on hover), otherwise styled client names. Duplicate the list for a seamless loop and fade the edges with a mask.
-- Pauses on hover. Static with reduced motion.
-
-### 3.5 Work
-- Heading: "Real sites for" / "real businesses."
-- **Featured card (first project, full width):** screenshot on the left (about 60%) inside a minimal browser frame (three dots plus the domain in `--text-3`), and content on the right: tags, title, 2–3 sentence story (what they needed, what I built, the result), and "Visit site ↗" button.
-- **Remaining four:** 2×2 grid. Each card has a browser-framed screenshot, tags, title, one-line description, and "Visit site ↗".
-- **Tags:** small pills in `--accent-soft` with `--accent` text, sentence case, max 3 per card. Use a category tag (Restaurant, Service business, Personal project) plus tech tags only if accurate.
-- No filter tabs until there are 9 or more projects.
-
-| Project | Category tag | Description |
-|---|---|---|
-| Rusty Mule Pizza (featured) | Restaurant | A wood-fired pizzeria in Karnack, Texas that needed its menu, hours, and phone orders in one place. |
-| Rubens Removal LLC | Service business | A Florida land-clearing company that needed local visitors to turn into quote requests and calls. |
-| Pinoy Eats | Restaurant | Keep the existing description. |
-| Mann Cayona | Keep existing | Keep the existing description. |
-| Berserk | Personal project | A dark, atmospheric tribute site built to push layout and mood further than client work allows. |
-
-### 3.6 What you get (services)
-- Heading: "What you get" / "when we work together."
-- Three cards in a row: a small outline icon (24px, `--text-2`), title, and description. Keep the existing copy for Website design, Build and launch, and Automation.
-
-### 3.7 About
-- Heading: "Designer's eye" / "and an operator's discipline."
-- **Left column:** keep my existing About paragraphs. Below them, specialty pills (outline, sentence case): Website design, Landing pages, Web development, Automation, AI workflows.
-- **Right column: profile card** (`--surface-1`, 20px radius):
-  - Top: candid photo `/public/me-candid.jpg` (falls back to `me.jpg`), name, "Web designer and developer · Bacolod City, PH"
-  - A 2×2 stat grid with hairline dividers, using real values only: **4+** Years building · **[N]** Sites launched · **12** Certifications · **GMT+8** Time zone
-  - A full-width "Start a project" accent button that scrolls to Contact, with a smaller "Resume ↗" text link under it
-- This fills the empty right half the v1 About section had.
-
-### 3.8 Certifications
-- Heading: "Certified in AI" / "by Anthropic and Google."
-- Summary line under the heading, with one small check icon: "12 certifications, each with a public verification link." Keep this count in sync with the data file automatically.
-- **Featured row (3 cards):** certificate thumbnail from `/public/certificates/` (16:10 crop with 12px radius and a hairline border), issuer icon and name, credential title, issued date, and a "Verify ↗" link. Clicking the thumbnail opens a lightbox with the full certificate.
-- **Everything else: compact list** in two columns (one on mobile), grouped under small `--text-3` group names ("Claude and the Anthropic platform", "AI Fluency"). Each row has the title, "Issuer · Month Year" in `--text-3`, and "Verify ↗" aligned right, separated by hairlines. No thumbnails and no badges in the list.
-- **Lightbox:** an accessible dialog with focus moved in and returned on close; closes with Esc, the close button, or a backdrop click; uses the optimized full-size image.
-- **Data-driven:** all certificates live in one data file (for example `content/certifications.ts` or `.json`) with `id`, `title`, `issuer`, `group`, `issued` (YYYY-MM), `verifyUrl`, `image`, `featured`, and `order`. Adding a certificate later means adding one entry, not editing components.
-- **Rules:** one entry per real credential. A verification link is a button on its credential, never its own card. The resume is not a certificate. It lives in the hero and About card. No "VERIFIED" badge repeated on every item; the summary line covers it once.
-
-| Order | File name in `/public/certificates/` | Title | Issuer | Group | Issued | Featured |
-|---|---|---|---|---|---|---|
-| 1 | `google-ai-professional` | Google AI Professional Certificate (7 courses) | Google · Coursera | — | Jun 2026 | Yes |
-| 2 | `anthropic-ai-fluency-framework` | AI Fluency: Framework and Foundations | Anthropic | AI Fluency | TODO | Yes |
-| 3 | `anthropic-claude-code-101` | Claude Code 101 | Anthropic | Claude | TODO | Yes |
-| 4 | `anthropic-claude-platform-101` | Claude Platform 101 | Anthropic | Claude | TODO | |
-| 5 | `anthropic-claude-101` | Claude 101 | Anthropic | Claude | TODO | |
-| 6 | `anthropic-intro-claude-cowork` | Introduction to Claude Cowork | Anthropic | Claude | TODO | |
-| 7 | `anthropic-ai-fluency-builders` | AI Fluency for Builders | Anthropic | AI Fluency | Jul 2026 | |
-| 8 | `anthropic-ai-fluency-small-businesses` | AI Fluency for Small Businesses | Anthropic | AI Fluency | Jul 2026 | |
-| 9 | `anthropic-ai-capabilities-limitations` | AI Capabilities and Limitations | Anthropic | AI Fluency | Jul 2026 | |
-| 10 | `anthropic-ai-fluency-nonprofits` | AI Fluency for Nonprofits | Anthropic | AI Fluency | Jul 2026 | |
-| 11 | `anthropic-ai-fluency-educators` | AI Fluency for Educators | Anthropic | AI Fluency | Jul 2026 | |
-| 12 | `anthropic-ai-fluency-students` | AI Fluency for Students | Anthropic | AI Fluency | Jul 2026 | |
-
-- File names can end in `.png`, `.jpg`, or `.pdf`. For PDFs, render the first page to an image once during setup and commit the optimized result.
-- Verify URLs: reuse the ones already in my codebase if they exist (Coursera and verify.skilljar.com links). Anything missing is a `TODO` for me. Never guess a URL.
-
-### 3.9 Toolkit
-- Heading: "My toolkit" / "from first sketch to live site."
-- Grouped rows with a small group name (sentence case, `--text-3`) and a thin rule: Design, Build, Deploy, AI and automation.
-- Square tiles (about 104px, `--surface-1`, 16px radius) with a brand icon (Simple Icons) and a name. Icons are monochrome `--text-2` by default and turn brand-colored on hover, which distinguishes the grid from a plain colorful logo wall.
-- **Only list tools I actually use.** Confirmed: Figma, Claude Code, GitHub, Vercel. Add others only after I confirm them.
-
-### 3.10 Experience
-- Heading: "Where I've worked" / "and what I did there."
-- A single-column timeline (max width about 760px): a vertical hairline with dots. Each entry has role, organization, dates, and one line about the work. The current role gets a small green "Now" pill.
-- Use placeholder entries marked `TODO` for me to fill in. Only list employers and clients I'm allowed to name publicly.
-
-### 3.11 Contact
-- A large card (`--surface-1`, 24px radius) with a soft accent glow in one corner.
-- Heading: "Need a website?" / "Let's build it."
-- Body: "Tell me about your business and what you need it to do. I reply to every message, usually within a day."
-- Actions: "Email me" (accent pill, mailto) and a "Copy email" icon button that shows a "Copied" confirmation for 2 seconds.
-- Social row as icon + label buttons: LinkedIn, GitHub, YouTube, Facebook (use the existing links).
-- Small line: "Based in Bacolod City, Philippines · GMT+8 · Working with clients worldwide".
-
-### 3.12 Footer
-- Name and year on the left. Social icons and "Back to top ↑" on the right. `--text-3`, 14px.
+Radius: `--r-sm: 8px` (chips, buttons), `--r-md: 14px` (cards), `--r-lg: 20px` (large media).
+Three values, chosen by element size — not one radius on everything.
 
 ---
 
-## 4. Theme toggle
-- Dark by default for first-time visitors. The choice is remembered in `localStorage`.
-- Apply the saved theme with a tiny inline script in `<head>` before first paint so there is no flash of the wrong theme.
-- The toggle has an aria-label that updates ("Switch to light theme" / "Switch to dark theme").
+## 6. Page structure
 
----
+In order. Each section is one job.
 
-## 5. Assets
+| # | Section | Job | Priority |
+|---|---|---|---|
+| 1 | Nav | Wayfinding, sticky, scroll-spy | Must |
+| 2 | Hero | Who, what, where, + stat strip | Must |
+| 3 | Trust strip | Client logos | Must |
+| 4 | Selected work | 5 project cards + filters | Must |
+| 5 | Motion slot | Reserved — see §9 | Must (empty for now) |
+| 6 | About | The person, + stats and capabilities in the right column | Must |
+| 7 | Stack | Tools, grouped | Must |
+| 8 | Experience | Timeline, numbered | Must |
+| 9 | Certifications | 12 certificates, grouped by issuer | Must |
+| 10 | Services | Three offers | Nice |
+| 11 | Process | Four steps, numbered | Nice |
+| 12 | Testimonials | Client quotes | Nice, pending content |
+| 13 | Contact | Channels + availability | Must |
+| 14 | Footer | Links, social, back to top | Must |
+
+**On numbering:** use `01 / 02 / 03` markers only in **Experience** and **Process**, because
+those are genuine sequences. Do not number the contact channels, the services, or the project
+cards — a numbered list implies an order that isn't there.
+
+### Section notes
+
+**Hero.** Headline to two lines maximum. Stat strip below the buttons — `4+ years`,
+`5 sites shipped`, `12 certifications`, `2 client accounts` — with count-up on first view.
+Use `headshot-dark.png` or `headshot-transparent.png`; the old version sat on a white
+rectangle. Fix the clipped project thumbnail behind the portrait or remove it entirely.
+
+**Trust strip.** Replace the five floating text names with a bordered strip of client logos.
+Static row. No marquee — a scrolling logo band on a five-logo list is motion for its own sake.
+
+**Selected work.** Card anatomy:
 
 ```
-public/
-├── me.jpg                 hero headshot (existing)
-├── me-candid.jpg          NEW: casual photo for the About card
-├── resume.pdf             my resume (hero button + About card link)
-├── certificates/          one file per certificate, named as in section 3.8
-├── logos/                 optional: client logos (svg or png, transparent)
-└── work/
-    ├── rusty-mule.jpg
-    ├── rubens-removal.jpg
-    ├── pinoy-eats.jpg
-    ├── mann-cayona.jpg
-    └── berserk.jpg
+┌──────────────────────────────┐
+│  [ screenshot, 16:10 ]       │
+│                              │
+│  Restaurant   Texas          │  ← tags
+│  Rusty Mule Pizza            │  ← title
+│  Two lines on what the       │
+│  business needed and what    │  ← description
+│  I built.                    │
+│  HTML  CSS  JavaScript       │  ← tech chips
+│  Visit site                  │  ← link
+└──────────────────────────────┘
 ```
 
-- Generate optimized AVIF/WebP versions with explicit width and height. Hero images load eagerly with high priority. Everything else is lazy-loaded.
-- Generate `og.png` (1200×630) on the dark theme: headshot, name, and "Web designer and developer".
-- Favicon set: a "JJ" monogram in `--accent` on `--bg`, as SVG plus a PNG fallback and an Apple touch icon.
+Filters above the grid: All / Restaurants / Service businesses / Creators.
+Link text reads "Visit site" with the arrow as a separate `<span>` that animates on hover —
+not an arrow character baked into the label.
+
+**About.** The right half is currently empty. Fill it with a 2×2 stat grid and a short set of
+capability chips. Body copy stays in the left column at 34em.
+
+**Certifications.** Twelve uniform cards in a row is monotonous. Group them under two
+subheads — Anthropic and Google — and let the Google one be visually larger since it's the
+longer program.
+
+**Contact.** Channel list, availability line, response time, location. No numbers.
 
 ---
 
-## 6. Technical and deployment requirements
+## 7. Components
 
-- Real, server-rendered or static HTML on first load. No loading screen, no "Unpacking..." state.
-- **SEO:** unique `<title>` and meta description, canonical URL, Open Graph and Twitter tags, `sitemap.xml`, `robots.txt`, and JSON-LD `Person` schema (name, job title, URL, sameAs social links).
-- **Performance:** Lighthouse mobile scores of at least 90 for Performance and 95 for Accessibility, Best Practices, and SEO. LCP under 2.5s, CLS under 0.05. No heavy libraries (no three.js, no large animation frameworks). CSS transitions and small vanilla JS are enough.
-- **Accessibility:** semantic landmarks, one `<h1>`, visible focus rings in `--accent`, alt text on every image, contrast of at least 4.5:1 in both themes, full keyboard support for the menu and theme toggle, and the marquee duplicate hidden from screen readers.
-- **Responsive:** check at 375, 768, 1024, 1440, and 1920px.
-- **Deployment (Vercel):** work on a branch. Each push to that branch gets a Vercel preview URL for review. Merge to main only after approval. Secrets live only in Vercel environment variables, never in the repo or client bundle.
+Build these once and reuse. Do not write bespoke markup per section.
 
----
-
-## 7. Don'ts
-
-- No copying code, copy, images, colors, or signature treatments from any reference site
-- No yellow, and no second accent color
-- No highlighter, underline, colored word, or italic word inside headlines
-- No all-caps eyebrow labels
-- No invented or inflated numbers
-- No filter tabs with fewer than 9 projects
-- No scroll fade-ins on every section, no count-up numbers, no cursor effects, no particle backgrounds
-- No more than two floating chips in the hero
-- No duplicate certificate entries, no resume inside the certificate grid, and no "verified" badge repeated on every item
-- No loading screen
+- `.label` — section label with hairline
+- `.section-head` — label + heading + optional deck
+- `.btn` — variants `--primary`, `--secondary`, `--ghost`
+- `.card` — surface, border, radius
+- `.tag` — category tag
+- `.chip` — tech chip with optional icon
+- `.stat` — number + caption, with count-up hook
+- `.timeline-item` — numbered row for Experience
 
 ---
 
-## 8. Before shipping
+## 8. Motion
 
-- [ ] `me-candid.jpg` added (or I accept the headshot fallback)
-- [ ] Stats in hero chips and the About card are true
-- [ ] Toolkit only shows tools I use
-- [ ] Experience timeline `TODO` entries filled in or removed
-- [ ] Every certificate has the right date, image, and a working verify link
-- [ ] GitHub activity looks healthy, or `SHOW_GITHUB_ACTIVITY` is off
-- [ ] Both themes checked on phone and desktop
-- [ ] Link preview shows the OG image on Messenger and LinkedIn
-- [ ] Lighthouse targets met on the Vercel preview URL
+**One orchestrated moment, then nothing until the user acts.**
+
+- **Page load:** the hero animates in once — headline, then subhead, then buttons, then the
+  stat strip, staggered by about 80ms. This is the site's one non-interactive moment.
+- **Stat count-up:** runs once when the strip first enters the viewport.
+- **Everything else is user-triggered:** card hover, nav state, filter changes, focus rings.
+  Keep these at 180–250ms with a standard ease.
+
+**Do not add fade-and-slide-up reveals to every section on scroll.** I recommended this
+earlier and I was wrong: scroll-triggered entrances on every section are the most recognizable
+tell of a generated page, and on a page this long they make reading feel like it's fighting
+back. One deliberate moment reads as designed; twelve read as a template.
+
+`prefers-reduced-motion: reduce` disables the hero sequence and the count-up. Not optional.
+
+---
+
+## 9. Motion slot (reserved)
+
+Section 5 is a reserved full-bleed band for a custom animation, currently unfinished.
+
+Build it now as an empty, correctly-sized container:
+
+```html
+<section id="motion" class="motion-slot" data-motion-slot>
+  <div class="motion-slot__frame" aria-hidden="true">
+    <!-- Animation mounts here. Format TBD. -->
+  </div>
+</section>
+```
+
+- Aspect ratio 16:9, full-bleed (breaks the container), `max-height: 70vh`
+- Placeholder: `--surface` fill with a hairline border. No "coming soon" text.
+- Format not yet decided (MP4 / Lottie / canvas / CSS). Do not scaffold for a specific one.
+
+---
+
+## 10. Quality floor
+
+Not negotiable, not features:
+
+- Responsive at 360, 768, 1024, 1440
+- Visible keyboard focus on every interactive element
+- `prefers-reduced-motion` respected
+- Alt text on every image
+- All images WebP, sized to display dimensions, `loading="lazy"` below the fold
+- Contrast: 4.5:1 body text, 3:1 large text, in **both** themes
+- No layout shift on load — dimensions on every image
+
+---
+
+## 11. Things to avoid
+
+Specific to this project, learned the hard way:
+
+- Any type above 2.6rem outside the hero
+- Section gaps outside the spacing scale
+- Tracked-out all-caps labels above every heading
+- `01 / 02 / 03` markers on content that isn't a sequence
+- Meta strings joined with middle dots (`Texas · 2025 · Web`)
+- Arrow characters (`→`) welded into link and button text
+- The same border-radius and the same soft grey shadow on every element
+- Identical rounded cards as the answer to every content type
+- Scroll-reveal on every section
+- Hardcoded hex values anywhere in the CSS
+- Placeholder or invented copy — if content isn't ready, leave the section out
+
+---
+
+## 12. Open decisions
+
+Tracked here so they don't get lost:
+
+- [ ] Animation format and content
+- [ ] Whether Services shows pricing
+- [ ] Custom domain vs `.vercel.app`
+- [ ] Case study pages for Rusty Mule and Rubens Removal
+- [ ] Testimonials — requested from clients, none received yet
+- [ ] Exact LSF job title and start date for the Experience entry
