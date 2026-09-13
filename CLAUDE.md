@@ -82,9 +82,9 @@ Structure:
 │   │   ├── projects/
 │   │   ├── certifications/
 │   │   ├── clients/
-│   │   └── og-image.png
+│   │   └── og-image.jpg
 │   ├── files/
-│   └── favicon.ico
+│   └── favicon.ico          TODO: not created yet (inline SVG favicon in use)
 ├── _source/
 └── _archive/
 ```

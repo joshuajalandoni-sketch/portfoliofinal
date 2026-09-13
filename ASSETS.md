@@ -9,8 +9,14 @@ reference to it and update this file.
 ## TODO
 
 - [ ] **Public resume.** Add a redacted resume at `public/files/joshua-jalandoni-resume.pdf`.
-      The "Resume ↗" button (line 823) already points there and returns "not found" until the
+      The "Resume ↗" button (line 1082) already points there and returns "not found" until the
       file exists.
+- [ ] **favicon.ico fallback.** The site uses an inline SVG monogram (line 26), which modern
+      browsers show. Older browsers still want a `favicon.ico`. When it exists, add it at
+      `public/favicon.ico` and add a `<link rel="icon">` for it alongside the SVG. Don't add the
+      tag before the file exists: a missing icon puts an error in the console.
+- [ ] **Hero headshot.** DESIGN.md §6 calls for the processed headshot with the white
+      background removed. File TBD.
 - [ ] **Desktop screenshots.** Full-resolution desktop screenshots are needed for all 5
       projects. The current ones are 1200×750 WebP thumbnails with no originals.
 - [ ] **Phone screenshots.** Retake the Rubens Removal and Mann Cayona phone screenshots at the
@@ -24,19 +30,22 @@ reference to it and update this file.
 
 | Path | What it is | Dimensions | Where used |
 |---|---|---|---|
-| `public/images/hero/headshot.webp` | Headshot | 640×800 | Line 838: hero photo, front of the work stack |
-| `public/images/projects/rusty-mule-pizza-desktop.webp` | Rusty Mule Pizza homepage | 1200×750 | Line 832: hero work stack (back screenshot). Line 876: Selected work card |
-| `public/images/projects/rubens-removal-desktop.webp` | Rubens Removal LLC homepage | 1200×750 | Line 835: hero work stack (front screenshot). Line 885: Selected work card |
-| `public/images/projects/pinoy-eats-desktop.webp` | Pinoy Eats homepage | 1200×750 | Line 894: Selected work card |
-| `public/images/projects/mann-cayona-desktop.webp` | Mann Cayona homepage | 1200×750 | Line 903: Selected work card |
-| `public/images/projects/berserk-desktop.webp` | Berserk Tribute homepage | 1200×750 | Line 912: Selected work card |
-| `public/images/og-image.jpg` | Link preview card: name, title, headshot | 1200×630 | Lines 29 and 36: `og:image` and `twitter:image`, as `https://jjoshua.vercel.app/public/images/og-image.jpg` |
-| `public/files/joshua-jalandoni-resume.pdf` | Public resume | — | Line 823: "Resume ↗" button. **Missing, see TODO** |
+| `public/images/hero/headshot.webp` | Headshot | 640×800 | Line 1096: hero photo, front of the work stack |
+| `public/images/projects/rusty-mule-pizza-desktop.webp` | Rusty Mule Pizza homepage | 1200×750 | Line 1090: hero work stack (back screenshot). Line 1137: Selected work card. Line 1497: commented-out component demo |
+| `public/images/projects/rubens-removal-desktop.webp` | Rubens Removal LLC homepage | 1200×750 | Line 1093: hero work stack (front screenshot). Line 1146: Selected work card |
+| `public/images/projects/pinoy-eats-desktop.webp` | Pinoy Eats homepage | 1200×750 | Line 1155: Selected work card |
+| `public/images/projects/mann-cayona-desktop.webp` | Mann Cayona homepage | 1200×750 | Line 1164: Selected work card |
+| `public/images/projects/berserk-desktop.webp` | Berserk Tribute homepage | 1200×750 | Line 1173: Selected work card |
+| `public/images/og-image.jpg` | Link preview card: name, title, headshot | 1200×630 | Lines 32 and 39: `og:image` and `twitter:image`, as `https://jjoshua.vercel.app/public/images/og-image.jpg` |
+| `public/files/joshua-jalandoni-resume.pdf` | Public resume | — | Line 1082: "Resume ↗" button. **Missing, see TODO** |
 
 Not files:
 
-- **Favicon:** an inline SVG "JJ" monogram on line 23. There is no `favicon.ico`.
-- **Font:** Schibsted Grotesk from Google Fonts, line 40 (preconnects on lines 38–39).
+- **Favicon:** an inline SVG "JJ" monogram on line 26. There is no `favicon.ico` yet (see TODO).
+- **Font:** Archivo from Google Fonts, line 45 (preconnects on lines 43–44). One variable
+  family; the page requests five width/weight pairs: standard width at 400, 500, 600 and 700,
+  and Expanded (125%) at 700 for the hero headline only. Google serves all five from a single
+  file, about 88 KB for the Latin subset.
 
 ---
 
@@ -96,8 +105,11 @@ These folders are excluded by `.vercelignore`.
 
 ### `.screenshots/`: redesign captures
 
-32 PNGs of the site taken during the redesign, in `before/`, `phase1/`, and `phase2/`, at
-phone, tablet, and desktop widths. Also excluded from git by `.gitignore`.
+64 PNGs of the site taken during the redesign, in `before/`, `phase1/`, `phase2/`,
+`foundation-before/`, and `foundation-after/`, at phone, tablet, and desktop widths. The two
+`foundation-*` folders cover 360, 768, 1024, and 1440 in both themes, fold and full page, and
+each holds a `metrics.json` with page height, heading sizes, and section gaps. Also excluded
+from git by `.gitignore`.
 
 ---
 

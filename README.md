@@ -44,9 +44,9 @@ Then visit `http://localhost:8000`.
 │   │   ├── projects/        Website screenshots, desktop and mobile
 │   │   ├── certifications/  Certificate images
 │   │   ├── clients/         Client and employer logos
-│   │   └── og-image.png     Link preview image, 1200×630
+│   │   └── og-image.jpg     Link preview image, 1200×630
 │   ├── files/               Resume and other downloads
-│   └── favicon.ico
+│   └── favicon.ico          TODO: not created yet (inline SVG favicon in use)
 ├── _source/            Working files, not deployed
 └── _archive/           Unused files kept for reference, not deployed
 ```
@@ -91,7 +91,7 @@ anything significant.
 
 ## Before adding an image
 
-1. Convert to WebP
+1. Convert screenshots and photos to WebP; leave certificates and logos in their original format
 2. Resize to roughly the dimensions it displays at — don't ship a 4000px file for a 600px slot
 3. Name it per the conventions above
 4. Put it in the right `public/images/` subfolder

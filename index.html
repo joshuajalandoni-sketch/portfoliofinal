@@ -7,7 +7,9 @@
 <title>Joshua Jalandoni: Web Designer and Developer</title>
 <meta name="description" content="I design and build fast, clean websites for restaurants, service businesses, and creators. Based in Bacolod City, Philippines. Available for work.">
 <link rel="canonical" href="https://jjoshua.vercel.app/">
-<meta name="theme-color" content="#0D0F13" id="themeColor">
+<!-- HTML can't read a CSS variable, so this starts as the dark --ink value. The theme script
+     below overwrites it from the live --ink token, so it never drifts from the CSS. -->
+<meta name="theme-color" content="#0E1116" id="themeColor">
 
 <!-- Applies the saved theme before first paint so there is no flash of the
      wrong one. Dark is the default for a first visit. -->
@@ -19,7 +21,8 @@
   })();
 </script>
 
-<!-- Monogram favicon, inline so it costs no request. Ink ground, Paper letters. -->
+<!-- Monogram favicon, inline so it costs no request. Ink ground, Paper letters.
+     A favicon.ico fallback for older browsers is still wanted: see ASSETS.md. -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231A1D24'/%3E%3Ctext x='16' y='22' font-family='Helvetica,Arial,sans-serif' font-size='15' font-weight='700' letter-spacing='-0.5' fill='%23FAFAF7' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
@@ -35,761 +38,1016 @@
 <meta name="twitter:description" content="Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched.">
 <meta name="twitter:image" content="https://jjoshua.vercel.app/public/images/og-image.jpg">
 
+<!-- Archivo, one variable family (DESIGN.md §3). Only the five width/weight pairs the page
+     uses: standard width at 400/500/600/700, Expanded (125%) at 700 for the hero. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400;100,500;100,600;100,700;125,700&display=swap" rel="stylesheet">
 
 <style>
-  /* Dark is the default. Every token exists in both themes, so no component
-     below this block ever names a colour directly. */
-  :root{
-    color-scheme:dark;
+  /* The stylesheet is split into layers. A later layer always wins over an earlier one,
+     whatever its selectors look like, so element rules in "base" can never override a
+     component, and nothing needs !important or doubled-up class names to win. */
+  @layer tokens, base, layout, components, sections, utilities;
 
-    --bg:#0D0F13;
-    --surface-1:#14171D;
-    --surface-2:#1B1F27;
-    --border:rgba(255,255,255,0.08);
-    --border-strong:rgba(255,255,255,0.16);
-    --text:#F2F3F5;
-    --text-2:#9AA1AD;
-    --text-3:#6B7280;
-    --accent:#5B7CFF;
-    --accent-soft:rgba(91,124,255,0.14);
-    --available:#22C55E;
+  /* ================================================================
+     TOKENS: every design value on the site. DESIGN.md §3, §4, §5, §8.
+     ================================================================ */
+  @layer tokens {
+    :root{
+      color-scheme:dark;
 
-    /* Depth in dark comes from surface steps, so the float shadow is off. */
-    --shadow-float:none;
+      /* Color, dark theme (default). DESIGN.md §4. */
+      --ink:#0E1116;
+      --surface:#171B22;
+      --line:#262C36;
+      --text:#E9ECF1;
+      --muted:#98A2B0;
+      --accent:#4F63E8;
+      --accent-text:#7A8CF0;
+      --on-accent:#FFFFFF;
+      --signal:#E0A340;
 
-    --maxw:1200px;
-    --pad:24px;
-    --section:140px;
-    --nav-h:68px;
+      /* Depth in dark comes from surface steps, so the float shadow is off. */
+      --shadow-float:none;
 
-    --r-card:20px;
-    --r-img:16px;
-    --r-pill:999px;
+      /* Type. DESIGN.md §3. */
+      --font:'Archivo','Helvetica Neue',Arial,sans-serif;
+      --wdth-display:125%;
+      --fw-regular:400;
+      --fw-medium:500;
+      --fw-semibold:600;
+      --fw-bold:700;
+
+      --fs-hero:clamp(2.25rem, 4.5vw, 3.5rem);
+      --lh-hero:0.98;
+      --ls-hero:-0.03em;
+
+      --fs-h2:clamp(1.9rem, 3vw, 2.6rem);
+      --lh-h2:1.05;
+      --ls-h2:-0.02em;
+
+      --fs-h3:1.25rem;
+      --lh-h3:1.25;
+      --ls-h3:-0.01em;
+
+      --fs-body-lg:1.0625rem;
+      --fs-body:1rem;
+      --lh-body:1.6;
+
+      --fs-small:0.875rem;
+      --lh-small:1.45;
+
+      --fs-label:0.75rem;
+      --lh-label:1.3;
+      --ls-label:0.06em;
+
+      --measure:34em;
+
+      /* Spacing. DESIGN.md §5. */
+      --sp-0:0.25rem;
+      --sp-1:0.5rem;
+      --sp-2:0.75rem;
+      --sp-3:1rem;
+      --sp-4:1.5rem;
+      --sp-5:2rem;
+      --sp-6:3rem;
+      --sp-7:4rem;
+      --sp-8:6rem;
+      --sp-9:8rem;
+
+      /* Radius, chosen by element size. DESIGN.md §5. */
+      --r-sm:8px;
+      --r-md:14px;
+      --r-lg:20px;
+
+      /* Motion. DESIGN.md §8. */
+      --dur-fast:180ms;
+      --dur:250ms;
+      --ease:ease;
+      --stagger:80ms;
+
+      /* Layout. Not colors, sizes, or spacing, so not in DESIGN.md's tables. */
+      --container:1180px;
+      --gutter:var(--sp-4);
+      --section-pad:var(--sp-7);
+      --control-h:2.5rem;
+      --icon:1.125rem;
+      --hero-visual:23rem;
+      --nav-h:calc(var(--control-h) + 2 * var(--sp-3));
+      --nav-h-scrolled:calc(var(--control-h) + 2 * var(--sp-1));
+      --ring-width:2px;
+      --ring-offset:3px;
+      --blur:12px;
+    }
+
+    /* Desktop spacing starts at 768px. DESIGN.md §5. */
+    @media (min-width:768px){
+      :root{
+        --gutter:var(--sp-6);
+        --section-pad:var(--sp-8);
+      }
+    }
+
+    /* Light theme: the same token names, overridden. DESIGN.md §4. */
+    :root[data-theme="light"]{
+      color-scheme:light;
+
+      --ink:#FBFBFC;
+      --surface:#FFFFFF;
+      --line:#E3E6EB;
+      --text:#14181F;
+      --muted:#5A6472;
+      --accent:#3D4FD0;
+      --accent-text:#3040B8;
+      --on-accent:#FFFFFF;
+      --signal:#9A6A12;
+
+      --shadow-float:0 var(--sp-3) var(--sp-5) color-mix(in srgb, var(--text) 13%, transparent);
+    }
   }
 
-  :root[data-theme="light"]{
-    color-scheme:light;
+  /* ================================================================
+     BASE: element defaults.
+     ================================================================ */
+  @layer base {
+    *,*::before,*::after{box-sizing:border-box;}
 
-    --bg:#FAFAF7;
-    --surface-1:#FFFFFF;
-    --surface-2:#F2F2EE;
-    --border:#E4E4DE;
-    --border-strong:#CFCFC7;
-    --text:#1A1D24;
-    --text-2:#5E6472;
-    --text-3:#8A909B;
-    --accent:#2F5BFF;
-    --accent-soft:rgba(47,91,255,0.10);
-    --available:#1F9D55;
+    html{
+      -webkit-text-size-adjust:100%;
+      scroll-behavior:smooth;
+      /* In-page links land below the pinned nav rather than under it. */
+      scroll-padding-top:var(--nav-h-scrolled);
+    }
 
-    --shadow-float:0 16px 34px rgba(26,29,36,.13);
+    body{
+      margin:0;
+      /* The nav is pinned (position: fixed), so the page starts below it. */
+      padding-top:var(--nav-h);
+      background:var(--ink);
+      color:var(--text);
+      font-family:var(--font);
+      font-size:var(--fs-body);
+      font-weight:var(--fw-regular);
+      line-height:var(--lh-body);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    h1,h2,h3,p,ul,ol{margin:0;}
+
+    /* Browsers that support these avoid a lone word on the last line of a paragraph
+       and even out heading lines. The words themselves never change. */
+    h1,h2,h3{text-wrap:balance;}
+    p{text-wrap:pretty;}
+
+    img{max-width:100%;height:auto;display:block;}
+
+    button{font:inherit;color:inherit;}
+
+    a{color:var(--accent-text);text-decoration:none;}
+    a:hover{text-decoration:underline;text-underline-offset:0.2em;}
+
+    /* One visible focus treatment everywhere: outline only, so it follows each
+       element's own corners and never changes its shape. */
+    :focus-visible{
+      outline:var(--ring-width) solid var(--accent);
+      outline-offset:var(--ring-offset);
+    }
+
+    /* The colour cross-fade is only armed while the toggle is switching, so it
+       never taxes hover or scroll, and never runs for reduced-motion users. */
+    @media (prefers-reduced-motion:no-preference){
+      :root.theme-switching,
+      :root.theme-switching *{
+        transition:background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease) !important;
+      }
+    }
+
+    /* Reduced motion: nothing animates, nothing transitions, nothing smooth-scrolls.
+       !important in this early layer beats every later layer. */
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto;}
+      *,*::before,*::after{
+        animation-duration:0.001ms !important;
+        animation-delay:0ms !important;
+        transition-duration:0.001ms !important;
+        scroll-behavior:auto !important;
+      }
+    }
   }
 
-  /* The colour cross-fade is only armed while the toggle is switching, so it
-     never taxes hover or scroll. */
-  :root.theme-switching,
-  :root.theme-switching *{
-    transition:background-color .15s ease, color .15s ease, border-color .15s ease !important;
+  /* ================================================================
+     LAYOUT
+     ================================================================ */
+  @layer layout {
+    .container{
+      width:100%;
+      max-width:var(--container);
+      margin-inline:auto;
+      padding-inline:var(--gutter);
+    }
+
+    .section{padding-block:var(--section-pad);}
+
+    .prose{max-width:var(--measure);}
+    .prose > * + *{margin-top:var(--sp-3);}
+
+    /* Vertical rhythm between stacked blocks, e.g. groups inside a section. */
+    .flow > * + *{margin-top:var(--sp-6);}
+
+    .cluster{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:var(--sp-2);
+      padding:0;
+      list-style:none;
+    }
   }
 
-  *,*::before,*::after{box-sizing:border-box;}
+  /* ================================================================
+     COMPONENTS. DESIGN.md §7. Each works on its own, in any section.
+     ================================================================ */
+  @layer components {
 
-  html{
-    -webkit-text-size-adjust:100%;
-    scroll-behavior:smooth;
-  }
+    /* ---------- .label: sentence case, hairline to the left ---------- */
+    .label{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-2);
+      margin-bottom:var(--sp-2);
+      color:var(--muted);
+      font-size:var(--fs-label);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-label);
+      letter-spacing:var(--ls-label);
+    }
+    .label::before{
+      content:"";
+      flex:0 0 var(--sp-4);
+      border-top:1px solid currentColor;
+    }
 
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
-    font-size:17px;
-    font-weight:400;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
+    /* ---------- .section-head: label + heading + optional deck ---------- */
+    .section-head{margin-bottom:var(--sp-5);}
+    @media (min-width:768px){
+      .section-head{margin-bottom:var(--sp-6);}
+    }
+    .section-head__title{
+      color:var(--text);
+      font-size:var(--fs-h2);
+      font-weight:var(--fw-bold);
+      line-height:var(--lh-h2);
+      letter-spacing:var(--ls-h2);
+    }
+    .section-head__deck{
+      max-width:var(--measure);
+      margin-top:var(--sp-3);
+      color:var(--muted);
+      font-size:var(--fs-body-lg);
+    }
 
-  img{max-width:100%;display:block;}
+    /* ---------- .btn ---------- */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:var(--sp-0);
+      min-height:var(--control-h);
+      padding:0 var(--sp-4);
+      border:1px solid transparent;
+      border-radius:var(--r-sm);
+      background:transparent;
+      font-size:var(--fs-body);
+      font-weight:var(--fw-medium);
+      line-height:1;
+      text-decoration:none;
+      white-space:nowrap;
+      cursor:pointer;
+      transition:background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease);
+    }
+    .btn:hover{text-decoration:none;}
 
-  a{color:var(--accent);text-decoration:none;}
-  a:hover{text-decoration:underline;}
+    /* The only filled button. Hover darkens, which raises label contrast in both themes. */
+    .btn--primary{
+      background:var(--accent);
+      color:var(--on-accent);
+    }
+    .btn--primary:hover{filter:brightness(0.9);}
 
-  /* One visible focus treatment everywhere, in the single accent. */
-  :focus-visible{
-    outline:2px solid var(--accent);
-    outline-offset:3px;
-    border-radius:2px;
-  }
+    /* The border is a divider-strength hairline; the label and text colour carry
+       the meaning (DESIGN.md §7). */
+    .btn--secondary{
+      color:var(--text);
+      border-color:var(--line);
+    }
+    .btn--secondary:hover{border-color:var(--muted);}
 
-  .sr-only{
-    position:absolute;
-    width:1px;height:1px;
-    padding:0;margin:-1px;
-    overflow:hidden;
-    clip:rect(0,0,0,0);
-    white-space:nowrap;
-    border:0;
-  }
+    .btn--ghost{color:var(--accent-text);}
+    .btn--ghost:hover{background:color-mix(in srgb, var(--accent) 12%, transparent);}
 
-  .wrap{
-    width:100%;
-    max-width:var(--maxw);
-    margin:0 auto;
-    padding-inline:var(--pad);
-  }
+    /* An arrow is its own span, never welded into the label, and nudges on hover
+       (DESIGN.md §6, §11). */
+    .arrow{
+      display:inline-block;
+      transition:transform var(--dur) var(--ease);
+    }
+    a:hover .arrow{transform:translateX(var(--sp-0));}
 
-  .section{padding-block:var(--section);}
+    /* ---------- .icon-btn: theme toggle, menu trigger ---------- */
+    .icon-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:var(--control-h);
+      height:var(--control-h);
+      flex-shrink:0;
+      padding:0;
+      border:1px solid var(--line);
+      border-radius:var(--r-sm);
+      background:transparent;
+      color:var(--muted);
+      cursor:pointer;
+      transition:border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    }
+    .icon-btn:hover{border-color:var(--muted);color:var(--text);}
+    .icon-btn svg{width:var(--icon);height:var(--icon);display:block;}
 
-  h1,h2,h3{margin:0;}
+    :root[data-theme="dark"] .icon-moon{display:none;}
+    :root:not([data-theme="dark"]) .icon-sun{display:none;}
 
-  h2.section-title{
-    font-size:clamp(32px,4vw,48px);
-    font-weight:700;
-    letter-spacing:-0.03em;
-    line-height:1.08;
-    margin-bottom:48px;
-  }
+    /* ---------- .card: surface, border, radius ---------- */
+    .card{
+      overflow:hidden;
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--r-md);
+    }
+    .card__media{
+      aspect-ratio:16/10;
+      background:var(--line);
+    }
+    .card__media img{width:100%;height:100%;object-fit:cover;}
+    .card__body{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-2);
+      padding:var(--sp-4);
+    }
+    .card__title{
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .card__body p{color:var(--muted);max-width:var(--measure);}
 
-  /* Two-tone headings are the one typographic device: line 1 in --text,
-     line 2 in --text-2. Nothing else gets colour inside a heading. */
-  .l2{display:block;color:var(--text-2);}
+    /* ---------- .tag: category, plain text ---------- */
+    .tag{
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+    }
 
-  .section-lede{
-    color:var(--text-2);
-    max-width:62ch;
-    margin:-32px 0 48px;
-  }
+    /* ---------- .chip: tech chip, optional icon ---------- */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:var(--sp-0);
+      padding:var(--sp-0) var(--sp-1);
+      border:1px solid var(--line);
+      border-radius:var(--r-sm);
+      color:var(--muted);
+      font-size:var(--fs-label);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-label);
+      white-space:nowrap;
+    }
+    .chip__icon{width:1em;height:1em;flex:none;}
 
-  .prose{max-width:62ch;}
+    /* ---------- .stat: number + caption. data-count-up on the value
+       counts it up once, on first view, unless motion is reduced. ---------- */
+    .stat{
+      display:flex;
+      flex-direction:column;
+      gap:var(--sp-0);
+    }
+    .stat__value{
+      color:var(--text);
+      font-size:var(--fs-h2);
+      font-weight:var(--fw-bold);
+      line-height:var(--lh-h2);
+      letter-spacing:var(--ls-h2);
+      font-variant-numeric:tabular-nums;
+    }
+    .stat__label{
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+    }
 
-  /* Anchors clear the sticky bar rather than hiding under it. */
-  #work,#about,#certifications,#experience,#contact{
-    scroll-margin-top:calc(var(--nav-h) + 20px);
-  }
+    /* ---------- .timeline-item: numbered row for Experience ---------- */
+    .timeline{padding:0;list-style:none;}
+    .timeline-item{
+      display:grid;
+      grid-template-columns:var(--sp-6) minmax(0,1fr);
+      gap:var(--sp-4);
+      padding-block:var(--sp-5);
+      border-top:1px solid var(--line);
+    }
+    .timeline-item__index{
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      font-variant-numeric:tabular-nums;
+    }
+    .timeline-item__title{
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .timeline-item__meta{
+      margin-top:var(--sp-0);
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+    }
+    .timeline-item__body{
+      max-width:var(--measure);
+      margin-top:var(--sp-2);
+      color:var(--muted);
+    }
 
-  /* ---------- Nav ---------- */
+    /* ---------- Nav ---------- */
 
-  .nav{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:var(--bg);
-    border-bottom:1px solid transparent;
-    transition:border-color .2s ease;
-  }
-
-  /* The blur only turns on where it is supported; everywhere else the bar
-     stays fully opaque rather than translucent and unreadable. */
-  @supports (backdrop-filter:blur(12px)) or (-webkit-backdrop-filter:blur(12px)){
     .nav{
-      background:color-mix(in srgb, var(--bg) 72%, transparent);
-      -webkit-backdrop-filter:blur(12px);
-      backdrop-filter:blur(12px);
+      position:fixed;
+      inset:0 0 auto;
+      z-index:50;
+      background:var(--ink);
+      border-bottom:1px solid transparent;
+      transition:background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
     }
-  }
-
-  /* The bottom hairline only appears once the page has moved. */
-  .nav.is-scrolled{border-bottom-color:var(--border);}
-
-  .nav-inner{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:24px;
-    min-height:var(--nav-h);
-  }
-
-  .nav-name{
-    font-size:17px;
-    font-weight:600;
-    color:var(--text);
-    letter-spacing:-0.01em;
-  }
-  .nav-name:hover{text-decoration:none;}
-
-  .nav-links{
-    display:flex;
-    align-items:center;
-    gap:30px;
-  }
-
-  .nav-links a{
-    position:relative;
-    color:var(--text-2);
-    font-size:15px;
-    transition:color .18s ease;
-  }
-  .nav-links a:hover{color:var(--text);text-decoration:none;}
-
-  /* Active section: the label goes to full strength over a short accent rule.
-     No pill and no fill, so the bar stays quiet while you scroll. */
-  .nav-links a.is-active{color:var(--text);}
-  .nav-links a.is-active::after{
-    content:"";
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:-8px;
-    height:2px;
-    border-radius:2px;
-    background:var(--accent);
-  }
-
-  .nav-actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
-  .icon-btn.nav-burger{display:none;}
-  .nav-burger[aria-expanded="true"] .icon-menu{display:none;}
-  .nav-burger[aria-expanded="false"] .icon-close{display:none;}
-
-  /* ---------- Mobile menu sheet ---------- */
-
-  .nav-sheet{
-    position:fixed;
-    inset:var(--nav-h) 0 0;
-    z-index:45;
-    display:none;
-    flex-direction:column;
-    background:var(--bg);
-    padding:8px var(--pad) calc(28px + env(safe-area-inset-bottom));
-    overflow-y:auto;
-    overscroll-behavior:contain;
-  }
-  .nav-sheet.is-open{display:flex;}
-
-  .sheet-link{
-    display:block;
-    padding:18px 0;
-    border-bottom:1px solid var(--border);
-    color:var(--text);
-    font-size:26px;
-    font-weight:600;
-    letter-spacing:-0.02em;
-  }
-  .sheet-link:hover{color:var(--accent);text-decoration:none;}
-  /* No trailing rule under the last link: it would hang over empty space. */
-  .sheet-link:last-of-type{border-bottom:0;}
-
-  /* Spec 3.1: the CTA sits at the bottom of the sheet. */
-  .sheet-cta{margin-top:auto;padding-top:36px;}
-  .sheet-cta .btn{width:100%;}
-
-  body.menu-open{overflow:hidden;}
-
-  /* ---------- Buttons ---------- */
-
-  .btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:13px 24px;
-    border-radius:var(--r-pill);
-    font-size:16px;
-    font-weight:500;
-    line-height:1;
-    border:1px solid transparent;
-    cursor:pointer;
-    transition:background-color .18s ease, color .18s ease, border-color .18s ease;
-  }
-  .btn:hover{text-decoration:none;}
-
-  .btn-sm{padding:9px 18px;font-size:15px;}
-
-  /* The only filled button. White label in both themes, per the token rules. */
-  .btn-solid{
-    background:var(--accent);
-    color:#fff;
-  }
-  .btn-solid:hover{filter:brightness(1.08);}
-
-  .btn-outline{
-    background:transparent;
-    color:var(--text);
-    border-color:var(--border);
-  }
-  .btn-outline:hover{border-color:var(--border-strong);}
-
-  /* Square icon button: theme toggle and the mobile menu trigger. */
-  .icon-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:38px;
-    height:38px;
-    flex-shrink:0;
-    padding:0;
-    background:transparent;
-    border:1px solid var(--border);
-    border-radius:var(--r-pill);
-    color:var(--text-2);
-    cursor:pointer;
-    transition:border-color .18s ease, color .18s ease, background-color .18s ease;
-  }
-  .icon-btn:hover{border-color:var(--border-strong);color:var(--text);}
-  .icon-btn svg{width:17px;height:17px;display:block;}
-
-  :root[data-theme="dark"] .icon-moon{display:none;}
-  :root:not([data-theme="dark"]) .icon-sun{display:none;}
-
-  /* ---------- Hero ---------- */
-
-  .hero{
-    position:relative;
-    padding-block:96px 104px;
-  }
-
-  /* Dot texture, hero only, faded out toward the edges by a radial mask so it
-     never reads as a background pattern with a hard edge. */
-  .hero::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    z-index:0;
-    color:var(--text);
-    opacity:.06;
-    background-image:radial-gradient(currentColor 1px, transparent 1px);
-    background-size:24px 24px;
-    -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, #000 25%, transparent 78%);
-    mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, #000 25%, transparent 78%);
-    pointer-events:none;
-  }
-
-  .hero-grid{
-    position:relative;
-    z-index:1;
-    display:grid;
-    grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
-    gap:56px;
-    align-items:center;
-  }
-
-  /* Both halves of the two-tone headline are blocks, so the break lands
-     where it is written rather than wherever the column happens to run out.
-     The cap is 72px because "I design websites" has to hold one line inside
-     this column, and at 76px it does not. */
-  .hero h1{
-    font-size:clamp(44px,6.4vw,72px);
-    font-weight:700;
-    line-height:1.02;
-    letter-spacing:-0.035em;
-    margin-bottom:24px;
-  }
-  .hero h1 .l1{display:block;}
-
-  .hero-sub{
-    color:var(--text-2);
-    max-width:46ch;
-    margin:0 0 32px;
-  }
-
-  .hero-actions{display:flex;flex-wrap:wrap;gap:12px;}
-
-  .dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--available);
-    flex-shrink:0;
-  }
-
-  .availability{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    margin:24px 0 0;
-    font-size:15px;
-    color:var(--text-2);
-  }
-
-  /* ---------- The work stack (signature) ---------- */
-
-  .stack{
-    position:relative;
-    width:100%;
-    max-width:500px;
-    margin-left:auto;
-  }
-
-  /* The one glow on this half of the page. It sits behind everything in the
-     stack and bleeds past it, so the edges of the screenshots catch light. */
-  .stack-glow{
-    position:absolute;
-    z-index:0;
-    inset:-22% -14% -14% -30%;
-    background:radial-gradient(farthest-side at 42% 48%, var(--accent), transparent);
-    opacity:.18;
-    pointer-events:none;
-  }
-
-  /* The photo sits right of centre so the screenshots behind it keep a wide
-     enough margin to actually read as a stack. At 22% they were covered to
-     within a sliver and the whole idea disappeared. */
-  .stack-photo{
-    position:relative;
-    z-index:3;
-    width:68%;
-    margin-left:32%;
-    aspect-ratio:4/5;
-    border-radius:var(--r-card);
-    border:1px solid var(--border);
-    overflow:hidden;
-    background:var(--surface-2);
-  }
-  .stack-photo img{width:100%;height:100%;object-fit:cover;}
-
-  .stack-shot{
-    position:absolute;
-    width:60%;
-    aspect-ratio:16/10;
-    border-radius:12px;
-    overflow:hidden;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow-float);
-    background:var(--surface-1);
-    transition:transform .45s cubic-bezier(.22,.61,.36,1);
-  }
-  .stack-shot img{width:100%;height:100%;object-fit:cover;}
-
-  .stack-shot--a{z-index:1;left:-6%;top:6%;transform:rotate(-6deg);}
-  .stack-shot--b{z-index:2;left:2%;top:50%;transform:rotate(4deg);}
-
-  /* Hover fans the stack open, like flipping through finished work. Pointer
-     devices only: there is no hover state to leave on a touch screen. */
-  @media (hover:hover) and (pointer:fine){
-    .stack:hover .stack-shot--a{transform:rotate(-10deg) translate(-9%,-4%);}
-    .stack:hover .stack-shot--b{transform:rotate(8deg) translate(-7%,4%);}
-  }
-
-  /* ---------- Floating chips (two, and only two) ---------- */
-
-  .chip{
-    position:absolute;
-    z-index:4;
-    display:flex;
-    flex-direction:column;
-    gap:1px;
-    padding:11px 18px;
-    border:1px solid var(--border);
-    border-radius:var(--r-pill);
-    background:color-mix(in srgb, var(--surface-1) 85%, transparent);
-    -webkit-backdrop-filter:blur(8px);
-    backdrop-filter:blur(8px);
-    box-shadow:var(--shadow-float);
-    line-height:1.3;
-    white-space:nowrap;
-  }
-  .chip strong{font-size:15px;font-weight:600;color:var(--text);}
-  .chip span{font-size:12.5px;color:var(--text-3);}
-
-  a.chip{transition:border-color .18s ease;}
-  a.chip:hover{border-color:var(--border-strong);text-decoration:none;}
-
-  .chip--yrs{top:3%;left:4%;}
-  .chip--certs{bottom:6%;right:-5%;}
-
-  /* ---------- Client strip ---------- */
-
-  .clients{
-    border-top:1px solid var(--border);
-    border-bottom:1px solid var(--border);
-    padding-block:26px;
-  }
-
-  .clients ul{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:16px 32px;
-    margin:0;
-    padding:0;
-    list-style:none;
-    color:var(--text-2);
-    font-size:15px;
-  }
-
-  /* ---------- Selected work ---------- */
-
-  .work-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:56px 32px;
-  }
-
-  .project-shot{
-    display:block;
-    aspect-ratio:16/10;
-    border-radius:16px;
-    border:1px solid var(--border);
-    overflow:hidden;
-    margin-bottom:20px;
-    background:var(--surface-2);
-  }
-  .project-shot img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:transform .3s ease;
-  }
-  .project-shot:hover img{transform:scale(1.03);}
-
-  .project h3{
-    font-size:20px;
-    font-weight:500;
-    letter-spacing:-0.01em;
-    margin-bottom:6px;
-  }
-
-  .project p{
-    color:var(--text-2);
-    margin:0 0 12px;
-    max-width:46ch;
-  }
-
-  .project .visit{font-size:15px;font-weight:500;}
-
-  /* ---------- Services ---------- */
-
-  .services-grid{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:40px 32px;
-  }
-
-  .service h3{
-    font-size:20px;
-    font-weight:500;
-    letter-spacing:-0.01em;
-    margin-bottom:10px;
-  }
-  .service p{color:var(--text-2);margin:0;}
-
-  /* ---------- About ---------- */
-
-  .about p{color:var(--text-2);}
-  .about p strong{color:var(--text);font-weight:500;}
-  .about .tools{margin-top:28px;font-size:15px;}
-
-  /* ---------- Contact ---------- */
-
-  .contact-block{
-    background:var(--surface-1);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:72px 56px;
-  }
-
-  .contact-block h2{
-    font-size:clamp(32px,4vw,48px);
-    font-weight:700;
-    letter-spacing:-0.03em;
-    line-height:1.08;
-    margin-bottom:16px;
-  }
-
-  .contact-block p{
-    color:var(--text-2);
-    margin:0 0 32px;
-    max-width:50ch;
-  }
-
-  .contact-actions{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:14px 28px;
-  }
-
-  .btn-paper{background:var(--accent);color:#fff;}
-  .btn-paper:hover{filter:brightness(1.08);}
-
-  .contact-socials{
-    display:flex;
-    flex-wrap:wrap;
-    gap:22px;
-    font-size:15px;
-  }
-  .contact-socials a{color:var(--text-2);}
-  .contact-socials a:hover{color:var(--text);}
-
-  /* ---------- Footer ---------- */
-
-  .footer{
-    border-top:1px solid var(--border);
-    padding-block:32px 44px;
-    margin-top:var(--section);
-  }
-
-  .footer-inner{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:12px 32px;
-    font-size:14px;
-    color:var(--text-2);
-  }
-
-  .footer-inner a{color:var(--text-2);}
-  .footer-inner a:hover{color:var(--accent);}
-
-  .footer-links{display:flex;flex-wrap:wrap;gap:20px;}
-
-  /* ---------- One page-load moment ---------- */
-  /* Final state is the plain rule above; the keyframes only describe where
-     each piece starts. Nothing here can leave content stuck invisible: with
-     animations off, or CSS half-applied, everything already reads at rest. */
-
-  @keyframes rise{
-    from{opacity:0;transform:translateY(12px);}
-  }
-  @keyframes photoIn{
-    from{opacity:0;transform:scale(.97);}
-  }
-  @keyframes slideA{
-    from{opacity:0;transform:translate(38%,10%) rotate(0deg);}
-  }
-  @keyframes slideB{
-    from{opacity:0;transform:translate(32%,-18%) rotate(0deg);}
-  }
-  @keyframes chipIn{
-    from{opacity:0;transform:translateY(6px);}
-  }
-
-  /* Fill is "backwards", never "both": a forward fill would keep transform
-     under the animation's control and the hover fan would never apply. The
-     implicit end state is the resting rule above, so nothing jumps. */
-  .hero h1{animation:rise .30s ease-out backwards;}
-  .hero-sub{animation:rise .30s ease-out .08s backwards;}
-  .hero-actions{animation:rise .30s ease-out .14s backwards;}
-  .availability{animation:rise .30s ease-out .20s backwards;}
-  .stack-photo{animation:photoIn .30s ease-out .15s backwards;}
-  .stack-shot--a{animation:slideA .34s ease-out .30s backwards;}
-  .stack-shot--b{animation:slideB .34s ease-out .38s backwards;}
-  .chip--yrs{animation:chipIn .28s ease-out .56s backwards;}
-  .chip--certs{animation:chipIn .28s ease-out .64s backwards;}
-
-  @media (prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto;}
-
-    /* The stack rests where it lands; hover does not move it. */
-    .stack:hover .stack-shot--a{transform:rotate(-6deg);}
-    .stack:hover .stack-shot--b{transform:rotate(4deg);}
-
-    *,*::before,*::after{
-      animation-duration:.001ms !important;
-      animation-delay:0ms !important;
-      transition-duration:.001ms !important;
+    .nav__bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:var(--sp-4);
+      padding-block:var(--sp-3);
+      transition:padding-block var(--dur) var(--ease);
     }
+
+    /* After about 80px of scroll: shorter bar, hairline, and a blur where the
+       browser supports it (elsewhere the bar stays opaque and readable). */
+    .nav.is-scrolled{border-bottom-color:var(--line);}
+    .nav.is-scrolled .nav__bar{padding-block:var(--sp-1);}
+    @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+      .nav.is-scrolled{
+        background:color-mix(in srgb, var(--ink) 80%, transparent);
+        -webkit-backdrop-filter:blur(var(--blur));
+        backdrop-filter:blur(var(--blur));
+      }
+    }
+
+    /* Marks the 80px point; the nav script watches it instead of listening to scroll. */
+    .nav-sentinel{
+      position:absolute;
+      top:calc(var(--sp-7) + var(--sp-3));
+      left:0;
+      width:1px;
+      height:1px;
+      pointer-events:none;
+    }
+
+    .nav__name{
+      color:var(--text);
+      font-size:var(--fs-body);
+      font-weight:var(--fw-semibold);
+      letter-spacing:var(--ls-h3);
+      white-space:nowrap;
+    }
+    .nav__name:hover{text-decoration:none;}
+
+    .nav__links{
+      display:none;
+      align-items:center;
+      gap:var(--sp-4);
+    }
+    .nav__link{
+      position:relative;
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      transition:color var(--dur-fast) var(--ease);
+    }
+    .nav__link:hover{color:var(--text);text-decoration:none;}
+
+    /* Active section: accent-coloured label over a short accent rule. */
+    .nav__link.is-active{color:var(--accent-text);}
+    .nav__link.is-active::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:calc(-1 * var(--sp-1));
+      border-top:var(--ring-width) solid var(--accent);
+    }
+
+    .nav__actions{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-1);
+    }
+    .nav__cta{display:none;}
+
+    .nav__burger[aria-expanded="true"] .icon-menu{display:none;}
+    .nav__burger[aria-expanded="false"] .icon-close{display:none;}
+
+    @media (min-width:768px){
+      .nav__links{display:flex;}
+      .nav__cta{display:inline-flex;}
+      .nav__burger{display:none;}
+    }
+
+    /* Mobile menu: full screen under the bar, CTA at the bottom. */
+    .nav__sheet{
+      position:fixed;
+      inset:0;
+      z-index:45;
+      display:none;
+      flex-direction:column;
+      padding:calc(var(--nav-h) + var(--sp-1)) var(--gutter) calc(var(--sp-5) + env(safe-area-inset-bottom));
+      background:var(--ink);
+      overflow-y:auto;
+      overscroll-behavior:contain;
+    }
+    .nav__sheet.is-open{display:flex;}
+    @media (min-width:768px){
+      .nav__sheet.is-open{display:none;}
+    }
+
+    .nav__sheet-link{
+      display:block;
+      padding-block:var(--sp-3);
+      border-bottom:1px solid var(--line);
+      color:var(--text);
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .nav__sheet-link:hover{color:var(--accent-text);text-decoration:none;}
+    .nav__sheet-link.is-active{color:var(--accent-text);}
+    /* No trailing rule under the last link: it would hang over empty space. */
+    .nav__sheet-link:last-child{border-bottom:0;}
+
+    .nav__sheet-cta{margin-top:auto;padding-top:var(--sp-5);}
+    .nav__sheet-cta .btn{width:100%;}
+
+    body.menu-open{overflow:hidden;}
   }
 
-  /* ---------- Responsive ---------- */
+  /* ================================================================
+     SECTIONS: layout specific to each existing section.
+     ================================================================ */
+  @layer sections {
 
-  /* Five links, a CTA and a toggle stop fitting well before the layout
-     breakpoint, so the nav collapses on its own. */
-  @media (max-width:940px){
-    .nav-links{display:none;}
-    .nav-cta{display:none;}
-    .icon-btn.nav-burger{display:inline-flex;}
+    /* ---------- Hero ---------- */
+
+    .hero{position:relative;}
+
+    /* Dot texture, hero only, faded out toward the edges by a radial mask so it
+       never reads as a background pattern with a hard edge. */
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:0;
+      color:var(--text);
+      opacity:.06;
+      background-image:radial-gradient(currentColor 1px, transparent 1px);
+      background-size:var(--sp-4) var(--sp-4);
+      -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, currentColor 25%, transparent 78%);
+      mask-image:radial-gradient(ellipse 68% 62% at 50% 42%, currentColor 25%, transparent 78%);
+      pointer-events:none;
+    }
+
+    /* Stacked below 1024px, photo first. From 1024px, two columns: the photo stack
+       takes a fixed width and the headline takes the rest, which is 684px at 1440
+       (DESIGN.md §6 asks for at least 680px). */
+    .hero__grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:var(--sp-6);
+      align-items:center;
+    }
+    .hero__copy{order:2;}
+    .hero__visual{order:1;}
+
+    @media (min-width:1024px){
+      .hero__grid{
+        grid-template-columns:minmax(0,1fr) minmax(0,var(--hero-visual));
+        gap:var(--sp-5);
+      }
+      .hero__copy{order:1;}
+      .hero__visual{order:2;}
+    }
+
+    /* Both halves of the two-tone headline are blocks, so the break lands where it
+       is written. Expanded width is reserved for this one element (DESIGN.md §3). */
+    .hero__title{
+      margin-bottom:var(--sp-4);
+      font-size:var(--fs-hero);
+      font-weight:var(--fw-bold);
+      font-stretch:var(--wdth-display);
+      line-height:var(--lh-hero);
+      letter-spacing:var(--ls-hero);
+    }
+    .hero__title span{display:block;}
+    .hero__title .l2{color:var(--muted);}
+
+    .hero__sub{
+      max-width:var(--measure);
+      margin-bottom:var(--sp-5);
+      color:var(--muted);
+      font-size:var(--fs-body-lg);
+    }
+
+    .hero__actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--sp-2);
+    }
+
+    .availability{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-1);
+      margin-top:var(--sp-4);
+      color:var(--muted);
+      font-size:var(--fs-small);
+    }
+    .availability__dot{
+      width:0.5em;
+      height:0.5em;
+      flex-shrink:0;
+      border-radius:50%;
+      background:var(--signal);
+    }
+
+    /* The primary takes the full width on small phones; the two secondary buttons
+       share the row under it rather than making a stack of three slabs. */
+    @media (max-width:400px){
+      .hero__actions .btn--primary{flex:1 0 100%;}
+      .hero__actions .btn--secondary{flex:1 1 0;padding-inline:var(--sp-2);}
+    }
+
+    /* ---------- Hero work stack ---------- */
+
+    .hero-stack{
+      position:relative;
+      width:100%;
+      max-width:var(--hero-visual);
+      margin-inline:auto;
+    }
+
+    /* The photo sits right of centre so the screenshots behind it keep a wide
+       enough margin to read as a stack. */
+    .hero-stack__photo{
+      position:relative;
+      z-index:3;
+      width:64%;
+      margin-left:36%;
+      aspect-ratio:4/5;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--r-lg);
+      background:var(--surface);
+    }
+    .hero-stack__photo img{width:100%;height:100%;object-fit:cover;}
+
+    .hero-stack__shot{
+      position:absolute;
+      width:58%;
+      aspect-ratio:16/10;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--r-md);
+      background:var(--surface);
+      box-shadow:var(--shadow-float);
+      transition:transform var(--dur) var(--ease);
+    }
+    .hero-stack__shot img{width:100%;height:100%;object-fit:cover;}
+
+    .hero-stack__shot--a{z-index:1;left:2%;top:6%;transform:rotate(-6deg);}
+    .hero-stack__shot--b{z-index:2;left:8%;top:50%;transform:rotate(4deg);}
+
+    @media (min-width:1024px){
+      .hero-stack{margin-inline:auto 0;}
+      .hero-stack__photo{width:68%;margin-left:32%;}
+      .hero-stack__shot{width:60%;}
+      .hero-stack__shot--a{left:-6%;}
+      .hero-stack__shot--b{left:2%;}
+    }
+
+    /* Hover fans the stack open, like flipping through finished work. Pointer
+       devices only: there is no hover state to leave on a touch screen. */
+    @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+      .hero-stack:hover .hero-stack__shot--a{transform:rotate(-10deg) translate(-9%,-4%);}
+      .hero-stack:hover .hero-stack__shot--b{transform:rotate(8deg) translate(-7%,4%);}
+    }
+
+    /* Two floating badges, and only two. */
+    .hero-badge{
+      position:absolute;
+      z-index:4;
+      display:flex;
+      flex-direction:column;
+      padding:var(--sp-1) var(--sp-2);
+      border:1px solid var(--line);
+      border-radius:var(--r-md);
+      background:color-mix(in srgb, var(--surface) 85%, transparent);
+      -webkit-backdrop-filter:blur(var(--sp-1));
+      backdrop-filter:blur(var(--sp-1));
+      box-shadow:var(--shadow-float);
+      line-height:var(--lh-label);
+      white-space:nowrap;
+    }
+    .hero-badge strong{color:var(--text);font-size:var(--fs-small);font-weight:var(--fw-semibold);}
+    .hero-badge span{color:var(--muted);font-size:var(--fs-label);}
+
+    .hero-badge--yrs{top:2%;left:3%;}
+    .hero-badge--certs{bottom:4%;right:-2%;}
+
+    @media (min-width:1024px){
+      .hero-badge{padding:var(--sp-2) var(--sp-3);}
+      .hero-badge--yrs{top:3%;left:4%;}
+      .hero-badge--certs{bottom:6%;right:-5%;}
+    }
+
+    /* ---------- One page-load moment (DESIGN.md §8) ----------
+       Final state is the plain rule above; the keyframes only describe where each
+       piece starts. With animations off, everything already reads at rest. */
+
+    @keyframes rise{
+      from{opacity:0;transform:translateY(var(--sp-2));}
+    }
+    @keyframes photoIn{
+      from{opacity:0;transform:scale(.97);}
+    }
+    @keyframes slideA{
+      from{opacity:0;transform:translate(38%,10%) rotate(0deg);}
+    }
+    @keyframes slideB{
+      from{opacity:0;transform:translate(32%,-18%) rotate(0deg);}
+    }
+    @keyframes badgeIn{
+      from{opacity:0;transform:translateY(var(--sp-0));}
+    }
+
+    /* Fill is "backwards", never "both": a forward fill would keep transform under
+       the animation's control and the hover fan would never apply. */
+    .hero__title{animation:rise var(--dur) ease-out backwards;}
+    .hero__sub{animation:rise var(--dur) ease-out calc(var(--stagger) * 1) backwards;}
+    .hero__actions{animation:rise var(--dur) ease-out calc(var(--stagger) * 2) backwards;}
+    .availability{animation:rise var(--dur) ease-out calc(var(--stagger) * 3) backwards;}
+    .hero-stack__photo{animation:photoIn var(--dur) ease-out calc(var(--stagger) * 2) backwards;}
+    .hero-stack__shot--a{animation:slideA var(--dur) ease-out calc(var(--stagger) * 4) backwards;}
+    .hero-stack__shot--b{animation:slideB var(--dur) ease-out calc(var(--stagger) * 5) backwards;}
+    .hero-badge--yrs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 7) backwards;}
+    .hero-badge--certs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 8) backwards;}
+
+    /* ---------- Client strip ---------- */
+
+    .clients{
+      padding-block:var(--sp-4);
+      border-block:1px solid var(--line);
+    }
+    .clients__list{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+      gap:var(--sp-2) var(--sp-4);
+      padding:0;
+      list-style:none;
+      color:var(--muted);
+      font-size:var(--fs-small);
+    }
+    @media (min-width:768px){
+      .clients__list{justify-content:space-between;gap:var(--sp-3) var(--sp-5);}
+    }
+
+    /* ---------- Selected work ---------- */
+
+    .work-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:var(--sp-6) var(--sp-5);
+    }
+    @media (min-width:768px){
+      .work-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+
+    .project__shot{
+      display:block;
+      aspect-ratio:16/10;
+      margin-bottom:var(--sp-3);
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--r-lg);
+      background:var(--surface);
+    }
+    .project__shot img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform var(--dur) var(--ease);
+    }
+    .project__shot:hover img{transform:scale(1.03);}
+
+    .project__title{
+      margin-bottom:var(--sp-1);
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .project__text{
+      max-width:var(--measure);
+      margin-bottom:var(--sp-2);
+      color:var(--muted);
+    }
+    .project__link{
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+    }
+
+    /* ---------- Services ---------- */
+
+    .services-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:var(--sp-5);
+    }
+    @media (min-width:1024px){
+      .services-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+
+    .service__title{
+      margin-bottom:var(--sp-1);
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .service__text{color:var(--muted);}
+
+    /* ---------- About ---------- */
+
+    .about .prose p{color:var(--muted);}
+    .about .prose strong{color:var(--text);font-weight:var(--fw-medium);}
+    /* Links inside running text are underlined: colour alone isn't enough to tell
+       them apart from the words around them. */
+    .about .prose a{text-decoration:underline;text-underline-offset:0.2em;}
+    .about__tools{font-size:var(--fs-small);}
+    .prose > .about__tools{margin-top:var(--sp-4);}
+
+    /* ---------- Contact ---------- */
+
+    .contact-block{
+      padding:var(--sp-6) var(--sp-4);
+      border-radius:var(--r-lg);
+    }
+    @media (min-width:768px){
+      .contact-block{padding:var(--sp-6) var(--sp-5);}
+    }
+    @media (min-width:1024px){
+      .contact-block{padding:var(--sp-7) var(--sp-6);}
+    }
+    .contact-block .section-head{margin-bottom:var(--sp-5);}
+
+    .contact__actions{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-4);
+    }
+    @media (min-width:768px){
+      .contact__actions{flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-4);}
+    }
+
+    .contact__socials{
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--sp-3);
+      font-size:var(--fs-small);
+    }
+    @media (min-width:768px){
+      .contact__socials{gap:var(--sp-4);}
+    }
+    .contact__socials a{color:var(--muted);}
+    .contact__socials a:hover{color:var(--text);}
+
+    /* ---------- Footer ---------- */
+
+    .footer{
+      padding-block:var(--sp-5) var(--sp-6);
+      border-top:1px solid var(--line);
+    }
+    .footer__inner{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:var(--sp-2) var(--sp-5);
+      color:var(--muted);
+      font-size:var(--fs-small);
+    }
+    .footer__inner a{color:var(--muted);}
+    .footer__inner a:hover{color:var(--accent-text);}
+    .footer__links{display:flex;flex-wrap:wrap;gap:var(--sp-3);}
   }
 
-  @media (max-width:960px){
-    .hero-grid{gap:48px;}
-    .services-grid{grid-template-columns:1fr;gap:32px;}
-    .contact-block{padding:56px 40px;}
-  }
+  /* ================================================================
+     UTILITIES
+     ================================================================ */
+  @layer utilities {
+    .sr-only{
+      position:absolute;
+      width:1px;height:1px;
+      padding:0;margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
 
-  @media (max-width:768px){
-    :root{--pad:20px;--section:88px;}
-
-    .hero{padding-block:56px 72px;}
-
-    /* Spec: photo first on mobile, then the text. */
-    .hero-grid{grid-template-columns:1fr;gap:44px;}
-    .hero-copy{order:2;}
-    .hero-visual{order:1;}
-
-    /* No negative offsets here. On a phone the stack is already flush against
-       the 20px gutter, so a screenshot hung off its left edge runs off-screen
-       instead of peeking out. Tuck everything inside and take the exposure
-       out of the photo's width instead. */
-    .stack{margin-inline:auto;max-width:360px;}
-    .stack-photo{width:64%;margin-left:36%;}
-    .stack-shot{width:58%;}
-    .stack-shot--a{left:2%;top:6%;}
-    .stack-shot--b{left:8%;top:50%;}
-
-    /* The chips come in with the stack rather than hanging off a gutter. */
-    .chip{padding:9px 15px;}
-    .chip strong{font-size:14px;}
-    .chip span{font-size:11.5px;}
-    .chip--yrs{top:2%;left:3%;}
-    .chip--certs{bottom:4%;right:-2%;}
-
-    .work-grid{grid-template-columns:1fr;gap:48px;}
-
-    h2.section-title{margin-bottom:32px;}
-
-    .clients ul{justify-content:flex-start;gap:12px 24px;}
-
-    .contact-block{padding:44px 28px;}
-    .contact-block h2{font-size:28px;}
-    .contact-actions{flex-direction:column;align-items:flex-start;gap:24px;}
-    .contact-socials{gap:18px;}
-  }
-
-  @media (max-width:400px){
-    /* The primary takes the full width; the two outline buttons share the
-       row under it rather than making a stack of three slabs. */
-    .hero-actions{width:100%;gap:10px;}
-    .hero-actions .btn-solid{flex:1 0 100%;}
-    .hero-actions .btn-outline{flex:1 1 0;padding-inline:12px;}
+    /* Hidden until a keyboard user tabs to it; first stop on the page. */
+    .skip-link{
+      position:fixed;
+      top:var(--sp-1);
+      left:var(--sp-1);
+      z-index:60;
+      padding:var(--sp-1) var(--sp-3);
+      border-radius:var(--r-sm);
+      background:var(--surface);
+      color:var(--text);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-semibold);
+      transform:translateY(calc(-100% - var(--sp-3)));
+    }
+    .skip-link:focus{transform:none;}
   }
 </style>
 
 <noscript>
   <style>
-    /* No JS means the sheet can never open and the theme toggle does nothing,
-       so the links come back inline and the toggle is withdrawn. */
+    /* No JS means the menu can never open and the theme toggle does nothing, so the
+       links come back inline, the toggle is withdrawn, and the bar goes back to
+       sticky so a wrapped bar can't cover the page. */
     #themeToggle{display:none;}
-    @media (max-width:940px){
-      .nav-links{display:flex;flex-wrap:wrap;gap:8px 20px;}
-      .icon-btn.nav-burger{display:none;}
-      .nav-inner{flex-wrap:wrap;padding-block:10px;}
+    .nav{position:sticky;top:0;}
+    body{padding-top:0;}
+    @media (max-width:767.98px){
+      .nav__links{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-4);}
+      .nav__burger{display:none;}
+      .nav__bar{flex-wrap:wrap;}
     }
   </style>
 </noscript>
 </head>
 <body>
 
-<header class="nav" id="nav">
-  <div class="wrap nav-inner">
-    <a class="nav-name" href="#top">Joshua Jalandoni</a>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="nav-sentinel" aria-hidden="true"></div>
 
-    <nav class="nav-links" id="navLinks" aria-label="Main">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#certifications">Certifications</a>
-      <a href="#experience">Experience</a>
-      <a href="#contact">Contact</a>
+<header class="nav" id="nav">
+  <div class="container nav__bar">
+    <a class="nav__name" href="#top">Joshua Jalandoni</a>
+
+    <nav class="nav__links" aria-label="Main">
+      <a class="nav__link" href="#work">Work</a>
+      <a class="nav__link" href="#services">Services</a>
+      <a class="nav__link" href="#about">About</a>
+      <a class="nav__link" href="#contact">Contact</a>
     </nav>
 
-    <div class="nav-actions">
-      <a class="btn btn-solid btn-sm nav-cta" href="#contact">Let&rsquo;s talk</a>
+    <div class="nav__actions">
+      <a class="btn btn--primary nav__cta" href="#contact">Let&rsquo;s talk</a>
 
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to light theme">
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.4A8.6 8.6 0 0 1 9.6 3.5a8.6 8.6 0 1 0 10.9 10.9Z"/></svg>
       </button>
 
-      <button class="icon-btn nav-burger" id="navToggle" type="button" aria-expanded="false" aria-controls="navSheet" aria-label="Open menu">
+      <button class="icon-btn nav__burger" id="navToggle" type="button" aria-expanded="false" aria-controls="navSheet" aria-label="Open menu">
         <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
@@ -798,63 +1056,64 @@
 </header>
 
 <!-- Mobile menu. Same destinations as the bar, with the CTA at the bottom. -->
-<div class="nav-sheet" id="navSheet">
-  <a class="sheet-link" href="#work">Work</a>
-  <a class="sheet-link" href="#about">About</a>
-  <a class="sheet-link" href="#certifications">Certifications</a>
-  <a class="sheet-link" href="#experience">Experience</a>
-  <a class="sheet-link" href="#contact">Contact</a>
-  <div class="sheet-cta">
-    <a class="btn btn-solid" href="#contact">Let&rsquo;s talk</a>
+<div class="nav__sheet" id="navSheet">
+  <nav aria-label="Main">
+    <a class="nav__sheet-link" href="#work">Work</a>
+    <a class="nav__sheet-link" href="#services">Services</a>
+    <a class="nav__sheet-link" href="#about">About</a>
+    <a class="nav__sheet-link" href="#contact">Contact</a>
+  </nav>
+  <div class="nav__sheet-cta">
+    <a class="btn btn--primary" href="#contact">Let&rsquo;s talk</a>
   </div>
 </div>
 
-<main id="top">
+<main id="main">
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <h1><span class="l1">I design websites</span><span class="l2">that make small businesses look legit.</span></h1>
-        <p class="hero-sub">Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched from Bacolod City, Philippines.</p>
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="#work">See my work</a>
-          <a class="btn btn-outline" href="#contact">Let&rsquo;s talk</a>
-          <a class="btn btn-outline" href="public/files/joshua-jalandoni-resume.pdf" target="_blank" rel="noopener">Resume &#8599;</a>
+  <section class="section hero">
+    <div class="container hero__grid">
+      <div class="hero__copy">
+        <h1 class="hero__title"><span class="l1">I design websites</span><span class="l2">that make small businesses look legit.</span></h1>
+        <p class="hero__sub">Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched from Bacolod City, Philippines.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#work">See my work</a>
+          <a class="btn btn--secondary" href="#contact">Let&rsquo;s talk</a>
+          <a class="btn btn--secondary" href="public/files/joshua-jalandoni-resume.pdf" target="_blank" rel="noopener">Resume <span class="arrow" aria-hidden="true">&#8599;</span></a>
         </div>
-        <p class="availability"><span class="dot" aria-hidden="true"></span>Available for new projects</p>
+        <p class="availability"><span class="availability__dot" aria-hidden="true"></span>Available for new projects</p>
       </div>
 
-      <div class="hero-visual">
-        <div class="stack">
-          <div class="stack-glow" aria-hidden="true"></div>
-          <div class="stack-shot stack-shot--a">
+      <div class="hero__visual">
+        <div class="hero-stack">
+          <div class="hero-stack__shot hero-stack__shot--a">
             <img src="public/images/projects/rusty-mule-pizza-desktop.webp" width="1200" height="750" alt="The Rusty Mule Pizza website, showing the wood-fired oven hero and ordering buttons.">
           </div>
-          <div class="stack-shot stack-shot--b">
+          <div class="hero-stack__shot hero-stack__shot--b">
             <img src="public/images/projects/rubens-removal-desktop.webp" width="1200" height="750" alt="The Rubens Removal LLC website, showing the land clearing hero and quote buttons.">
           </div>
-          <div class="stack-photo">
+          <div class="hero-stack__photo">
             <img src="public/images/hero/headshot.webp" width="640" height="800" fetchpriority="high" alt="Joshua Jalandoni, web designer and developer.">
           </div>
 
-          <div class="chip chip--yrs">
+          <div class="hero-badge hero-badge--yrs">
             <strong>4+ years</strong>
             <span>building sites and automations</span>
           </div>
-          <a class="chip chip--certs" href="#certifications">
+          <!-- Not a link: the certifications section it pointed to isn't built yet. -->
+          <div class="hero-badge hero-badge--certs">
             <strong>12 certifications</strong>
             <span>Anthropic and Google</span>
-          </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Client strip -->
-  <div class="wrap">
+  <div class="container">
     <div class="clients">
-      <ul>
+      <ul class="clients__list">
         <li>Rusty Mule Pizza</li>
         <li>Rubens Removal LLC</li>
         <li>Pinoy Eats</li>
@@ -866,54 +1125,56 @@
 
   <!-- Selected work -->
   <section class="section" id="work">
-    <div class="wrap">
-      <h2 class="section-title">Selected work</h2>
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">Selected work</h2>
+      </header>
 
       <div class="work-grid">
 
         <article class="project">
-          <a class="project-shot" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+          <a class="project__shot" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
             <img loading="lazy" decoding="async" src="public/images/projects/rusty-mule-pizza-desktop.webp" width="1200" height="750" alt="">
           </a>
-          <h3>Rusty Mule Pizza</h3>
-          <p>A wood-fired pizzeria in Karnack, Texas that needed its menu, hours, and phone orders in one place.</p>
-          <a class="visit" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener">Visit site &rarr;<span class="sr-only"> (Rusty Mule Pizza)</span></a>
+          <h3 class="project__title">Rusty Mule Pizza</h3>
+          <p class="project__text">A wood-fired pizzeria in Karnack, Texas that needed its menu, hours, and phone orders in one place.</p>
+          <a class="project__link" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Rusty Mule Pizza)</span></a>
         </article>
 
         <article class="project">
-          <a class="project-shot" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+          <a class="project__shot" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
             <img loading="lazy" decoding="async" src="public/images/projects/rubens-removal-desktop.webp" width="1200" height="750" alt="">
           </a>
-          <h3>Rubens Removal LLC</h3>
-          <p>A Florida land-clearing company that needed local visitors to turn into quote requests and calls.</p>
-          <a class="visit" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener">Visit site &rarr;<span class="sr-only"> (Rubens Removal LLC)</span></a>
+          <h3 class="project__title">Rubens Removal LLC</h3>
+          <p class="project__text">A Florida land-clearing company that needed local visitors to turn into quote requests and calls.</p>
+          <a class="project__link" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Rubens Removal LLC)</span></a>
         </article>
 
         <article class="project">
-          <a class="project-shot" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+          <a class="project__shot" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
             <img loading="lazy" decoding="async" src="public/images/projects/pinoy-eats-desktop.webp" width="1200" height="750" alt="">
           </a>
-          <h3>Pinoy Eats</h3>
-          <p>A Filipino home kitchen in Greenville, Texas that needed its made-to-order story to sell the food.</p>
-          <a class="visit" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener">Visit site &rarr;<span class="sr-only"> (Pinoy Eats)</span></a>
+          <h3 class="project__title">Pinoy Eats</h3>
+          <p class="project__text">A Filipino home kitchen in Greenville, Texas that needed its made-to-order story to sell the food.</p>
+          <a class="project__link" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Pinoy Eats)</span></a>
         </article>
 
         <article class="project">
-          <a class="project-shot" href="https://manncayona.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+          <a class="project__shot" href="https://manncayona.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
             <img loading="lazy" decoding="async" src="public/images/projects/mann-cayona-desktop.webp" width="1200" height="750" alt="">
           </a>
-          <h3>Mann Cayona</h3>
-          <p>An Iloilo visual artist who needed her woven canvas work shown the way it deserves.</p>
-          <a class="visit" href="https://manncayona.vercel.app/" target="_blank" rel="noopener">Visit site &rarr;<span class="sr-only"> (Mann Cayona)</span></a>
+          <h3 class="project__title">Mann Cayona</h3>
+          <p class="project__text">An Iloilo visual artist who needed her woven canvas work shown the way it deserves.</p>
+          <a class="project__link" href="https://manncayona.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Mann Cayona)</span></a>
         </article>
 
         <article class="project">
-          <a class="project-shot" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+          <a class="project__shot" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
             <img loading="lazy" decoding="async" src="public/images/projects/berserk-desktop.webp" width="1200" height="750" alt="">
           </a>
-          <h3>Berserk</h3>
-          <p>A personal project: a dark, atmospheric tribute site built to push layout and mood further than client work allows.</p>
-          <a class="visit" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener">Visit site &rarr;<span class="sr-only"> (Berserk)</span></a>
+          <h3 class="project__title">Berserk</h3>
+          <p class="project__text">A personal project: a dark, atmospheric tribute site built to push layout and mood further than client work allows.</p>
+          <a class="project__link" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Berserk)</span></a>
         </article>
 
       </div>
@@ -921,21 +1182,23 @@
   </section>
 
   <!-- Services -->
-  <section class="section">
-    <div class="wrap">
-      <h2 class="section-title">What I do</h2>
+  <section class="section" id="services">
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">What I do</h2>
+      </header>
       <div class="services-grid">
         <div class="service">
-          <h3>Website design</h3>
-          <p>A layout that fits your business and your customers, not a template everyone else is already using.</p>
+          <h3 class="service__title">Website design</h3>
+          <p class="service__text">A layout that fits your business and your customers, not a template everyone else is already using.</p>
         </div>
         <div class="service">
-          <h3>Build and launch</h3>
-          <p>Fast, mobile-friendly sites, deployed and live, with the domain and hosting sorted out for you.</p>
+          <h3 class="service__title">Build and launch</h3>
+          <p class="service__text">Fast, mobile-friendly sites, deployed and live, with the domain and hosting sorted out for you.</p>
         </div>
         <div class="service">
-          <h3>Automation</h3>
-          <p>Workflows that handle the repetitive parts of running your business, so you spend less time on admin.</p>
+          <h3 class="service__title">Automation</h3>
+          <p class="service__text">Workflows that handle the repetitive parts of running your business, so you spend less time on admin.</p>
         </div>
       </div>
     </div>
@@ -943,25 +1206,29 @@
 
   <!-- About -->
   <section class="section about" id="about">
-    <div class="wrap">
-      <h2 class="section-title">About</h2>
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">About</h2>
+      </header>
       <div class="prose">
         <p>I am <strong>Joshua Jalandoni</strong>, a web designer and developer in Bacolod City, Philippines. I have spent four years building sites, apps, and automations, backed by a background in digital operations and AI ops that keeps every project clean and considered.</p>
         <p>I work best with small businesses. I listen first, ask the questions that matter, and ship something finished rather than something clever. Most of my clients are restaurants, service businesses, and creators who need to look credible online and start getting calls.</p>
-        <p class="tools">Tools I use: Figma, Claude Code, GitHub, Vercel. Certified in AI Fluency and the Claude platform through <a href="https://verify.skilljar.com/c/b76djp8gn6yd" target="_blank" rel="noopener">Anthropic</a>, and in AI through the <a href="https://coursera.org/verify/professional-cert/21JAF4EYINPJ" target="_blank" rel="noopener">Google AI Professional Certificate</a>.</p>
+        <p class="about__tools">Tools I use: Figma, Claude Code, GitHub, Vercel. Certified in AI Fluency and the Claude platform through <a href="https://verify.skilljar.com/c/b76djp8gn6yd" target="_blank" rel="noopener">Anthropic</a>, and in AI through the <a href="https://coursera.org/verify/professional-cert/21JAF4EYINPJ" target="_blank" rel="noopener">Google AI Professional Certificate</a>.</p>
       </div>
     </div>
   </section>
 
   <!-- Contact -->
-  <section id="contact">
-    <div class="wrap">
-      <div class="contact-block">
-        <h2>Need a website? Let&rsquo;s build it.</h2>
-        <p>Tell me about your business and what you need it to do. I reply to every message.</p>
-        <div class="contact-actions">
-          <a class="btn btn-paper" href="mailto:joshuajalandoni@gmail.com">Email me</a>
-          <div class="contact-socials">
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="card contact-block">
+        <header class="section-head">
+          <h2 class="section-head__title">Need a website? Let&rsquo;s build it.</h2>
+          <p class="section-head__deck">Tell me about your business and what you need it to do. I reply to every message.</p>
+        </header>
+        <div class="contact__actions">
+          <a class="btn btn--primary" href="mailto:joshuajalandoni@gmail.com">Email me</a>
+          <div class="contact__socials">
             <a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a>
             <a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a>
             <a href="https://www.youtube.com/@JoshuaJAutomation" target="_blank" rel="noopener">YouTube</a>
@@ -975,9 +1242,9 @@
 </main>
 
 <footer class="footer">
-  <div class="wrap footer-inner">
+  <div class="container footer__inner">
     <div>Joshua Jalandoni &middot; 2026 &middot; Bacolod City, Philippines</div>
-    <div class="footer-links">
+    <div class="footer__links">
       <a href="mailto:joshuajalandoni@gmail.com">joshuajalandoni@gmail.com</a>
       <a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a>
@@ -987,29 +1254,32 @@
 </footer>
 
 <script>
-  /* Everything the page needs at runtime: the theme toggle, the nav's scroll
-     border, active-section highlighting, and the mobile sheet. The page is
-     already rendered HTML, so none of this gates what a visitor or a crawler
-     sees — with JS off the site is fully readable in the default dark theme. */
+  /* Everything the page needs at runtime: the theme toggle, the nav's scrolled state,
+     active-section highlighting, the mobile menu, and the stat count-up hook. The page
+     is already rendered HTML, so none of this gates what a visitor or a crawler sees:
+     with JS off the site is fully readable in the default dark theme. */
   (function(){
     var root = document.documentElement;
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var hasIO = 'IntersectionObserver' in window;
 
     /* ---------- Theme ---------- */
 
     var toggle = document.getElementById('themeToggle');
     var meta   = document.getElementById('themeColor');
-    var GROUND = { dark:'#0D0F13', light:'#FAFAF7' };
 
     function applyTheme(theme, persist){
       root.setAttribute('data-theme', theme);
-      if (meta) meta.setAttribute('content', GROUND[theme]);
+      /* The address-bar colour is read from the live --ink token, so it can never
+         drift from the CSS. */
+      if (meta) meta.setAttribute('content', getComputedStyle(root).getPropertyValue('--ink').trim());
       if (toggle) toggle.setAttribute('aria-label',
         theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
       if (persist){ try{ localStorage.setItem('theme', theme); }catch(e){} }
     }
 
-    /* The head script already set the attribute; this only syncs the label
-       and the address-bar colour to whatever it landed on. */
+    /* The head script already set the attribute; this only syncs the label and the
+       address-bar colour to whatever it landed on. */
     applyTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
 
     if (toggle){
@@ -1017,98 +1287,253 @@
         var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         root.classList.add('theme-switching');
         applyTheme(next, true);
-        window.setTimeout(function(){ root.classList.remove('theme-switching'); }, 200);
+        window.setTimeout(function(){ root.classList.remove('theme-switching'); }, 250);
       });
     }
 
-    /* ---------- Nav border after 8px ---------- */
+    /* ---------- Nav: shrink and blur after ~80px ----------
+       Watches a 1px marker at the 80px point instead of listening to every scroll. */
 
     var nav = document.getElementById('nav');
-    if (nav){
-      var onScroll = function(){ nav.classList.toggle('is-scrolled', window.scrollY > 8); };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
+    var sentinel = document.querySelector('.nav-sentinel');
+    if (nav && sentinel && hasIO){
+      new IntersectionObserver(function(entries){
+        nav.classList.toggle('is-scrolled', !entries[0].isIntersecting);
+      }).observe(sentinel);
     }
 
-    /* ---------- Mobile sheet ---------- */
+    /* ---------- Mobile menu ---------- */
 
-    var burger = document.getElementById('navToggle');
-    var sheet  = document.getElementById('navSheet');
-    var main   = document.querySelector('main');
-    var footer = document.querySelector('footer');
+    var burger  = document.getElementById('navToggle');
+    var sheet   = document.getElementById('navSheet');
+    var main    = document.querySelector('main');
+    var footer  = document.querySelector('footer');
+    var skip    = document.querySelector('.skip-link');
+    var desktop = window.matchMedia('(min-width: 768px)');
 
-    function setMenu(open){
+    function isOpen(){ return sheet.classList.contains('is-open'); }
+
+    /* Everything a keyboard can reach while the menu is open: the bar's own
+       controls, then the menu. Hidden elements are left out. */
+    function trapped(){
+      return [].slice.call(document.querySelectorAll('#nav a[href], #nav button, #navSheet a[href]'))
+        .filter(function(el){ return el.getClientRects().length > 0; });
+    }
+
+    function setMenu(open, returnFocus){
       sheet.classList.toggle('is-open', open);
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       document.body.classList.toggle('menu-open', open);
 
-      /* Keep tab order and the screen reader inside the sheet while it is up. */
-      [main, footer].forEach(function(el){ if (el) el.inert = open; });
+      /* Take the rest of the page out of reach while the menu is up. */
+      [main, footer, skip].forEach(function(el){ if (el) el.inert = open; });
 
       if (open){
-        var first = sheet.querySelector('a');
+        var first = sheet.querySelector('a[href]');
         if (first) first.focus();
+      } else if (returnFocus){
+        burger.focus();
       }
     }
 
     if (burger && sheet){
-      burger.addEventListener('click', function(){
-        var open = !sheet.classList.contains('is-open');
-        setMenu(open);
-        if (!open) burger.focus();
-      });
+      burger.addEventListener('click', function(){ setMenu(!isOpen(), true); });
 
       sheet.addEventListener('click', function(e){
-        if (e.target.closest('a')) setMenu(false);
+        if (e.target.closest('a')) setMenu(false, false);
+      });
+
+      /* Picking the name link (back to top) also closes the menu. */
+      document.querySelector('.nav__name').addEventListener('click', function(){
+        if (isOpen()) setMenu(false, false);
       });
 
       document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape' && sheet.classList.contains('is-open')){
-          setMenu(false);
-          burger.focus();
+        if (!isOpen()) return;
+
+        if (e.key === 'Escape'){
+          setMenu(false, true);
+          return;
+        }
+
+        /* Focus trap: Tab past the last item wraps to the first, Shift+Tab before
+           the first wraps to the last. */
+        if (e.key === 'Tab'){
+          var items = trapped();
+          if (!items.length) return;
+          var first = items[0], last = items[items.length - 1];
+          var inside = items.indexOf(document.activeElement) !== -1;
+          if (!inside){
+            e.preventDefault();
+            first.focus();
+          } else if (e.shiftKey && document.activeElement === first){
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last){
+            e.preventDefault();
+            first.focus();
+          }
         }
       });
 
-      /* Rotating past the breakpoint must not leave a hidden sheet holding
-         focus and the scroll lock. */
-      window.addEventListener('resize', function(){
-        if (window.innerWidth > 940 && sheet.classList.contains('is-open')) setMenu(false);
+      /* Widening past the breakpoint must not leave a hidden menu holding focus and
+         the scroll lock. */
+      desktop.addEventListener('change', function(e){
+        if (e.matches && isOpen()) setMenu(false, false);
       });
     }
 
-    /* ---------- Active section ---------- */
+    /* ---------- Active section (scroll spy) ---------- */
 
-    var links = [].slice.call(document.querySelectorAll('.nav-links a'));
-    var byId = {};
-    var targets = [];
-
-    links.forEach(function(a){
-      var el = document.getElementById(a.getAttribute('href').slice(1));
-      if (el){ byId[el.id] = a; targets.push(el); }
+    var navLinks = [].slice.call(document.querySelectorAll('.nav__link, .nav__sheet-link'));
+    var ids = [];
+    navLinks.forEach(function(a){
+      var id = a.getAttribute('href').slice(1);
+      if (ids.indexOf(id) === -1 && document.getElementById(id)) ids.push(id);
     });
 
-    function setActive(id){
-      links.forEach(function(a){
-        var on = byId[id] === a;
+    var inBand = {};
+    var atBottom = false;
+
+    function renderActive(){
+      var current = null;
+      if (atBottom){
+        current = ids[ids.length - 1];
+      } else {
+        for (var i = 0; i < ids.length; i++){ if (inBand[ids[i]]){ current = ids[i]; break; } }
+      }
+      navLinks.forEach(function(a){
+        var on = current !== null && a.getAttribute('href') === '#' + current;
         a.classList.toggle('is-active', on);
         if (on) a.setAttribute('aria-current', 'true');
         else a.removeAttribute('aria-current');
       });
     }
 
-    if (targets.length && 'IntersectionObserver' in window){
-      /* A thin band across the middle of the viewport: whichever section
-         crosses it owns the highlight. At the top of the page nothing does,
-         which is right — the hero is not a nav destination. */
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(en){ if (en.isIntersecting) setActive(en.target.id); });
+    if (ids.length && hasIO){
+      /* A thin band across the middle of the viewport: whichever section crosses it
+         owns the highlight. In the hero, nothing does, so nothing is lit. */
+      var band = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ inBand[en.target.id] = en.isIntersecting; });
+        renderActive();
       }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+      ids.forEach(function(id){ band.observe(document.getElementById(id)); });
 
-      targets.forEach(function(el){ io.observe(el); });
+      /* At the very bottom the last section may be too short to reach the band, so
+         a fully visible footer hands the highlight to the last link. */
+      if (footer){
+        new IntersectionObserver(function(entries){
+          atBottom = entries[0].isIntersecting;
+          renderActive();
+        }, { threshold:1 }).observe(footer);
+      }
     }
+
+    /* ---------- Stat count-up hook ----------
+       Any element with data-count-up counts from 0 to the number already in its text,
+       once, when half of it is on screen. The final text is always the real HTML, so
+       with JS off or reduced motion on, the number simply shows. */
+
+    function countUp(el){
+      var m = el.textContent.match(/^(\D*)(\d+)(.*)$/);
+      if (!m) return;
+      var end = parseInt(m[2], 10), start = null, DURATION = 900;
+      function frame(t){
+        if (start === null) start = t;
+        var p = Math.min((t - start) / DURATION, 1);
+        el.textContent = m[1] + Math.round(end * (1 - Math.pow(1 - p, 3))) + m[3];
+        if (p < 1) window.requestAnimationFrame(frame);
+      }
+      window.requestAnimationFrame(frame);
+    }
+
+    /* Waits for the whole document, so a stat placed anywhere (even below this script)
+       gets picked up. */
+    function initCounters(){
+      var counters = [].slice.call(document.querySelectorAll('[data-count-up]'));
+      if (!counters.length || !hasIO || reducedMotion.matches) return;
+      var counterIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (!en.isIntersecting) return;
+          counterIO.unobserve(en.target);
+          countUp(en.target);
+        });
+      }, { threshold:0.5 });
+      counters.forEach(function(el){ counterIO.observe(el); });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCounters);
+    else initCounters();
   })();
 </script>
+
+<!-- ======================================================================
+  COMPONENT DEMO. For review only; never rendered. Delete before launch.
+
+  To see it: delete the "DEMO START" line and the "DEMO END" line below,
+  reload, and scroll past the footer. Text is real copy from the site or
+  DESIGN.md. [Bracketed] text marks a slot with no real content yet.
+======================================================================= -->
+<!-- DEMO START
+<section class="section" aria-label="Component demo">
+  <div class="container flow">
+
+    <header class="section-head">
+      <p class="label">Selected work</p>
+      <h2 class="section-head__title">Sites that ship and get used.</h2>
+      <p class="section-head__deck">Fast, clean sites for restaurants, service businesses, and creators.</p>
+    </header>
+
+    <div class="cluster">
+      <a class="btn btn--primary" href="#work">See my work</a>
+      <a class="btn btn--secondary" href="#contact">Let&rsquo;s talk</a>
+      <a class="btn btn--ghost" href="#about">Resume <span class="arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+
+    <div class="work-grid">
+      <article class="card">
+        <div class="card__media">
+          <img loading="lazy" decoding="async" src="public/images/projects/rusty-mule-pizza-desktop.webp" width="1200" height="750" alt="">
+        </div>
+        <div class="card__body">
+          <div class="cluster">
+            <span class="tag">Restaurant</span>
+            <span class="tag">Texas</span>
+          </div>
+          <h3 class="card__title">Rusty Mule Pizza</h3>
+          <p>A wood-fired pizzeria in Karnack, Texas that needed its menu, hours, and phone orders in one place.</p>
+          <ul class="cluster">
+            <li class="chip"><svg class="chip__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>HTML</li>
+            <li class="chip">CSS</li>
+            <li class="chip">JavaScript</li>
+          </ul>
+          <a href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
+    </div>
+
+    <div class="work-grid">
+      <div class="stat"><span class="stat__value" data-count-up>4+</span><span class="stat__label">years</span></div>
+      <div class="stat"><span class="stat__value" data-count-up>5</span><span class="stat__label">sites shipped</span></div>
+      <div class="stat"><span class="stat__value" data-count-up>12</span><span class="stat__label">certifications</span></div>
+      <div class="stat"><span class="stat__value" data-count-up>2</span><span class="stat__label">client accounts</span></div>
+    </div>
+
+    <ol class="timeline">
+      <li class="timeline-item">
+        <span class="timeline-item__index">01</span>
+        <div>
+          <h3 class="timeline-item__title">[role]</h3>
+          <p class="timeline-item__meta">Lion Sales Funnels, [start date]</p>
+          <p class="timeline-item__body">[what the role involved]</p>
+        </div>
+      </li>
+    </ol>
+
+  </div>
+</section>
+DEMO END -->
 
 </body>
 </html>

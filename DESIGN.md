@@ -25,8 +25,8 @@ small sites for small businesses, plus a growing side in AI operations work.
 and will not waste my time.* Everything else is secondary.
 
 **What is wrong with the current site.** Everything is set at display size, so nothing reads
-as more important than anything else. Section spacing is arbitrary — some gaps are 400px of
-nothing. The page has four sections where it needs nine. There is no evidence layer: no
+as more important than anything else. Section spacing is arbitrary — some gaps reach
+284px. The page has four sections where it needs nine. There is no evidence layer: no
 logos, no stats, no experience, no certifications, no testimonials.
 
 ---
@@ -87,7 +87,8 @@ Body copy maxes at **68 characters** per line. Use `max-width: 34em`, not a pixe
 ### Section labels
 
 Small labels above section headings, in sentence case with a short hairline rule to their
-left — not tracked-out all caps.
+left — not tracked-out all caps. The hairline is drawn in `--muted`; `--line` is too faint to
+carry the weight.
 
 ```
 ──  Selected work
@@ -102,7 +103,7 @@ sentence case, and the hairline carries the visual weight instead of letterspaci
 
 ## 4. Color
 
-Eight tokens, each defined for both themes. Do not add a ninth without updating this file.
+Nine tokens, each defined for both themes. Do not add a tenth without updating this file.
 
 | Token | Dark | Light | Use |
 |---|---|---|---|
@@ -113,7 +114,11 @@ Eight tokens, each defined for both themes. Do not add a ninth without updating 
 | `--muted` | `#98A2B0` | `#5A6472` | Body copy, meta, labels |
 | `--accent` | `#4F63E8` | `#3D4FD0` | Button fills, borders, focus rings. Never text. |
 | `--accent-text` | `#7A8CF0` | `#3040B8` | Link text and any accent-colored text |
+| `--on-accent` | `#FFFFFF` | `#FFFFFF` | Label text on `--accent` fills |
 | `--signal` | `#E0A340` | `#9A6A12` | Available status, certification marks, highlights |
+
+`--signal` in light mode sits at 4.57:1 against `--ink`. It passes, but with no margin. Never
+lighten it. If it needs to change, darken it.
 
 **On `--accent` and `--accent-text`:** restrict both to interactive elements only — links, the
 primary button, the active nav state, and focus rings. It is currently applied to decoration
@@ -122,6 +127,8 @@ as well, which dilutes it. If it isn't clickable, it isn't blue.
 `--accent` is for fills, borders, and focus rings only. On the dark ground it fails 4.5:1 as
 text (3.86:1 on `--ink`), so any text that should read as accent — links, an active nav label —
 uses `--accent-text` instead.
+
+Labels on an `--accent` fill use `--on-accent`. Measured: 4.90:1 in dark, 6.51:1 in light.
 
 **On `--signal`:** the amber gives the page a second voice so it doesn't read as the standard
 near-black-plus-one-bright-accent layout. It also ties visually to the Rusty Mule gold and
@@ -139,6 +146,7 @@ hardcode a color anywhere in the CSS.
 One scale. Every margin, padding, and gap on the site comes from it.
 
 ```css
+--sp-0:  0.25rem;  /*  4px, tight UI only: chips, tags */
 --sp-1:  0.5rem;   /*  8px */
 --sp-2:  0.75rem;  /* 12px */
 --sp-3:  1rem;     /* 16px */
@@ -153,8 +161,11 @@ One scale. Every margin, padding, and gap on the site comes from it.
 - Section vertical padding: `--sp-7` (64px) on mobile, `--sp-8` (96px) on desktop. **Nothing
   larger.** Padding stacks where two sections meet, so the space between sections is 128px on
   mobile and 192px on desktop.
-- Container: `max-width: 1180px`, side padding `--sp-4` mobile / `--sp-6` desktop.
+- Container: `max-width: 1180px` including side padding, side padding `--sp-4` mobile /
+  `--sp-6` desktop.
 - Grid gutter: `--sp-5`.
+- Breakpoints: "mobile" is below 768px; desktop spacing starts at 768px. Multi-column layouts
+  start at 1024px.
 
 Radius: `--r-sm: 8px` (chips, buttons), `--r-md: 14px` (cards), `--r-lg: 20px` (large media).
 Three values, chosen by element size — not one radius on everything.
@@ -192,11 +203,13 @@ cards — a numbered list implies an order that isn't there.
 the same change. Removing a link to a section that doesn't exist is a bug fix, not a copy
 change.
 
-**Hero.** Headline: three lines maximum at 1440, four at 360. Stat strip below the buttons —
-`4+ years`, `5 sites shipped`, `12 certifications`, `2 client accounts` — with count-up on first
-view.
-Use `headshot-dark.png` or `headshot-transparent.png`; the old version sat on a white
-rectangle. Fix the clipped project thumbnail behind the portrait or remove it entirely.
+**Hero.** Headline: three lines maximum at 1440, four at 360. The 360 limit applies after the
+headline rewrite; the current headline runs six lines there. The headline column is at least
+680px wide at 1440. Never shrink the hero below 2.25rem to hit a line count — the hero staying
+the loud element matters more. Stat strip below the buttons — `4+ years`, `5 sites shipped`,
+`12 certifications`, `2 client accounts` — with count-up on first view. Use the processed
+headshot with the white background removed. File TBD. Fix the clipped project thumbnail behind
+the portrait or remove it entirely.
 
 **Trust strip.** Replace the five floating text names with a bordered strip of client logos.
 Static row. No marquee — a scrolling logo band on a five-logo list is motion for its own sake.
@@ -238,7 +251,9 @@ Build these once and reuse. Do not write bespoke markup per section.
 
 - `.label` — section label with hairline
 - `.section-head` — label + heading + optional deck
-- `.btn` — variants `--primary`, `--secondary`, `--ghost`
+- `.btn` — variants `--primary`, `--secondary`, `--ghost`. The secondary button must carry its
+  meaning in its label and text color, never in its border alone (`--line` is only 1.2–1.35:1
+  against the background, which is right for a divider).
 - `.card` — surface, border, radius
 - `.tag` — category tag
 - `.chip` — tech chip with optional icon
@@ -294,7 +309,8 @@ Not negotiable, not features:
 - Visible keyboard focus on every interactive element
 - `prefers-reduced-motion` respected
 - Alt text on every image
-- All images WebP, sized to display dimensions, `loading="lazy"` below the fold
+- Screenshots and photos in WebP; certificates and logos stay in their original format. All
+  images sized to display dimensions, `loading="lazy"` below the fold
 - Contrast: 4.5:1 body text, 3:1 large text, in **both** themes
 - No layout shift on load — dimensions on every image
 
