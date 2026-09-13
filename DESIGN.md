@@ -53,8 +53,13 @@ logos, no stats, no experience, no certifications, no testimonials.
 **Archivo** (Google Fonts, variable) — one family for the entire site, using its width and
 weight axes instead of a second typeface.
 
-- Display: `Archivo Expanded`, weight 700
-- Body and UI: `Archivo`, weights 400 / 500 / 600
+- Display (hero headline only): `Archivo` at Expanded width (`font-stretch: 125%`), weight 700.
+  Expanded is reserved for the hero so it stays the one loud element on the page.
+- Section headings: `Archivo`, standard width, weight 700
+- Body and UI: `Archivo`, standard width, weights 400 / 500 / 600
+
+Load only these width and weight pairs. "Archivo Expanded" is not a separate Google Fonts
+family; it is Archivo's width axis at 125%.
 
 Rationale: the current site uses a very heavy grotesque, which is where "fat" comes from.
 Archivo keeps that confident grotesque character but gets its impact from the *width* axis
@@ -67,8 +72,8 @@ Fallback stack: `'Archivo', 'Helvetica Neue', Arial, sans-serif`
 
 | Role | Size | Weight | Line height | Tracking |
 |---|---|---|---|---|
-| Hero | `clamp(2.5rem, 5.5vw, 4.25rem)` | 700 Expanded | 0.98 | -0.03em |
-| Section heading | `clamp(1.9rem, 3vw, 2.6rem)` | 700 | 1.05 | -0.02em |
+| Hero | `clamp(2.25rem, 4.5vw, 3.5rem)` | 700 Expanded | 0.98 | -0.03em |
+| Section heading | `clamp(1.9rem, 3vw, 2.6rem)` | 700 standard width | 1.05 | -0.02em |
 | Card title | `1.25rem` | 600 | 1.25 | -0.01em |
 | Body large | `1.0625rem` | 400 | 1.6 | 0 |
 | Body | `1rem` | 400 | 1.6 | 0 |
@@ -97,21 +102,26 @@ sentence case, and the hairline carries the visual weight instead of letterspaci
 
 ## 4. Color
 
-Six values. Do not add a seventh without updating this file.
+Eight tokens, each defined for both themes. Do not add a ninth without updating this file.
 
-| Token | Hex | Use |
-|---|---|---|
-| `--ink` | `#0E1116` | Page background |
-| `--surface` | `#171B22` | Cards, raised panels |
-| `--line` | `#262C36` | Borders, dividers, hairlines |
-| `--text` | `#E9ECF1` | Primary text |
-| `--muted` | `#98A2B0` | Body copy, meta, labels |
-| `--accent` | `#4F63E8` | Links, primary buttons, active nav |
-| `--signal` | `#E0A340` | Available status, certification marks, highlights |
+| Token | Dark | Light | Use |
+|---|---|---|---|
+| `--ink` | `#0E1116` | `#FBFBFC` | Page background |
+| `--surface` | `#171B22` | `#FFFFFF` | Cards, raised panels |
+| `--line` | `#262C36` | `#E3E6EB` | Borders, dividers, hairlines |
+| `--text` | `#E9ECF1` | `#14181F` | Primary text |
+| `--muted` | `#98A2B0` | `#5A6472` | Body copy, meta, labels |
+| `--accent` | `#4F63E8` | `#3D4FD0` | Button fills, borders, focus rings. Never text. |
+| `--accent-text` | `#7A8CF0` | `#3040B8` | Link text and any accent-colored text |
+| `--signal` | `#E0A340` | `#9A6A12` | Available status, certification marks, highlights |
 
-**On `--accent`:** restrict it to interactive elements only — links, the primary button, the
-active nav state, and focus rings. It is currently applied to decoration as well, which
-dilutes it. If it isn't clickable, it isn't blue.
+**On `--accent` and `--accent-text`:** restrict both to interactive elements only — links, the
+primary button, the active nav state, and focus rings. It is currently applied to decoration
+as well, which dilutes it. If it isn't clickable, it isn't blue.
+
+`--accent` is for fills, borders, and focus rings only. On the dark ground it fails 4.5:1 as
+text (3.86:1 on `--ink`), so any text that should read as accent — links, an active nav label —
+uses `--accent-text` instead.
 
 **On `--signal`:** the amber gives the page a second voice so it doesn't read as the standard
 near-black-plus-one-bright-accent layout. It also ties visually to the Rusty Mule gold and
@@ -119,7 +129,7 @@ the Pinoy Eats cream in the project screenshots. Use it sparingly: the availabil
 certification count, and nothing else at first.
 
 **Light mode.** The theme toggle already exists. Every new section must work in both modes.
-Define light values as a `[data-theme="light"]` override on the same token names — never
+The light column above is a `[data-theme="light"]` override on the same token names — never
 hardcode a color anywhere in the CSS.
 
 ---
@@ -140,7 +150,9 @@ One scale. Every margin, padding, and gap on the site comes from it.
 --sp-9:  8rem;     /* 128px */
 ```
 
-- Section vertical padding: `--sp-8` on mobile, `--sp-9` on desktop. **Nothing larger.**
+- Section vertical padding: `--sp-7` (64px) on mobile, `--sp-8` (96px) on desktop. **Nothing
+  larger.** Padding stacks where two sections meet, so the space between sections is 128px on
+  mobile and 192px on desktop.
 - Container: `max-width: 1180px`, side padding `--sp-4` mobile / `--sp-6` desktop.
 - Grid gutter: `--sp-5`.
 
@@ -176,8 +188,13 @@ cards — a numbered list implies an order that isn't there.
 
 ### Section notes
 
-**Hero.** Headline to two lines maximum. Stat strip below the buttons — `4+ years`,
-`5 sites shipped`, `12 certifications`, `2 client accounts` — with count-up on first view.
+**Nav.** Link only to sections that exist on the page. When a section is built, add its link in
+the same change. Removing a link to a section that doesn't exist is a bug fix, not a copy
+change.
+
+**Hero.** Headline: three lines maximum at 1440, four at 360. Stat strip below the buttons —
+`4+ years`, `5 sites shipped`, `12 certifications`, `2 client accounts` — with count-up on first
+view.
 Use `headshot-dark.png` or `headshot-transparent.png`; the old version sat on a white
 rectangle. Fix the clipped project thumbnail behind the portrait or remove it entirely.
 
