@@ -55,11 +55,12 @@ Then visit `http://localhost:8000`.
 
 ## Conventions
 
-**Filenames** are lowercase with hyphens. No spaces, dates, UUIDs, or `(1)` suffixes.
+**Filenames** are lowercase with hyphens. No spaces, dates, UUIDs, or `(1)` suffixes. Keep
+the file's real extension.
 
-- Projects: `rusty-mule-pizza-desktop.png`
-- Certificates: `anthropic-claude-code-101.jpg`
-- Clients: `rubens-removal.png`
+- Projects: `rusty-mule-pizza-desktop.webp`
+- Certificates: `anthropic-claude-code-101.png`
+- Clients: `lion-sales-funnels.jpg`
 
 **Design values** — colors, type sizes, spacing, radii — come from CSS custom properties.
 Nothing is hardcoded. The full token set is in `DESIGN.md`.

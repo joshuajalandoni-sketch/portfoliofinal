@@ -90,11 +90,12 @@ Structure:
 ```
 
 Filenames: lowercase, hyphens only. No spaces, no underscores, no dates, no UUIDs, no `(1)`
-suffixes. The name should say what the file is without opening it.
+suffixes. The name should say what the file is without opening it. Keep the file's real
+extension: renaming does not convert a file, so a WebP stays `.webp`.
 
-- Projects: `{project-slug}-{desktop|mobile}.png`
-- Certificates: `{issuer}-{course-name}.jpg`
-- Clients: `{client-slug}.png`
+- Projects: `{project-slug}-{desktop|mobile}.{ext}`
+- Certificates: `{issuer}-{course-name}.{ext}`
+- Clients: `{client-slug}.{ext}`
 
 After moving or renaming any asset, update every reference to it and update `ASSETS.md`.
 
