@@ -164,8 +164,9 @@ One scale. Every margin, padding, and gap on the site comes from it.
 - Container: `max-width: 1180px` including side padding, side padding `--sp-4` mobile /
   `--sp-6` desktop.
 - Grid gutter: `--sp-5`.
-- Breakpoints: "mobile" is below 768px; desktop spacing starts at 768px. Multi-column layouts
-  start at 1024px.
+- Breakpoints: "mobile" is below 768px; desktop spacing starts at 768px. Two-column grids may
+  start at 768px; three or more columns, and side-by-side layouts like the hero, start at
+  1024px.
 
 Radius: `--r-sm: 8px` (chips, buttons), `--r-md: 14px` (cards), `--r-lg: 20px` (large media).
 Three values, chosen by element size — not one radius on everything.
@@ -201,7 +202,8 @@ cards — a numbered list implies an order that isn't there.
 
 **Nav.** Link only to sections that exist on the page. When a section is built, add its link in
 the same change. Removing a link to a section that doesn't exist is a bug fix, not a copy
-change.
+change. Links follow page order. Below 1024px they live in the menu: six links, the CTA, and
+the theme toggle need about 850px.
 
 **Hero.** Headline: three lines maximum at 1440, four at 360. The 360 limit applies after the
 headline rewrite; the current headline runs six lines there. The headline column is at least
@@ -211,8 +213,12 @@ the loud element matters more. Stat strip below the buttons — `4+ years`, `5 s
 headshot with the white background removed. File TBD. Fix the clipped project thumbnail behind
 the portrait or remove it entirely.
 
-**Trust strip.** Replace the five floating text names with a bordered strip of client logos.
-Static row. No marquee — a scrolling logo band on a five-logo list is motion for its own sake.
+**Trust strip.** Labeled "Selected clients". Web design clients only: Rusty Mule Pizza, Rubens
+Removal LLC, Pinoy Eats, Mann Cayona. Berserk is a personal project and Lion Sales Funnels is an
+employer, so neither belongs here (LSF goes in Experience). A bordered strip on `--surface`,
+four across from 768px and two by two below. Each client shows its logo, or its name as a text
+wordmark until a logo file exists. Static row. No marquee — a scrolling logo band on a short
+list is motion for its own sake.
 
 **Selected work.** Card anatomy:
 
@@ -237,9 +243,21 @@ not an arrow character baked into the label.
 **About.** The right half is currently empty. Fill it with a 2×2 stat grid and a short set of
 capability chips. Body copy stays in the left column at 34em.
 
-**Certifications.** Twelve uniform cards in a row is monotonous. Group them under two
-subheads — Anthropic and Google — and let the Google one be visually larger since it's the
-longer program.
+**Stack.** Tools grouped under Design, Build, AI, and Ship: one row per group, a `.label` and
+its chips (`.chip--lg`). Icons are Simple Icons, inlined as a sprite rather than loaded from a
+CDN. A tool without its own mark gets a text-only chip; the three Claude products share the
+Claude mark.
+
+**Certifications.** Twelve certificates: eleven from Anthropic, one from Google. Twelve uniform
+cards in a row is monotonous, so group them under two subheads. Google comes first as a wide
+feature card listing its seven courses, since it's the longer program; the Anthropic
+certificates follow in a grid (one column, two from 768px, three from 1024px). One stat above
+them: the count, captioned "certificates earned", in `--signal`. Titles are exactly as printed
+on each certificate, and a date appears only when it's printed. Card images are 4:3 with the
+whole certificate visible (letterboxed, never cropped). Clicking a card opens the full
+certificate in a lightbox. To keep the page short on phones, the section shows the Google card
+and the first four Anthropic certificates; a "Show all certificates" button (`.btn--secondary`)
+reveals the rest in one step, with no animation beyond the height change.
 
 **Contact.** Channel list, availability line, response time, location. No numbers.
 
@@ -254,11 +272,19 @@ Build these once and reuse. Do not write bespoke markup per section.
 - `.btn` — variants `--primary`, `--secondary`, `--ghost`. The secondary button must carry its
   meaning in its label and text color, never in its border alone (`--line` is only 1.2–1.35:1
   against the background, which is right for a divider).
-- `.card` — surface, border, radius
+- `.card` — surface, border, radius. Variants: `--interactive` (the whole card opens
+  something), `--feature` (wide, image beside text); `__media--contain` for documents that must
+  never be cropped
 - `.tag` — category tag
-- `.chip` — tech chip with optional icon
-- `.stat` — number + caption, with count-up hook
+- `.chip` — tech chip with optional icon. `--lg` when the chips are the content
+- `.stat` — number + caption, with count-up hook. `__value--signal` for the certification count
 - `.timeline-item` — numbered row for Experience
+- `.logo-strip` — bordered row of client logos, with text wordmarks as the fallback
+- `.lightbox` — one image full size in a native `<dialog>`; Escape closes, focus returns to
+  whatever opened it
+
+Repeated content (clients, tools, certificates, and later projects and experience) lives in
+data arrays at the top of the page script, each drawn by one template function.
 
 ---
 
@@ -309,8 +335,10 @@ Not negotiable, not features:
 - Visible keyboard focus on every interactive element
 - `prefers-reduced-motion` respected
 - Alt text on every image
-- Screenshots and photos in WebP; certificates and logos stay in their original format. All
-  images sized to display dimensions, `loading="lazy"` below the fold
+- Screenshots and photos in WebP; certificates and logos stay in their original format. Where
+  a large original is only needed on demand (certificates in the lightbox), cards use a
+  ~600px WebP thumbnail instead (`certifications/thumbs/`). All images sized to display
+  dimensions, `loading="lazy"` below the fold
 - Contrast: 4.5:1 body text, 3:1 large text, in **both** themes
 - No layout shift on load — dimensions on every image
 

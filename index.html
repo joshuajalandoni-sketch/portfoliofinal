@@ -134,6 +134,8 @@
       --control-h:2.5rem;
       --icon:1.125rem;
       --hero-visual:23rem;
+      --label-col:10rem;
+      --hairline:1px;
       --nav-h:calc(var(--control-h) + 2 * var(--sp-3));
       --nav-h-scrolled:calc(var(--control-h) + 2 * var(--sp-1));
       --ring-width:2px;
@@ -178,6 +180,9 @@
       scroll-behavior:smooth;
       /* In-page links land below the pinned nav rather than under it. */
       scroll-padding-top:var(--nav-h-scrolled);
+      /* Keeps the scrollbar's space reserved while the menu or lightbox locks
+         scrolling, so the page doesn't jump sideways. */
+      scrollbar-gutter:stable;
     }
 
     body{
@@ -193,14 +198,17 @@
       -webkit-font-smoothing:antialiased;
     }
 
-    h1,h2,h3,p,ul,ol{margin:0;}
+    h1,h2,h3,h4,p,ul,ol,figure{margin:0;}
 
     /* Browsers that support these avoid a lone word on the last line of a paragraph
        and even out heading lines. The words themselves never change. */
-    h1,h2,h3{text-wrap:balance;}
+    h1,h2,h3,h4{text-wrap:balance;}
     p{text-wrap:pretty;}
 
     img{max-width:100%;height:auto;display:block;}
+
+    /* The hidden attribute always wins, even over a component that sets display. */
+    [hidden]{display:none !important;}
 
     button{font:inherit;color:inherit;}
 
@@ -403,6 +411,63 @@
     }
     .card__body p{color:var(--muted);max-width:var(--measure);}
 
+    /* Documents such as certificates: the whole image shows, letterboxed on the card
+       surface, never cropped. */
+    .card__media--contain{
+      aspect-ratio:4/3;
+      background:var(--surface);
+      border-bottom:1px solid var(--line);
+    }
+    .card__media--contain img{object-fit:contain;}
+
+    /* A card that opens something. The trigger is a real <button> in the title; its
+       ::after stretches over the whole card, so the entire card is clickable, and the
+       focus ring is drawn on that overlay just inside the card's edge (the card clips
+       anything outside it). */
+    .card--interactive{
+      position:relative;
+      transition:border-color var(--dur-fast) var(--ease);
+    }
+    .card--interactive:hover{border-color:var(--muted);}
+    .card__trigger{
+      padding:0;
+      border:0;
+      background:none;
+      color:inherit;
+      font:inherit;
+      letter-spacing:inherit;
+      text-align:left;
+      cursor:pointer;
+    }
+    .card__trigger::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+      border-radius:var(--r-md);
+    }
+    .card__trigger:focus-visible{outline:none;}
+    .card__trigger:focus-visible::after{
+      outline:var(--ring-width) solid var(--accent);
+      outline-offset:calc(-1 * var(--ring-width));
+    }
+
+    /* The one item in a group that deserves more room: image beside the text. */
+    @media (min-width:768px){
+      .card--feature{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      }
+      .card--feature .card__media--contain{
+        border-bottom:0;
+        border-right:1px solid var(--line);
+      }
+      .card--feature .card__body{
+        justify-content:center;
+        padding:var(--sp-5);
+      }
+    }
+
     /* ---------- .tag: category, plain text ---------- */
     .tag{
       color:var(--muted);
@@ -427,6 +492,17 @@
     }
     .chip__icon{width:1em;height:1em;flex:none;}
 
+    /* Larger chip for when the chips are the content (the Stack section) rather than
+       a note under a card. */
+    .chip--lg{
+      gap:var(--sp-1);
+      padding:var(--sp-1) var(--sp-2);
+      color:var(--text);
+      font-size:var(--fs-small);
+      line-height:var(--lh-small);
+    }
+    .chip--lg .chip__icon{width:var(--icon);height:var(--icon);}
+
     /* ---------- .stat: number + caption. data-count-up on the value
        counts it up once, on first view, unless motion is reduced. ---------- */
     .stat{
@@ -448,6 +524,118 @@
       font-weight:var(--fw-medium);
       line-height:var(--lh-small);
     }
+    /* The certification count is one of --signal's few named uses (DESIGN.md §4). */
+    .stat__value--signal{color:var(--signal);}
+
+    /* ---------- .logo-strip: client logos, or text wordmarks until a logo exists ---------- */
+    .logo-strip{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      /* The hairline gaps let the --line background show through as dividers. */
+      gap:var(--hairline);
+      padding:0;
+      list-style:none;
+      overflow:hidden;
+      background:var(--line);
+      border:1px solid var(--line);
+      border-radius:var(--r-md);
+    }
+    @media (min-width:768px){
+      .logo-strip{grid-template-columns:repeat(4,minmax(0,1fr));}
+    }
+    /* On two columns, an odd last item spans the row instead of leaving an empty cell. */
+    @media (max-width:767.98px){
+      .logo-strip__item:last-child:nth-child(odd){grid-column:1 / -1;}
+    }
+    .logo-strip__item{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:var(--sp-5) var(--sp-3);
+      background:var(--surface);
+      text-align:center;
+    }
+    .logo-strip__logo{
+      width:auto;
+      max-width:100%;
+      max-height:var(--sp-6);
+      object-fit:contain;
+    }
+    .logo-strip__wordmark{
+      color:var(--text);
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+
+    /* ---------- .lightbox: one image, full size, over everything ----------
+       A native <dialog> opened with showModal(), so the rest of the page is out of
+       reach. The dialog itself is the full-screen dimmed layer; clicking it outside
+       the image closes it. */
+    .lightbox{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      max-width:none;
+      max-height:none;
+      margin:0;
+      padding:var(--sp-7) var(--gutter) var(--sp-5);
+      border:0;
+      /* Nearly opaque: a hint of the page behind, but never enough to read under the caption. */
+      background:color-mix(in srgb, var(--ink) 97%, transparent);
+      color:var(--text);
+    }
+    .lightbox[open]{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .lightbox::backdrop{background:transparent;}
+    @media (prefers-reduced-motion:no-preference){
+      .lightbox[open]{animation:lightboxIn var(--dur-fast) var(--ease);}
+    }
+    @keyframes lightboxIn{
+      from{opacity:0;}
+    }
+    .lightbox__close{
+      position:absolute;
+      top:var(--sp-3);
+      right:var(--gutter);
+      background:var(--surface);
+    }
+    .lightbox__figure{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:var(--sp-3);
+      max-width:100%;
+      max-height:100%;
+    }
+    .lightbox__image{
+      width:auto;
+      max-width:100%;
+      max-height:calc(100dvh - var(--sp-9) - var(--sp-9));
+      object-fit:contain;
+      border:1px solid var(--line);
+      border-radius:var(--r-sm);
+      background:var(--surface);
+    }
+    .lightbox__caption{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:var(--sp-0);
+      text-align:center;
+    }
+    .lightbox__title{
+      font-size:var(--fs-h3);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+    .lightbox__meta{justify-content:center;}
 
     /* ---------- .timeline-item: numbered row for Experience ---------- */
     .timeline{padding:0;list-style:none;}
@@ -569,7 +757,9 @@
     .nav__burger[aria-expanded="true"] .icon-menu{display:none;}
     .nav__burger[aria-expanded="false"] .icon-close{display:none;}
 
-    @media (min-width:768px){
+    /* Six links, the CTA and the toggle need about 850px, so the bar shows them from
+       1024px; below that they live in the menu (DESIGN.md §6, Nav). */
+    @media (min-width:1024px){
       .nav__links{display:flex;}
       .nav__cta{display:inline-flex;}
       .nav__burger{display:none;}
@@ -588,7 +778,7 @@
       overscroll-behavior:contain;
     }
     .nav__sheet.is-open{display:flex;}
-    @media (min-width:768px){
+    @media (min-width:1024px){
       .nav__sheet.is-open{display:none;}
     }
 
@@ -610,7 +800,8 @@
     .nav__sheet-cta{margin-top:auto;padding-top:var(--sp-5);}
     .nav__sheet-cta .btn{width:100%;}
 
-    body.menu-open{overflow:hidden;}
+    body.menu-open,
+    body.lightbox-open{overflow:hidden;}
   }
 
   /* ================================================================
@@ -825,25 +1016,9 @@
     .hero-badge--yrs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 7) backwards;}
     .hero-badge--certs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 8) backwards;}
 
-    /* ---------- Client strip ---------- */
+    /* ---------- Selected clients (trust strip) ---------- */
 
-    .clients{
-      padding-block:var(--sp-4);
-      border-block:1px solid var(--line);
-    }
-    .clients__list{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-start;
-      gap:var(--sp-2) var(--sp-4);
-      padding:0;
-      list-style:none;
-      color:var(--muted);
-      font-size:var(--fs-small);
-    }
-    @media (min-width:768px){
-      .clients__list{justify-content:space-between;gap:var(--sp-3) var(--sp-5);}
-    }
+    .clients .label{margin-bottom:var(--sp-3);}
 
     /* ---------- Selected work ---------- */
 
@@ -919,6 +1094,68 @@
     .about .prose a{text-decoration:underline;text-underline-offset:0.2em;}
     .about__tools{font-size:var(--fs-small);}
     .prose > .about__tools{margin-top:var(--sp-4);}
+
+    /* ---------- Stack ---------- */
+
+    /* One row per group: the group label, then its tool chips. Label beside the chips
+       from 768px, above them on phones. */
+    .stack-list{border-top:1px solid var(--line);}
+    .stack-list__group{
+      display:grid;
+      gap:var(--sp-2);
+      padding-block:var(--sp-4);
+      border-bottom:1px solid var(--line);
+    }
+    @media (min-width:768px){
+      .stack-list__group{
+        grid-template-columns:var(--label-col) minmax(0,1fr);
+        align-items:center;
+        gap:var(--sp-4);
+      }
+    }
+    .stack-list__group .label{margin-bottom:0;}
+
+    /* ---------- Certifications ---------- */
+
+    .cert-count{margin-bottom:var(--sp-6);}
+
+    .cert-group .label{margin-bottom:var(--sp-3);}
+    .cert-group .card--feature + .cert-grid{margin-top:var(--sp-5);}
+    .cert-group__more{margin-top:var(--sp-5);}
+
+    .cert-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      gap:var(--sp-5);
+      padding:0;
+      list-style:none;
+    }
+    @media (min-width:768px){
+      .cert-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media (min-width:1024px){
+      .cert-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    }
+
+    .cert-card .card__body{gap:var(--sp-1);}
+    .cert-card__meta{gap:var(--sp-0) var(--sp-3);}
+
+    .cert-card__courses{
+      display:grid;
+      gap:var(--sp-0);
+      margin-top:var(--sp-2);
+      padding:0;
+      list-style:none;
+      color:var(--muted);
+      font-size:var(--fs-small);
+      line-height:var(--lh-small);
+    }
+    @media (min-width:1024px){
+      .cert-card__courses{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        column-gap:var(--sp-4);
+      }
+    }
 
     /* ---------- Contact ---------- */
 
@@ -1004,6 +1241,14 @@
       transform:translateY(calc(-100% - var(--sp-3)));
     }
     .skip-link:focus{transform:none;}
+
+    /* Holds the inline icon <symbol>s; takes no space and is never seen itself. */
+    .icon-sprite{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+    }
   }
 </style>
 
@@ -1011,11 +1256,13 @@
   <style>
     /* No JS means the menu can never open and the theme toggle does nothing, so the
        links come back inline, the toggle is withdrawn, and the bar goes back to
-       sticky so a wrapped bar can't cover the page. */
+       sticky so a wrapped bar can't cover the page. Sections drawn from the data
+       arrays would be empty, so they're hidden rather than shown as bare headings. */
     #themeToggle{display:none;}
+    [data-requires-js]{display:none;}
     .nav{position:sticky;top:0;}
     body{padding-top:0;}
-    @media (max-width:767.98px){
+    @media (max-width:1023.98px){
       .nav__links{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-4);}
       .nav__burger{display:none;}
       .nav__bar{flex-wrap:wrap;}
@@ -1028,14 +1275,28 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="nav-sentinel" aria-hidden="true"></div>
 
+<!-- Tool icons: Simple Icons 16.31.0 (CC0), fetched once and inlined so the page makes no
+     icon requests. The marks remain trademarks of their owners. Used as <use href="#icon-name">. -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-figma" viewBox="0 0 24 24"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></symbol>
+  <symbol id="icon-html5" viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></symbol>
+  <symbol id="icon-css" viewBox="0 0 24 24"><path d="M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"/></symbol>
+  <symbol id="icon-javascript" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></symbol>
+  <symbol id="icon-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+  <symbol id="icon-github" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+  <symbol id="icon-vercel" viewBox="0 0 24 24"><path d="m12 1.608 12 20.784H0Z"/></symbol>
+</svg>
+
 <header class="nav" id="nav">
   <div class="container nav__bar">
     <a class="nav__name" href="#top">Joshua Jalandoni</a>
 
     <nav class="nav__links" aria-label="Main">
       <a class="nav__link" href="#work">Work</a>
-      <a class="nav__link" href="#services">Services</a>
       <a class="nav__link" href="#about">About</a>
+      <a class="nav__link" href="#stack">Stack</a>
+      <a class="nav__link" href="#certifications">Certifications</a>
+      <a class="nav__link" href="#services">Services</a>
       <a class="nav__link" href="#contact">Contact</a>
     </nav>
 
@@ -1059,8 +1320,10 @@
 <div class="nav__sheet" id="navSheet">
   <nav aria-label="Main">
     <a class="nav__sheet-link" href="#work">Work</a>
-    <a class="nav__sheet-link" href="#services">Services</a>
     <a class="nav__sheet-link" href="#about">About</a>
+    <a class="nav__sheet-link" href="#stack">Stack</a>
+    <a class="nav__sheet-link" href="#certifications">Certifications</a>
+    <a class="nav__sheet-link" href="#services">Services</a>
     <a class="nav__sheet-link" href="#contact">Contact</a>
   </nav>
   <div class="nav__sheet-cta">
@@ -1110,17 +1373,12 @@
     </div>
   </section>
 
-  <!-- Client strip -->
+  <!-- Selected clients. Drawn from CLIENTS in the script. -->
   <div class="container">
-    <div class="clients">
-      <ul class="clients__list">
-        <li>Rusty Mule Pizza</li>
-        <li>Rubens Removal LLC</li>
-        <li>Pinoy Eats</li>
-        <li>Mann Cayona</li>
-        <li>Berserk</li>
-      </ul>
-    </div>
+    <section class="clients" aria-labelledby="clientsLabel" data-requires-js>
+      <h2 class="label" id="clientsLabel">Selected clients</h2>
+      <ul class="logo-strip" data-render="clients"></ul>
+    </section>
   </div>
 
   <!-- Selected work -->
@@ -1181,6 +1439,45 @@
     </div>
   </section>
 
+  <!-- About -->
+  <section class="section about" id="about">
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">About</h2>
+      </header>
+      <div class="prose">
+        <p>I am <strong>Joshua Jalandoni</strong>, a web designer and developer in Bacolod City, Philippines. I have spent four years building sites, apps, and automations, backed by a background in digital operations and AI ops that keeps every project clean and considered.</p>
+        <p>I work best with small businesses. I listen first, ask the questions that matter, and ship something finished rather than something clever. Most of my clients are restaurants, service businesses, and creators who need to look credible online and start getting calls.</p>
+        <p class="about__tools">Tools I use: Figma, Claude Code, GitHub, Vercel. Certified in AI Fluency and the Claude platform through <a href="https://verify.skilljar.com/c/b76djp8gn6yd" target="_blank" rel="noopener">Anthropic</a>, and in AI through the <a href="https://coursera.org/verify/professional-cert/21JAF4EYINPJ" target="_blank" rel="noopener">Google AI Professional Certificate</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stack. Drawn from STACK in the script. -->
+  <section class="section" id="stack" data-requires-js>
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">Stack</h2>
+      </header>
+      <div class="stack-list" data-render="stack"></div>
+    </div>
+  </section>
+
+  <!-- Certifications. Drawn from CERTIFICATES in the script; the count comes from the
+       same array, so it can't drift from the cards. -->
+  <section class="section" id="certifications" data-requires-js>
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">Certifications</h2>
+      </header>
+      <p class="stat cert-count">
+        <span class="stat__value stat__value--signal" data-render="certificate-count" data-count-up></span>
+        <span class="stat__label">certificates earned</span>
+      </p>
+      <div class="flow" data-render="certificates"></div>
+    </div>
+  </section>
+
   <!-- Services -->
   <section class="section" id="services">
     <div class="container">
@@ -1200,20 +1497,6 @@
           <h3 class="service__title">Automation</h3>
           <p class="service__text">Workflows that handle the repetitive parts of running your business, so you spend less time on admin.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="section about" id="about">
-    <div class="container">
-      <header class="section-head">
-        <h2 class="section-head__title">About</h2>
-      </header>
-      <div class="prose">
-        <p>I am <strong>Joshua Jalandoni</strong>, a web designer and developer in Bacolod City, Philippines. I have spent four years building sites, apps, and automations, backed by a background in digital operations and AI ops that keeps every project clean and considered.</p>
-        <p>I work best with small businesses. I listen first, ask the questions that matter, and ship something finished rather than something clever. Most of my clients are restaurants, service businesses, and creators who need to look credible online and start getting calls.</p>
-        <p class="about__tools">Tools I use: Figma, Claude Code, GitHub, Vercel. Certified in AI Fluency and the Claude platform through <a href="https://verify.skilljar.com/c/b76djp8gn6yd" target="_blank" rel="noopener">Anthropic</a>, and in AI through the <a href="https://coursera.org/verify/professional-cert/21JAF4EYINPJ" target="_blank" rel="noopener">Google AI Professional Certificate</a>.</p>
       </div>
     </div>
   </section>
@@ -1253,15 +1536,270 @@
   </div>
 </footer>
 
+<!-- Certificate lightbox. Filled and opened by the script when a certificate card is
+     clicked; Escape or the close button closes it and returns focus to that card. -->
+<dialog class="lightbox" id="lightbox" aria-labelledby="lightboxTitle">
+  <button class="icon-btn lightbox__close" type="button" data-lightbox-close aria-label="Close certificate">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <figure class="lightbox__figure">
+    <img class="lightbox__image" id="lightboxImage" width="1200" height="928" alt="">
+    <figcaption class="lightbox__caption">
+      <p class="lightbox__title" id="lightboxTitle"></p>
+      <div class="cluster lightbox__meta" id="lightboxMeta"></div>
+    </figcaption>
+  </figure>
+</dialog>
+
 <script>
-  /* Everything the page needs at runtime: the theme toggle, the nav's scrolled state,
-     active-section highlighting, the mobile menu, and the stat count-up hook. The page
-     is already rendered HTML, so none of this gates what a visitor or a crawler sees:
-     with JS off the site is fully readable in the default dark theme. */
+  /* Everything the page needs at runtime: the content data and the templates that draw
+     it, the theme toggle, the nav's scrolled state, active-section highlighting, the
+     mobile menu, the certificate lightbox, and the stat count-up hook. Sections written
+     as plain HTML stay fully readable with JS off; the three drawn from data (Selected
+     clients, Stack, Certifications) are hidden in that case rather than shown empty. */
   (function(){
+
+    /* ==========================================================================
+       CONTENT DATA: edit here.
+       Adding a client, a tool, or a certificate means adding one object to its list.
+       Nothing below this block needs to change.
+       ========================================================================== */
+
+    /* Web design clients, in display order. logo: null shows the name as a text
+       wordmark. To use a logo file instead, put it in public/images/clients/ and set
+       logo: { src: 'public/images/clients/file-name.png', width: 000, height: 000 }. */
+    var CLIENTS = [
+      { name: 'Rusty Mule Pizza',   logo: null },
+      { name: 'Rubens Removal LLC', logo: null },
+      { name: 'Pinoy Eats',         logo: null },
+      { name: 'Mann Cayona',        logo: null }
+    ];
+
+    /* Tools, in groups. icon is the name of a symbol in the icon sprite at the top of
+       <body> (the part after "icon-"); icon: null gives a text-only chip. */
+    var STACK = [
+      { group: 'Design', tools: [
+        { name: 'Figma', icon: 'figma' }
+      ]},
+      { group: 'Build', tools: [
+        { name: 'HTML',       icon: 'html5' },
+        { name: 'CSS',        icon: 'css' },
+        { name: 'JavaScript', icon: 'javascript' }
+      ]},
+      { group: 'AI', tools: [
+        { name: 'Claude Code',     icon: 'claude' },
+        { name: 'Claude Platform', icon: 'claude' },
+        { name: 'Claude Cowork',   icon: 'claude' }
+      ]},
+      { group: 'Ship', tools: [
+        { name: 'GitHub', icon: 'github' },
+        { name: 'Vercel', icon: 'vercel' }
+      ]}
+    ];
+
+    /* Certificates.
+       - title: exactly as printed on the certificate.
+       - issuer: groups appear in the order their issuer first appears in this list.
+       - date: 'YYYY-MM-DD' only if the date is printed on the certificate, else null.
+       - image: the full certificate in public/images/certifications/, with its real
+         width and height. The card uses a 600px WebP of the same name in thumbs/.
+       - feature: true shows the wide card, with courses listed if given.
+       Below the list, CERTIFICATES_SHOWN sets how many grid cards per issuer show before
+       the "Show all certificates" button. */
+    var CERTIFICATES = [
+      { title: 'Google AI Professional Certificate', issuer: 'Google', date: '2026-06-03', feature: true,
+        image: 'google-ai-professional-certificate.jpg', width: 1200, height: 928,
+        courses: [
+          'AI Fundamentals',
+          'AI for Brainstorming and Planning',
+          'AI for Research and Insights',
+          'AI for Writing and Communicating',
+          'AI for Content Creation',
+          'AI for Data Analysis',
+          'AI for App Building'
+        ] },
+
+      { title: 'Claude 101', issuer: 'Anthropic', date: null,
+        image: 'anthropic-claude-101.png', width: 935, height: 714 },
+      { title: 'Claude Code 101', issuer: 'Anthropic', date: null,
+        image: 'anthropic-claude-code-101.png', width: 949, height: 719 },
+      { title: 'Claude Platform 101', issuer: 'Anthropic', date: null,
+        image: 'anthropic-claude-platform-101.png', width: 950, height: 563 },
+      { title: 'Claude with the Anthropic API', issuer: 'Anthropic', date: null,
+        image: 'anthropic-claude-with-the-anthropic-api.png', width: 946, height: 717 },
+      { title: 'Introduction to Claude Cowork', issuer: 'Anthropic', date: null,
+        image: 'anthropic-claude-cowork-intro.png', width: 949, height: 718 },
+      { title: 'AI Fluency: AI Capabilities & Limitations', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-ai-capabilities-and-limitations.png', width: 948, height: 718 },
+      { title: 'AI Fluency for Builders', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-for-builders.png', width: 949, height: 718 },
+      { title: 'AI Fluency for Small Businesses', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-for-small-businesses.png', width: 949, height: 718 },
+      { title: 'AI Fluency for educators', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-for-educators.png', width: 948, height: 720 },
+      { title: 'AI Fluency for students', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-for-students.png', width: 950, height: 718 },
+      { title: 'AI Fluency for nonprofits', issuer: 'Anthropic', date: null,
+        image: 'anthropic-ai-fluency-for-nonprofits.png', width: 950, height: 719 }
+    ];
+
+    /* Grid cards shown per issuer before "Show all certificates". Feature cards always show. */
+    var CERTIFICATES_SHOWN = 4;
+
+    /* ==========================================================================
+       TEMPLATES: one function per content type. Each takes one item from the data
+       above and returns its HTML as a string.
+       ========================================================================== */
+
+    var CERT_DIR = 'public/images/certifications/';
+    var THUMB_WIDTH = 600;
+    var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    /* Makes text safe to put inside HTML, so a title such as
+       "AI Capabilities & Limitations" can never break the markup. */
+    function esc(value){
+      return String(value).replace(/[&<>"']/g, function(ch){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+      });
+    }
+
+    /* '2026-06-03' becomes 'Jun 3, 2026', the way the certificates print it. Read by
+       hand rather than with Date, so a visitor's time zone can't shift the day. */
+    function formatDate(iso){
+      var p = iso.split('-');
+      return MONTHS[Number(p[1]) - 1] + ' ' + Number(p[2]) + ', ' + p[0];
+    }
+
+    function clientTemplate(client){
+      var inner = client.logo
+        ? '<img class="logo-strip__logo" src="' + esc(client.logo.src) + '" width="' + client.logo.width +
+          '" height="' + client.logo.height + '" alt="' + esc(client.name) + '" loading="lazy" decoding="async">'
+        : '<span class="logo-strip__wordmark">' + esc(client.name) + '</span>';
+      return '<li class="logo-strip__item">' + inner + '</li>';
+    }
+
+    /* large: true for chips that are the content (Stack); small chips suit notes
+       under a card. */
+    function toolChipTemplate(tool, large){
+      var icon = tool.icon
+        ? '<svg class="chip__icon" fill="currentColor" aria-hidden="true" focusable="false"><use href="#icon-' + esc(tool.icon) + '"></use></svg>'
+        : '';
+      return '<li class="chip' + (large ? ' chip--lg' : '') + '">' + icon + esc(tool.name) + '</li>';
+    }
+
+    function stackGroupTemplate(group){
+      return '<div class="stack-list__group">' +
+          '<h3 class="label">' + esc(group.group) + '</h3>' +
+          '<ul class="cluster">' + group.tools.map(function(tool){ return toolChipTemplate(tool, true); }).join('') + '</ul>' +
+        '</div>';
+    }
+
+    /* Issuer and, when printed, the date. Shared by the card and the lightbox. */
+    function certificateMetaTemplate(cert){
+      return '<p class="tag">' + esc(cert.issuer) + '</p>' +
+        (cert.date ? '<p class="tag"><time datetime="' + esc(cert.date) + '">' + formatDate(cert.date) + '</time></p>' : '');
+    }
+
+    /* hidden: true renders the card hidden until "Show all certificates" is pressed. */
+    function certificateCardTemplate(cert, hidden){
+      var index = CERTIFICATES.indexOf(cert);
+      var thumb = CERT_DIR + 'thumbs/' + cert.image.replace(/\.[a-z]+$/i, '.webp');
+      var thumbHeight = Math.round(cert.height * THUMB_WIDTH / cert.width);
+      var element = cert.feature ? 'article' : 'li';
+      var courses = cert.courses && cert.courses.length
+        ? '<ul class="cert-card__courses">' + cert.courses.map(function(c){ return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>'
+        : '';
+      return '<' + element + ' class="card card--interactive cert-card' + (cert.feature ? ' card--feature' : '') + '"' +
+          (hidden ? ' hidden' : '') + '>' +
+          '<div class="card__media card__media--contain">' +
+            '<img src="' + esc(thumb) + '" width="' + THUMB_WIDTH + '" height="' + thumbHeight + '" alt="" loading="lazy" decoding="async">' +
+          '</div>' +
+          '<div class="card__body">' +
+            '<h4 class="card__title"><button class="card__trigger" type="button" aria-haspopup="dialog" data-certificate="' + index + '">' +
+              esc(cert.title) + '</button></h4>' +
+            '<div class="cluster cert-card__meta">' + certificateMetaTemplate(cert) + '</div>' +
+            courses +
+          '</div>' +
+        '</' + element + '>';
+    }
+
+    /* One issuer's subhead and its certificates: feature cards full width, the rest in
+       the grid. Past CERTIFICATES_SHOWN, grid cards start hidden behind a button. */
+    function certificateGroupTemplate(group){
+      var features = group.certs.filter(function(c){ return c.feature; });
+      var others = group.certs.filter(function(c){ return !c.feature; });
+      var gridId = 'certificates-' + group.issuer.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      var grid = others.length
+        ? '<ul class="cert-grid" id="' + esc(gridId) + '">' +
+            others.map(function(cert, i){ return certificateCardTemplate(cert, i >= CERTIFICATES_SHOWN); }).join('') +
+          '</ul>'
+        : '';
+      var more = others.length > CERTIFICATES_SHOWN
+        ? '<div class="cert-group__more">' +
+            '<button class="btn btn--secondary" type="button" aria-expanded="false" aria-controls="' + esc(gridId) + '" data-show-all>' +
+              'Show all certificates</button>' +
+          '</div>'
+        : '';
+      return '<div class="cert-group">' +
+          '<h3 class="label">' + esc(group.issuer) + '</h3>' +
+          features.map(function(cert){ return certificateCardTemplate(cert, false); }).join('') +
+          grid + more +
+        '</div>';
+    }
+
+    function groupByIssuer(certs){
+      var groups = [];
+      certs.forEach(function(cert){
+        var group = groups.filter(function(g){ return g.issuer === cert.issuer; })[0];
+        if (!group){ group = { issuer: cert.issuer, certs: [] }; groups.push(group); }
+        group.certs.push(cert);
+      });
+      return groups;
+    }
+
+    /* ---------- Render: fill each [data-render] slot from its data ---------- */
+
+    function render(name, html){
+      var slot = document.querySelector('[data-render="' + name + '"]');
+      if (slot) slot.innerHTML = html;
+    }
+
+    render('clients', CLIENTS.map(clientTemplate).join(''));
+    render('stack', STACK.map(stackGroupTemplate).join(''));
+    render('certificate-count', esc(CERTIFICATES.length));
+    render('certificates', groupByIssuer(CERTIFICATES).map(certificateGroupTemplate).join(''));
+
+    /* ==========================================================================
+       BEHAVIOUR
+       ========================================================================== */
+
     var root = document.documentElement;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     var hasIO = 'IntersectionObserver' in window;
+
+    /* ---------- Focus trap, shared by the menu and the lightbox ----------
+       Tab past the last item wraps to the first, Shift+Tab before the first wraps to
+       the last, and focus that has somehow escaped is pulled back in. */
+
+    function visibleOnly(nodes){
+      return [].slice.call(nodes).filter(function(el){ return el.getClientRects().length > 0; });
+    }
+
+    function trapTab(e, items){
+      if (!items.length) return;
+      var first = items[0], last = items[items.length - 1];
+      var inside = items.indexOf(document.activeElement) !== -1;
+      if (!inside){
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && document.activeElement === first){
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last){
+        e.preventDefault();
+        first.focus();
+      }
+    }
 
     /* ---------- Theme ---------- */
 
@@ -1309,15 +1847,14 @@
     var main    = document.querySelector('main');
     var footer  = document.querySelector('footer');
     var skip    = document.querySelector('.skip-link');
-    var desktop = window.matchMedia('(min-width: 768px)');
+    var desktop = window.matchMedia('(min-width: 1024px)');
 
     function isOpen(){ return sheet.classList.contains('is-open'); }
 
     /* Everything a keyboard can reach while the menu is open: the bar's own
        controls, then the menu. Hidden elements are left out. */
     function trapped(){
-      return [].slice.call(document.querySelectorAll('#nav a[href], #nav button, #navSheet a[href]'))
-        .filter(function(el){ return el.getClientRects().length > 0; });
+      return visibleOnly(document.querySelectorAll('#nav a[href], #nav button, #navSheet a[href]'));
     }
 
     function setMenu(open, returnFocus){
@@ -1357,24 +1894,7 @@
           return;
         }
 
-        /* Focus trap: Tab past the last item wraps to the first, Shift+Tab before
-           the first wraps to the last. */
-        if (e.key === 'Tab'){
-          var items = trapped();
-          if (!items.length) return;
-          var first = items[0], last = items[items.length - 1];
-          var inside = items.indexOf(document.activeElement) !== -1;
-          if (!inside){
-            e.preventDefault();
-            first.focus();
-          } else if (e.shiftKey && document.activeElement === first){
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last){
-            e.preventDefault();
-            first.focus();
-          }
-        }
+        if (e.key === 'Tab') trapTab(e, trapped());
       });
 
       /* Widening past the breakpoint must not leave a hidden menu holding focus and
@@ -1465,6 +1985,72 @@
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initCounters);
     else initCounters();
+
+    /* ---------- Certificate lightbox ----------
+       A native <dialog>: showModal() puts the rest of the page out of reach and Escape
+       closes it. Focus goes to the close button on open, is kept inside while open, and
+       returns to the card that opened it on close. */
+
+    var lightbox = document.getElementById('lightbox');
+    var lightboxImage = document.getElementById('lightboxImage');
+    var lightboxTitle = document.getElementById('lightboxTitle');
+    var lightboxMeta = document.getElementById('lightboxMeta');
+    var lightboxOpener = null;
+
+    if (lightbox && typeof lightbox.showModal === 'function'){
+      document.addEventListener('click', function(e){
+        var trigger = e.target.closest('[data-certificate]');
+        if (!trigger) return;
+        var cert = CERTIFICATES[Number(trigger.getAttribute('data-certificate'))];
+        if (!cert) return;
+
+        lightboxOpener = trigger;
+        lightboxImage.src = CERT_DIR + cert.image;
+        lightboxImage.width = cert.width;
+        lightboxImage.height = cert.height;
+        lightboxImage.alt = cert.title + ' certificate from ' + cert.issuer;
+        lightboxTitle.textContent = cert.title;
+        lightboxMeta.innerHTML = certificateMetaTemplate(cert);
+
+        lightbox.showModal();
+        document.body.classList.add('lightbox-open');
+        lightbox.querySelector('[data-lightbox-close]').focus();
+      });
+
+      /* The close button, or a click on the dimmed area around the certificate. */
+      lightbox.addEventListener('click', function(e){
+        if (e.target === lightbox || e.target.closest('[data-lightbox-close]')) lightbox.close();
+      });
+
+      lightbox.addEventListener('keydown', function(e){
+        if (e.key === 'Tab') trapTab(e, visibleOnly(lightbox.querySelectorAll('button, a[href]')));
+      });
+
+      /* Every way out (button, backdrop, Escape) ends in this one event. */
+      lightbox.addEventListener('close', function(){
+        document.body.classList.remove('lightbox-open');
+        if (lightboxOpener) lightboxOpener.focus();
+        lightboxOpener = null;
+      });
+    }
+
+    /* ---------- "Show all certificates" ----------
+       Reveals the hidden cards in one step (a plain height change, no animation), then
+       removes the button and moves focus to the first newly shown card, so keyboard
+       users land on the content they asked for instead of on nothing. */
+
+    document.addEventListener('click', function(e){
+      var button = e.target.closest('[data-show-all]');
+      if (!button) return;
+      var grid = document.getElementById(button.getAttribute('aria-controls'));
+      if (!grid) return;
+      var revealed = [].slice.call(grid.querySelectorAll('.cert-card[hidden]'));
+      revealed.forEach(function(card){ card.hidden = false; });
+      button.setAttribute('aria-expanded', 'true');
+      button.parentNode.hidden = true;
+      var firstNew = revealed.length ? revealed[0].querySelector('.card__trigger') : null;
+      if (firstNew) firstNew.focus();
+    });
   })();
 </script>
 
