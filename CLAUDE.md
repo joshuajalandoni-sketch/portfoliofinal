@@ -130,3 +130,20 @@ against `DESIGN.md`; several sections listed there don't exist yet.
 
 See the "Open decisions" section at the bottom of `DESIGN.md` for what's still undecided.
 Don't resolve those unilaterally — ask.
+
+## Working mode
+
+Default: measure, then build, in one turn. Do not stop for
+approval. Report after, under 150 words, numbers not prose.
+
+Verify dark only at 360 and 1440 unless the change is
+layout-structural. Before/after screenshot at 1440.
+
+If you measure something that contradicts my spec, say so and
+build your version. Show the numbers.
+
+Stop and ask ONLY for:
+- deleting or rewriting content in CONTENT.md
+- changes touching more than one section
+- anything in vercel.json, build config, or repo structure
+- anything involving LSF, client names, or contract work

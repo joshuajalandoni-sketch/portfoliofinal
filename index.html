@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Joshua Jalandoni: Web Designer and Developer</title>
+<title>Joshua Jalandoni — Websites and automations for small businesses</title>
 <meta name="description" content="I design and build fast, clean websites for restaurants, service businesses, and creators. Based in Bacolod City, Philippines. Available for work.">
 <link rel="canonical" href="https://jjoshua.vercel.app/">
 <!-- HTML can't read a CSS variable, so this starts as the dark --ink value. The theme script
      below overwrites it from the live --ink token, so it never drifts from the CSS. -->
-<meta name="theme-color" content="#0E1116" id="themeColor">
+<meta name="theme-color" content="#171A15" id="themeColor">
 
 <!-- Applies the saved theme before first paint so there is no flash of the
      wrong one. Dark is the default for a first visit. -->
@@ -21,21 +21,22 @@
   })();
 </script>
 
-<!-- Monogram favicon, inline so it costs no request. Ink ground, Paper letters.
-     A favicon.ico fallback for older browsers is still wanted: see ASSETS.md. -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231A1D24'/%3E%3Ctext x='16' y='22' font-family='Helvetica,Arial,sans-serif' font-size='15' font-weight='700' letter-spacing='-0.5' fill='%23FAFAF7' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
+<!-- Monogram favicon, inline so it costs no request. HTML can't read CSS variables, so the
+     colors are copied from the dark tokens: --ink ground, --text letters. Change them with the
+     tokens. A favicon.ico fallback for older browsers is still wanted: see ASSETS.md. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23171A15'/%3E%3Ctext x='16' y='22' font-family='Helvetica,Arial,sans-serif' font-size='15' font-weight='700' letter-spacing='-0.5' fill='%23F2EFE8' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jjoshua.vercel.app/">
-<meta property="og:title" content="Joshua Jalandoni: Web Designer and Developer">
-<meta property="og:description" content="Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched.">
+<meta property="og:title" content="Joshua Jalandoni — Websites and automations for small businesses">
+<meta property="og:description" content="Joshua Jalandoni — Websites and automations for small businesses">
 <meta property="og:image" content="https://jjoshua.vercel.app/public/images/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Joshua Jalandoni, web designer and developer">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Joshua Jalandoni: Web Designer and Developer">
-<meta name="twitter:description" content="Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched.">
+<meta name="twitter:title" content="Joshua Jalandoni — Websites and automations for small businesses">
+<meta name="twitter:description" content="Joshua Jalandoni — Websites and automations for small businesses">
 <meta name="twitter:image" content="https://jjoshua.vercel.app/public/images/og-image.jpg">
 
 <!-- Archivo, one variable family (DESIGN.md §3). Only the five width/weight pairs the page
@@ -58,18 +59,28 @@
       color-scheme:dark;
 
       /* Color, dark theme (default). DESIGN.md §4. */
-      --ink:#0E1116;
-      --surface:#171B22;
-      --line:#262C36;
-      --text:#E9ECF1;
-      --muted:#98A2B0;
-      --accent:#4F63E8;
-      --accent-text:#7A8CF0;
-      --on-accent:#FFFFFF;
-      --signal:#E0A340;
+      --ink:#171A15;
+      --surface:#1F2320;
+      --line:#2E332B;
+      --text:#F2EFE8;
+      --muted:#A8A99C;
+      --accent:#8FA876;
+      --accent-text:#A3BC8A;
+      /* Dark labels: white on the light sage fill is only 2.62:1. */
+      --on-accent:#171A15;
+      --signal:#C9C2B0;
+      /* Not a tenth color: the light ground behind the About illustration, whose black lines are
+         transparent between them and vanish on the dark page. Bone --text in dark. */
+      --illustration-ground:var(--text);
 
       /* Depth in dark comes from surface steps, so the float shadow is off. */
       --shadow-float:none;
+
+      /* The GitHub graph is a third-party image with its empty squares fixed at #EEEEEE, which
+         glows on the dark ground. Inverting most of the way brings them down to about --line and
+         keeps the busiest days brightest. Brightness alone can't: the filled squares are darker
+         than the empty ones, so they vanish first. Contrast is measured in DESIGN.md §6. */
+      --graph-filter:invert(0.85) hue-rotate(180deg);
 
       /* Type. DESIGN.md §3. */
       --font:'Archivo','Helvetica Neue',Arial,sans-serif;
@@ -79,23 +90,30 @@
       --fw-semibold:600;
       --fw-bold:700;
 
-      --fs-hero:clamp(2.25rem, 4.5vw, 3.5rem);
+      /* About 8% below the first scale. The hero keeps its 2.25rem floor and the label its
+         0.75rem: smaller labels read too small (DESIGN.md §3). */
+      --fs-hero:clamp(2.25rem, 4vw, 3.125rem);
       --lh-hero:0.98;
       --ls-hero:-0.03em;
 
-      --fs-h2:clamp(1.9rem, 3vw, 2.6rem);
+      --fs-h2:clamp(1.75rem, 2.7vw, 2.375rem);
       --lh-h2:1.05;
       --ls-h2:-0.02em;
 
-      --fs-h3:1.25rem;
+      /* Project names in the desktop Selected work list: between card title and section
+         heading, so a row never reads as another heading. Weight, line height, and tracking
+         are the card title's. */
+      --fs-row:1.5rem;
+
+      --fs-h3:1.15rem;
       --lh-h3:1.25;
       --ls-h3:-0.01em;
 
-      --fs-body-lg:1.0625rem;
-      --fs-body:1rem;
+      --fs-body-lg:1rem;
+      --fs-body:0.9375rem;
       --lh-body:1.6;
 
-      --fs-small:0.875rem;
+      --fs-small:0.8125rem;
       --lh-small:1.45;
 
       --fs-label:0.75rem;
@@ -132,9 +150,35 @@
       --gutter:var(--sp-4);
       --section-pad:var(--sp-7);
       --control-h:2.5rem;
+      /* Smallest tap target for a link that sits on top of another clickable area
+         (WCAG 2.5.8): 24px. */
+      --target-min:1.5rem;
+      /* The monitor icon before every section label (DESIGN.md §3). */
+      --icon-label:14px;
+      --icon-sm:1rem;
       --icon:1.125rem;
+      --icon-lg:1.5rem;
+      /* One-color logos in the tools marquee and the brands band (DESIGN.md §6). */
+      --band-logo-h:1.75rem;
+      --logo-opacity:0.55;
+      /* Company logos in Experience, sized optically (DESIGN.md §6): each fits a box by kind.
+         Marks (square, tall, or icon-like) fit 44 x 22; wordmarks, whose lettering needs height
+         to read, fit 80 x 28. Then their resting opacity. */
+      --logo-mark-max-w:44px;
+      --logo-mark-max-h:22px;
+      --logo-wordmark-max-w:80px;
+      --logo-wordmark-max-h:28px;
+      --timeline-logo-opacity:0.6;
+      /* The illustration in About (DESIGN.md §6): 200px tall. */
+      --about-illustration-h:12.5rem;
+      --marquee-loop:40s;
+      /* The GitHub graph's height; its width follows the image's 663:104 shape (DESIGN.md §6). */
+      --graph-max-h:7.5rem;
+      /* The hover preview in the desktop Selected work list, and the empty column each row
+         keeps for it (DESIGN.md §6): 380px, a 16:10 screenshot. */
+      --work-preview-w:23.75rem;
       --hero-visual:23rem;
-      --label-col:10rem;
+      --hero-photo-sm:12rem;
       --hairline:1px;
       --nav-h:calc(var(--control-h) + 2 * var(--sp-3));
       --nav-h-scrolled:calc(var(--control-h) + 2 * var(--sp-1));
@@ -155,17 +199,20 @@
     :root[data-theme="light"]{
       color-scheme:light;
 
-      --ink:#FBFBFC;
+      --ink:#F7F6F1;
       --surface:#FFFFFF;
-      --line:#E3E6EB;
-      --text:#14181F;
-      --muted:#5A6472;
-      --accent:#3D4FD0;
-      --accent-text:#3040B8;
+      --line:#E2E0D7;
+      --text:#1B1E18;
+      --muted:#5C6055;
+      --accent:#5A7042;
+      --accent-text:#47592F;
       --on-accent:#FFFFFF;
-      --signal:#9A6A12;
+      --signal:#6E6A5C;
+      --illustration-ground:var(--surface);
 
       --shadow-float:0 var(--sp-3) var(--sp-5) color-mix(in srgb, var(--text) 13%, transparent);
+
+      --graph-filter:none;
     }
   }
 
@@ -198,7 +245,7 @@
       -webkit-font-smoothing:antialiased;
     }
 
-    h1,h2,h3,h4,p,ul,ol,figure{margin:0;}
+    h1,h2,h3,h4,p,ul,ol,figure,blockquote{margin:0;}
 
     /* Browsers that support these avoid a lone word on the last line of a paragraph
        and even out heading lines. The words themselves never change. */
@@ -263,6 +310,18 @@
     /* Vertical rhythm between stacked blocks, e.g. groups inside a section. */
     .flow > * + *{margin-top:var(--sp-6);}
 
+    /* Main content beside a side column from 1024px; stacked below. */
+    .split{
+      display:grid;
+      gap:var(--sp-6);
+    }
+    @media (min-width:1024px){
+      .split{
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+        gap:var(--sp-7);
+      }
+    }
+
     .cluster{
       display:flex;
       flex-wrap:wrap;
@@ -278,7 +337,10 @@
      ================================================================ */
   @layer components {
 
-    /* ---------- .label: sentence case, hairline to the left ---------- */
+    /* ---------- .label: sentence case, monitor icon to the left ----------
+       The icon is centered on the label's height (align-items), not its baseline, and sits
+       the label's gap (--sp-2) from the text. It's stroked in currentColor, so it takes the
+       label's --muted. */
     .label{
       display:flex;
       align-items:center;
@@ -290,10 +352,10 @@
       line-height:var(--lh-label);
       letter-spacing:var(--ls-label);
     }
-    .label::before{
-      content:"";
-      flex:0 0 var(--sp-4);
-      border-top:1px solid currentColor;
+    .label__icon{
+      flex:none;
+      width:var(--icon-label);
+      height:var(--icon-label);
     }
 
     /* ---------- .section-head: label + heading + optional deck ---------- */
@@ -396,6 +458,23 @@
       background:var(--line);
     }
     .card__media img{width:100%;height:100%;object-fit:cover;}
+    .card__media{position:relative;overflow:hidden;}
+
+    /* A phone screenshot overlapping the lower-right corner of the card's screenshot,
+       from 768px. A --surface ring separates it from dark screenshots underneath. */
+    .card__media .card__phone{
+      display:none;
+      position:absolute;
+      right:var(--sp-3);
+      bottom:var(--sp-3);
+      width:20%;
+      height:auto;
+      border-radius:var(--r-sm);
+      box-shadow:0 0 0 var(--ring-width) var(--surface);
+    }
+    @media (min-width:768px){
+      .card__media .card__phone{display:block;}
+    }
     .card__body{
       display:flex;
       flex-direction:column;
@@ -476,6 +555,24 @@
       line-height:var(--lh-small);
     }
 
+    /* ---------- .verify-link: small text link to a certificate's public verification
+       page, on the card and in the lightbox. Set in the .label type, in --accent-text.
+       On a card it has to sit above the card-wide click area (.card__trigger::after),
+       and since that area is itself a target, the link keeps a 24px-tall tap target
+       rather than just its 12px text. ---------- */
+    .verify-link{
+      position:relative;
+      z-index:2;
+      display:inline-flex;
+      align-items:center;
+      min-height:var(--target-min);
+      color:var(--accent-text);
+      font-size:var(--fs-label);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-label);
+      letter-spacing:var(--ls-label);
+    }
+
     /* ---------- .chip: tech chip, optional icon ---------- */
     .chip{
       display:inline-flex;
@@ -492,8 +589,8 @@
     }
     .chip__icon{width:1em;height:1em;flex:none;}
 
-    /* Larger chip for when the chips are the content (the Stack section) rather than
-       a note under a card. */
+    /* Larger chip for when the chips are the content (the About capability chips) rather
+       than a note under a card. */
     .chip--lg{
       gap:var(--sp-1);
       padding:var(--sp-1) var(--sp-2);
@@ -502,6 +599,43 @@
       line-height:var(--lh-small);
     }
     .chip--lg .chip__icon{width:var(--icon);height:var(--icon);}
+
+    /* ---------- .tool-tile: a tool's icon beside its name ----------
+       An enlarged chip, not a card (DESIGN.md §11): --r-sm and no shadow. One shape at
+       every width. Not interactive, so no hover state. Small repeated items may run more
+       columns than content does (DESIGN.md §5): two, then four from 768px, five from 1024px,
+       six from 1180px (the container's width, --container). */
+    .tool-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:var(--sp-2);
+      padding:0;
+      list-style:none;
+    }
+    @media (min-width:768px){
+      .tool-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+    }
+    @media (min-width:1024px){
+      .tool-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+    }
+    @media (min-width:1180px){
+      .tool-grid{grid-template-columns:repeat(6,minmax(0,1fr));}
+    }
+    .tool-tile{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-2);
+      padding:var(--sp-2);
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--r-sm);
+      color:var(--text);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+    }
+    .tool-tile__icon{width:var(--icon-lg);height:var(--icon-lg);flex:none;}
+    .tool-tile__name{min-width:0;}
 
     /* ---------- .stat: number + caption. data-count-up on the value
        counts it up once, on first view, unless motion is reduced. ---------- */
@@ -527,47 +661,224 @@
     /* The certification count is one of --signal's few named uses (DESIGN.md §4). */
     .stat__value--signal{color:var(--signal);}
 
-    /* ---------- .logo-strip: client logos, or text wordmarks until a logo exists ---------- */
-    .logo-strip{
+    /* Smaller numbers, for a strip that sits under a bigger headline. */
+    .stat--compact .stat__value{
+      font-size:var(--fs-h3);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+    }
+
+    /* ---------- .stat-strip: stats side by side, one column each, hairline above ---------- */
+    .stat-strip{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      /* The hairline gaps let the --line background show through as dividers. */
-      gap:var(--hairline);
-      padding:0;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(0,1fr);
+      gap:var(--sp-3);
+      padding:var(--sp-4) 0 0;
       list-style:none;
-      overflow:hidden;
-      background:var(--line);
-      border:1px solid var(--line);
-      border-radius:var(--r-md);
+      border-top:1px solid var(--line);
     }
-    @media (min-width:768px){
-      .logo-strip{grid-template-columns:repeat(4,minmax(0,1fr));}
-    }
-    /* On two columns, an odd last item spans the row instead of leaving an empty cell. */
-    @media (max-width:767.98px){
-      .logo-strip__item:last-child:nth-child(odd){grid-column:1 / -1;}
-    }
-    .logo-strip__item{
+
+    /* ---------- .availability: status line with the --signal dot ---------- */
+    .availability{
       display:flex;
       align-items:center;
-      justify-content:center;
-      padding:var(--sp-5) var(--sp-3);
-      background:var(--surface);
-      text-align:center;
+      gap:var(--sp-1);
+      color:var(--muted);
+      font-size:var(--fs-small);
     }
-    .logo-strip__logo{
-      width:auto;
-      max-width:100%;
-      max-height:var(--sp-6);
-      object-fit:contain;
+    .availability__dot{
+      width:0.5em;
+      height:0.5em;
+      flex-shrink:0;
+      border-radius:50%;
+      background:var(--signal);
     }
-    .logo-strip__wordmark{
+
+    /* ---------- .pull-quote: one sentence set apart, card-title size, hairline above ---------- */
+    .pull-quote{
+      padding-top:var(--sp-4);
+      border-top:1px solid var(--line);
       color:var(--text);
       font-size:var(--fs-h3);
       font-weight:var(--fw-semibold);
       line-height:var(--lh-h3);
       letter-spacing:var(--ls-h3);
     }
+
+    /* ---------- .testimonial: someone's words about the work, in plain text ----------
+       No card, border, quote-mark graphic, or avatar. The quote in --text at the body size, the
+       source beneath in --muted, small. --quiet is smaller and all --muted, for a review set under
+       other text: --muted is the quietest text token that still passes 4.5:1 in both themes. */
+    .testimonial{
+      max-width:var(--measure);
+      margin:0;
+    }
+    .testimonial__quote{color:var(--text);}
+    .testimonial__source{
+      margin-top:var(--sp-1);
+      color:var(--muted);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+    }
+    .testimonial--quiet .testimonial__quote{
+      color:var(--muted);
+      font-size:var(--fs-small);
+      line-height:var(--lh-small);
+    }
+    .testimonial--quiet .testimonial__source{margin-top:var(--sp-0);}
+
+    /* ---------- .filters / .filter: a group of toggle buttons ----------
+       The selected one is an --accent fill; the others carry their meaning in the
+       label, not the border. */
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--sp-1);
+    }
+    /* Below 768px: one row that scrolls sideways instead of wrapping into several. The
+       padding keeps focus rings clear of the scroll area's edge; the matching negative
+       margin keeps the row lined up with the text around it. The scroll padding is how far
+       from the edge a focused tab is brought into view (the filter script reads it). */
+    @media (max-width:767.98px){
+      .filters{
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        margin:calc(-1 * var(--sp-1));
+        padding:var(--sp-1);
+        scroll-padding-inline:var(--sp-4);
+        scrollbar-width:none;
+      }
+      .filters::-webkit-scrollbar{display:none;}
+    }
+    .filter{
+      flex-shrink:0;
+      white-space:nowrap;
+      padding:var(--sp-1) var(--sp-3);
+      border:1px solid var(--line);
+      border-radius:var(--r-sm);
+      background:transparent;
+      color:var(--text);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+      line-height:var(--lh-small);
+      cursor:pointer;
+      transition:background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    }
+    .filter:hover{border-color:var(--muted);}
+    .filter[aria-pressed="true"]{
+      border-color:var(--accent);
+      background:var(--accent);
+      color:var(--on-accent);
+    }
+
+    /* ---------- .contact-details: availability, response time, location, channels ---------- */
+    .contact-details{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-3);
+    }
+    .contact-details__line{color:var(--muted);}
+    .contact-details__line span{display:block;}
+    .contact-details__channels{
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--sp-2) var(--sp-4);
+      padding:0;
+      list-style:none;
+      font-size:var(--fs-small);
+    }
+    .contact-details__channels a{color:var(--muted);}
+    .contact-details__channels a:hover{color:var(--text);}
+
+    /* ---------- .marquee: one-color logos scrolling on their own ----------
+       The one element allowed to move without the visitor acting (DESIGN.md §6, §8). The set
+       is drawn twice and the track slides by exactly one set, so the loop has no seam; the
+       edges fade through a mask. No hover state: the logos aren't links (§11). */
+    .marquee{
+      overflow:hidden;
+      color:var(--muted);
+      -webkit-mask-image:linear-gradient(to right, transparent, currentColor var(--sp-7), currentColor calc(100% - var(--sp-7)), transparent);
+              mask-image:linear-gradient(to right, transparent, currentColor var(--sp-7), currentColor calc(100% - var(--sp-7)), transparent);
+    }
+    .marquee__track{
+      display:flex;
+      width:max-content;
+      animation:marquee var(--marquee-loop) linear infinite;
+    }
+    .marquee.is-paused .marquee__track{animation-play-state:paused;}
+    @keyframes marquee{
+      to{transform:translateX(-50%);}
+    }
+    /* The trailing padding matches the gap, so two sets side by side repeat evenly. One set
+       must stay wider than the strip, or the same logo shows twice at once: the tighter gap
+       keeps phones from looking sparse, the wider one covers the 1,084px strip from 1024px. */
+    .marquee__set{
+      display:flex;
+      align-items:center;
+      gap:var(--sp-7);
+      margin:0;
+      padding:var(--sp-3) var(--sp-7) var(--sp-3) 0;
+      list-style:none;
+    }
+    @media (min-width:1024px){
+      .marquee__set{gap:var(--sp-8);padding-right:var(--sp-8);}
+    }
+    .marquee__item{display:flex;align-items:center;}
+    /* Sized by eye: --logo-scale gives each mark the same visual area as a --band-logo-h square. */
+    .marquee__logo{
+      display:block;
+      height:calc(var(--band-logo-h) * var(--logo-scale, 1));
+      width:auto;
+      opacity:var(--logo-opacity);
+    }
+    /* Reduced motion: no animation (the base layer only shortens animations, which would make
+       an endless loop flicker), one static wrapped row, no fade, no copy, no button. */
+    @media (prefers-reduced-motion:reduce){
+      .marquee{-webkit-mask-image:none;mask-image:none;}
+      .marquee__track{animation:none;width:auto;}
+      .marquee__set{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:var(--sp-4) var(--sp-6);
+        padding-right:0;
+      }
+      .marquee__set[aria-hidden="true"]{display:none;}
+      .marquee-toggle{display:none;}
+    }
+    .marquee-toggle .icon-play{display:none;}
+    .marquee-toggle[aria-pressed="true"] .icon-pause{display:none;}
+    .marquee-toggle[aria-pressed="true"] .icon-play{display:block;}
+
+    /* ---------- .brand-grid: one-color brand logos, not animated ----------
+       Each logo is painted in --muted through a mask of its file, so the file has to be a
+       one-color SVG or a PNG with a transparent background. Full opacity on hover: an
+       exception to DESIGN.md §11, since these logos are evidence a visitor may want to look at. */
+    .brand-grid{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      gap:var(--sp-4) var(--sp-7);
+      margin:0;
+      padding:var(--sp-3) 0;
+      list-style:none;
+    }
+    .brand-grid__item{display:flex;align-items:center;}
+    .brand-logo{
+      display:block;
+      height:calc(var(--band-logo-h) * var(--logo-scale, 1));
+      max-width:100%;
+      aspect-ratio:var(--logo-ratio, 1);
+      background-color:var(--muted);
+      opacity:var(--logo-opacity);
+      -webkit-mask:var(--logo-src) center / contain no-repeat;
+              mask:var(--logo-src) center / contain no-repeat;
+      transition:opacity var(--dur-fast) var(--ease);
+    }
+    .brand-logo:hover{opacity:1;}
 
     /* ---------- .lightbox: one image, full size, over everything ----------
        A native <dialog> opened with showModal(), so the rest of the page is out of
@@ -637,21 +948,11 @@
     }
     .lightbox__meta{justify-content:center;}
 
-    /* ---------- .timeline-item: numbered row for Experience ---------- */
+    /* ---------- .timeline-item: row for Experience ---------- */
     .timeline{padding:0;list-style:none;}
     .timeline-item{
-      display:grid;
-      grid-template-columns:var(--sp-6) minmax(0,1fr);
-      gap:var(--sp-4);
       padding-block:var(--sp-5);
       border-top:1px solid var(--line);
-    }
-    .timeline-item__index{
-      color:var(--muted);
-      font-size:var(--fs-small);
-      font-weight:var(--fw-semibold);
-      line-height:var(--lh-h3);
-      font-variant-numeric:tabular-nums;
     }
     .timeline-item__title{
       font-size:var(--fs-h3);
@@ -660,17 +961,56 @@
       letter-spacing:var(--ls-h3);
     }
     .timeline-item__meta{
-      margin-top:var(--sp-0);
+      margin-top:var(--sp-1);
       color:var(--muted);
       font-size:var(--fs-small);
       font-weight:var(--fw-medium);
       line-height:var(--lh-small);
+    }
+    .timeline{border-bottom:1px solid var(--line);}
+    /* The company's logo starts the company and dates line, centered on it by the cluster. Sized
+       optically, not to one height: it fits its kind's box (max width and max height), so a square
+       mark stops at the height and a wide one at the width. Height is worked out from the file's
+       shape (--logo-ratio, set by the script) and width follows from the width/height attributes,
+       so the box is right before the image loads and nothing moves. Quiet at rest (grayscale at
+       --timeline-logo-opacity), full colour on hover: an exception to DESIGN.md §11, like the brand
+       logos. */
+    .timeline-item__logo{
+      --logo-box-w:var(--logo-mark-max-w);
+      --logo-box-h:var(--logo-mark-max-h);
+      display:block;
+      flex:none;
+      height:min(var(--logo-box-h), var(--logo-box-w) / var(--logo-ratio, 1));
+      width:auto;
+      filter:grayscale(1);
+      opacity:var(--timeline-logo-opacity);
+      transition:filter var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+    }
+    .timeline-item__logo--wordmark{
+      --logo-box-w:var(--logo-wordmark-max-w);
+      --logo-box-h:var(--logo-wordmark-max-h);
+    }
+    @media (hover:hover){
+      .timeline-item__logo:hover{
+        filter:none;
+        opacity:1;
+      }
+    }
+    /* Work with no company logo (freelance): the section-label monitor at a mark's height, in the
+       label's --muted, never grayed or faded. */
+    .timeline-item__glyph{
+      display:block;
+      flex:none;
+      width:var(--logo-mark-max-h);
+      height:var(--logo-mark-max-h);
+      color:var(--muted);
     }
     .timeline-item__body{
       max-width:var(--measure);
       margin-top:var(--sp-2);
       color:var(--muted);
     }
+    .timeline-item .testimonial{margin-top:var(--sp-2);}
 
     /* ---------- Nav ---------- */
 
@@ -757,8 +1097,8 @@
     .nav__burger[aria-expanded="true"] .icon-menu{display:none;}
     .nav__burger[aria-expanded="false"] .icon-close{display:none;}
 
-    /* Six links, the CTA and the toggle need about 850px, so the bar shows them from
-       1024px; below that they live in the menu (DESIGN.md §6, Nav). */
+    /* The bar shows the seven links, the CTA and the toggle from 1024px (measured: 62px
+       to spare there); below that they live in the menu (DESIGN.md §6, Nav). */
     @media (min-width:1024px){
       .nav__links{display:flex;}
       .nav__cta{display:inline-flex;}
@@ -829,7 +1169,7 @@
       pointer-events:none;
     }
 
-    /* Stacked below 1024px, photo first. From 1024px, two columns: the photo stack
+    /* Stacked below 1024px, portrait first. From 1024px, two columns: the portrait
        takes a fixed width and the headline takes the rest, which is 684px at 1440
        (DESIGN.md §6 asks for at least 680px). */
     .hero__grid{
@@ -837,7 +1177,7 @@
       z-index:1;
       display:grid;
       grid-template-columns:minmax(0,1fr);
-      gap:var(--sp-6);
+      gap:var(--sp-5);
       align-items:center;
     }
     .hero__copy{order:2;}
@@ -878,21 +1218,8 @@
       gap:var(--sp-2);
     }
 
-    .availability{
-      display:flex;
-      align-items:center;
-      gap:var(--sp-1);
-      margin-top:var(--sp-4);
-      color:var(--muted);
-      font-size:var(--fs-small);
-    }
-    .availability__dot{
-      width:0.5em;
-      height:0.5em;
-      flex-shrink:0;
-      border-radius:50%;
-      background:var(--signal);
-    }
+    .hero__copy .availability{margin-top:var(--sp-4);}
+    .hero .stat-strip{margin-top:var(--sp-5);}
 
     /* The primary takes the full width on small phones; the two secondary buttons
        share the row under it rather than making a stack of three slabs. */
@@ -901,92 +1228,28 @@
       .hero__actions .btn--secondary{flex:1 1 0;padding-inline:var(--sp-2);}
     }
 
-    /* ---------- Hero work stack ---------- */
+    /* ---------- Hero portrait ----------
+       Stands alone (no screenshots or badges around it). Capped at 12rem below 1024px
+       so the headline still shows on a phone's first screen. */
 
-    .hero-stack{
-      position:relative;
+    .hero__photo{
       width:100%;
-      max-width:var(--hero-visual);
-      margin-inline:auto;
-    }
-
-    /* The photo sits right of centre so the screenshots behind it keep a wide
-       enough margin to read as a stack. */
-    .hero-stack__photo{
-      position:relative;
-      z-index:3;
-      width:64%;
-      margin-left:36%;
+      max-width:var(--hero-photo-sm);
       aspect-ratio:4/5;
       overflow:hidden;
       border:1px solid var(--line);
       border-radius:var(--r-lg);
       background:var(--surface);
     }
-    .hero-stack__photo img{width:100%;height:100%;object-fit:cover;}
-
-    .hero-stack__shot{
-      position:absolute;
-      width:58%;
-      aspect-ratio:16/10;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:var(--r-md);
-      background:var(--surface);
-      box-shadow:var(--shadow-float);
-      transition:transform var(--dur) var(--ease);
-    }
-    .hero-stack__shot img{width:100%;height:100%;object-fit:cover;}
-
-    .hero-stack__shot--a{z-index:1;left:2%;top:6%;transform:rotate(-6deg);}
-    .hero-stack__shot--b{z-index:2;left:8%;top:50%;transform:rotate(4deg);}
-
+    .hero__photo img{width:100%;height:100%;object-fit:cover;}
     @media (min-width:1024px){
-      .hero-stack{margin-inline:auto 0;}
-      .hero-stack__photo{width:68%;margin-left:32%;}
-      .hero-stack__shot{width:60%;}
-      .hero-stack__shot--a{left:-6%;}
-      .hero-stack__shot--b{left:2%;}
-    }
-
-    /* Hover fans the stack open, like flipping through finished work. Pointer
-       devices only: there is no hover state to leave on a touch screen. */
-    @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-      .hero-stack:hover .hero-stack__shot--a{transform:rotate(-10deg) translate(-9%,-4%);}
-      .hero-stack:hover .hero-stack__shot--b{transform:rotate(8deg) translate(-7%,4%);}
-    }
-
-    /* Two floating badges, and only two. */
-    .hero-badge{
-      position:absolute;
-      z-index:4;
-      display:flex;
-      flex-direction:column;
-      padding:var(--sp-1) var(--sp-2);
-      border:1px solid var(--line);
-      border-radius:var(--r-md);
-      background:color-mix(in srgb, var(--surface) 85%, transparent);
-      -webkit-backdrop-filter:blur(var(--sp-1));
-      backdrop-filter:blur(var(--sp-1));
-      box-shadow:var(--shadow-float);
-      line-height:var(--lh-label);
-      white-space:nowrap;
-    }
-    .hero-badge strong{color:var(--text);font-size:var(--fs-small);font-weight:var(--fw-semibold);}
-    .hero-badge span{color:var(--muted);font-size:var(--fs-label);}
-
-    .hero-badge--yrs{top:2%;left:3%;}
-    .hero-badge--certs{bottom:4%;right:-2%;}
-
-    @media (min-width:1024px){
-      .hero-badge{padding:var(--sp-2) var(--sp-3);}
-      .hero-badge--yrs{top:3%;left:4%;}
-      .hero-badge--certs{bottom:6%;right:-5%;}
+      .hero__photo{max-width:none;}
     }
 
     /* ---------- One page-load moment (DESIGN.md §8) ----------
-       Final state is the plain rule above; the keyframes only describe where each
-       piece starts. With animations off, everything already reads at rest. */
+       Headline, subhead, buttons, status, then the stat strip, 80ms apart. Final state
+       is the plain rule above; the keyframes only describe where each piece starts.
+       With animations off, everything already reads at rest. */
 
     @keyframes rise{
       from{opacity:0;transform:translateY(var(--sp-2));}
@@ -994,86 +1257,336 @@
     @keyframes photoIn{
       from{opacity:0;transform:scale(.97);}
     }
-    @keyframes slideA{
-      from{opacity:0;transform:translate(38%,10%) rotate(0deg);}
-    }
-    @keyframes slideB{
-      from{opacity:0;transform:translate(32%,-18%) rotate(0deg);}
-    }
-    @keyframes badgeIn{
-      from{opacity:0;transform:translateY(var(--sp-0));}
-    }
 
-    /* Fill is "backwards", never "both": a forward fill would keep transform under
-       the animation's control and the hover fan would never apply. */
     .hero__title{animation:rise var(--dur) ease-out backwards;}
     .hero__sub{animation:rise var(--dur) ease-out calc(var(--stagger) * 1) backwards;}
     .hero__actions{animation:rise var(--dur) ease-out calc(var(--stagger) * 2) backwards;}
-    .availability{animation:rise var(--dur) ease-out calc(var(--stagger) * 3) backwards;}
-    .hero-stack__photo{animation:photoIn var(--dur) ease-out calc(var(--stagger) * 2) backwards;}
-    .hero-stack__shot--a{animation:slideA var(--dur) ease-out calc(var(--stagger) * 4) backwards;}
-    .hero-stack__shot--b{animation:slideB var(--dur) ease-out calc(var(--stagger) * 5) backwards;}
-    .hero-badge--yrs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 7) backwards;}
-    .hero-badge--certs{animation:badgeIn var(--dur) ease-out calc(var(--stagger) * 8) backwards;}
+    .hero__copy .availability{animation:rise var(--dur) ease-out calc(var(--stagger) * 3) backwards;}
+    .hero .stat-strip{animation:rise var(--dur) ease-out calc(var(--stagger) * 4) backwards;}
+    .hero__photo{animation:photoIn var(--dur) ease-out calc(var(--stagger) * 2) backwards;}
 
-    /* ---------- Selected clients (trust strip) ---------- */
+    /* ---------- Tools marquee and Brands: supporting bands, no section padding ---------- */
 
-    .clients .label{margin-bottom:var(--sp-3);}
+    .band-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:var(--sp-3);
+      margin-bottom:var(--sp-2);
+    }
+    .band-head .label{margin-bottom:0;}
+    .brands .label{margin-bottom:var(--sp-2);}
+
+    /* GitHub graph, above the marquee with a hairline between. The box keeps the image's
+       663:104 shape at a fixed size and is sized before the image arrives, so nothing moves when
+       it loads. Label, graph, and link are centered as one group; the hairline stays on
+       .activity so it still spans the container. */
+    .activity{
+      padding-bottom:var(--sp-5);
+      margin-bottom:var(--sp-5);
+      border-bottom:1px solid var(--line);
+    }
+    /* max-content takes the graph's width; max-width keeps the group inside the container, so
+       on a narrow screen the scroll box takes the overflow and the page never scrolls sideways. */
+    .activity__group{
+      width:max-content;
+      max-width:100%;
+      margin-inline:auto;
+    }
+    /* The label spaces its items --sp-2 apart; the mark sits --sp-1 from the word. */
+    .activity__mark{
+      flex:none;
+      width:var(--icon-sm);
+      height:var(--icon-sm);
+      margin-inline-end:calc(var(--sp-1) - var(--sp-2));
+    }
+    .activity__scroll{overflow-x:auto;}
+    .activity__graph{
+      width:calc(var(--graph-max-h) * 663 / 104);
+      aspect-ratio:663 / 104;
+    }
+    .activity__graph img{
+      display:block;
+      width:100%;
+      height:100%;
+      filter:var(--graph-filter);
+    }
+    .activity__link{
+      display:inline-block;
+      margin-top:var(--sp-2);
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+    }
 
     /* ---------- Selected work ---------- */
 
+    /* Each project takes two rows of the grid, as a subgrid: its card, then the box under the
+       card (a testimonial, or empty). Cards in a row keep one height whether or not something
+       hangs under one of them. The space between projects is that box's bottom padding, there on
+       every project, so the grid pulls up by the same amount at its end and whatever follows sits
+       where it did. */
     .work-grid{
       display:grid;
       grid-template-columns:minmax(0,1fr);
-      gap:var(--sp-6) var(--sp-5);
+      column-gap:var(--sp-5);
+      margin-bottom:calc(-1 * var(--sp-6));
     }
     @media (min-width:768px){
       .work-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
     }
-
-    .project__shot{
-      display:block;
-      aspect-ratio:16/10;
-      margin-bottom:var(--sp-3);
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:var(--r-lg);
-      background:var(--surface);
+    .project-card{
+      grid-row:span 2;
+      display:grid;
+      grid-template-rows:subgrid;
     }
-    .project__shot img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      transition:transform var(--dur) var(--ease);
-    }
-    .project__shot:hover img{transform:scale(1.03);}
+    .project-card__after{padding-bottom:var(--sp-6);}
+    .project-card__after .testimonial{margin-top:var(--sp-3);}
 
-    .project__title{
-      margin-bottom:var(--sp-1);
+    .work-grid{padding:0;list-style:none;}
+    #work .filters{margin-bottom:var(--sp-5);}
+
+    /* Below 768px, only the first few matching cards show until "Show all projects" is
+       pressed. The script marks the rest as extra; from 768px everything shows. */
+    @media (max-width:767.98px){
+      .work-grid.is-collapsed .project-card--extra{display:none;}
+    }
+    .work-more{margin-top:var(--sp-5);}
+    @media (min-width:768px){
+      .work-more{display:none;}
+    }
+
+    .project-card .card__media{display:block;}
+    .project-card__shot{transition:transform var(--dur) var(--ease);}
+    .project-card .card__media:hover .project-card__shot{transform:scale(1.03);}
+    .project-card__link{
+      font-size:var(--fs-small);
+      font-weight:var(--fw-medium);
+    }
+
+    /* A client project's case study, on the card and the list row: three labeled lines. The
+       label runs in at the start of its line, in --text at the semibold weight; the text stays
+       --muted. Before the .work-row rules, so the row's own spacing wins there. */
+    .case-study{
+      display:grid;
+      gap:var(--sp-1);
+      max-width:var(--measure);
+      margin:0;
+      color:var(--muted);
+    }
+    .case-study dt{
+      display:inline;
+      color:var(--text);
+      font-weight:var(--fw-semibold);
+    }
+    .case-study dd{
+      display:inline;
+      margin:0;
+    }
+
+    /* Personal projects: below the client work, not a card or a row. The name links to the live
+       site, with the short description beneath. No screenshot, hover preview, case study, or tab.
+       It borrows the title size and internal spacing of the client projects shown above it, so
+       it reads as a project, but never their border or surface. With the cards (the default):
+       card-title size, a card body's padding, and --sp-2 between label, name, and description. */
+    .personal-work{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-2);
+      margin-top:var(--sp-6);
+      padding:var(--sp-4);
+    }
+    .personal-work .label{margin-bottom:0;}
+    .personal-work__list{
+      padding:0;
+      list-style:none;
+    }
+    .personal-work__item{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-2);
+    }
+    .personal-work__item + .personal-work__item{margin-top:var(--sp-4);}
+    .personal-work__name{
       font-size:var(--fs-h3);
       font-weight:var(--fw-semibold);
       line-height:var(--lh-h3);
       letter-spacing:var(--ls-h3);
     }
-    .project__text{
+    .personal-work__description{
       max-width:var(--measure);
-      margin-bottom:var(--sp-2);
       color:var(--muted);
     }
-    .project__link{
-      font-size:var(--fs-small);
-      font-weight:var(--fw-medium);
+    /* With the list (same gate as the list itself): row-name size and a row's spacing, --sp-5
+       above and below, no side padding, so the name lines up with the row names above. */
+    @media (min-width:1024px) and (hover:hover) and (pointer:fine){
+      .personal-work{
+        margin-top:0;
+        padding:var(--sp-5) 0;
+      }
+      .personal-work__item{gap:var(--sp-1);}
+      .personal-work__name{font-size:var(--fs-row);}
+    }
+
+    /* Two layouts from the same data (DESIGN.md §6). Cards, with their screenshots showing,
+       are the default at every width and on every touch screen. Only a wide screen with a
+       mouse or trackpad gets the list, where the screenshot moves into a hover preview; the
+       gate is the device's pointer, not width alone, so an iPad in landscape keeps the cards.
+       The script checks the same query before it wires up the preview. */
+    .work-list,
+    .work-preview{display:none;}
+    @media (min-width:1024px) and (hover:hover) and (pointer:fine){
+      .work-list{display:block;}
+      .work-preview{display:block;}
+      .work-grid,
+      .work-more{display:none;}
+    }
+
+    /* One row per project: name and description on the left, category, year, and tech chips
+       on the right. The middle column stays empty: it's where the preview sits when it
+       doesn't follow the cursor (keyboard focus, reduced motion), so it never covers the
+       row's own text. The name's link stretches over the whole row. */
+    .work-list{
+      padding:0;
+      list-style:none;
+      border-top:1px solid var(--line);
+    }
+    .work-row{
+      position:relative;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) var(--work-preview-w) auto;
+      column-gap:var(--sp-5);
+      align-items:start;
+      padding-block:var(--sp-5);
+      border-bottom:1px solid var(--line);
+    }
+    .work-row__name{
+      color:var(--text);
+      font-size:var(--fs-row);
+      font-weight:var(--fw-semibold);
+      line-height:var(--lh-h3);
+      letter-spacing:var(--ls-h3);
+      transition:color var(--dur-fast) var(--ease);
+    }
+    .work-row__link{color:inherit;}
+    .work-row__link::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:1;
+    }
+    .work-row__link:focus-visible{outline:none;}
+    /* Drawn outside the row, as elsewhere: the row has no side padding, so a ring inside it
+       would touch the text. */
+    .work-row__link:focus-visible::after{
+      outline:var(--ring-width) solid var(--accent);
+      outline-offset:var(--ring-offset);
+    }
+    .work-row__description{
+      max-width:var(--measure);
+      margin-top:var(--sp-1);
+      color:var(--muted);
+    }
+    .work-row .testimonial{margin-top:var(--sp-3);}
+    /* The source link sits above the row's stretched link, so it can be clicked on its own. */
+    .work-row .testimonial__link{
+      position:relative;
+      z-index:2;
+    }
+    .work-row__meta{
+      grid-column:3;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:var(--sp-2);
+    }
+    .work-row__meta .cluster{justify-content:flex-end;}
+    /* While a preview shows, the other rows' names step back to --muted. */
+    .work-list.is-previewing .work-row:not(.is-active) .work-row__name{color:var(--muted);}
+
+    /* The preview: one fixed-position box above the page, never in the layout, so showing or
+       moving it can't push content or cause scrolling. Under the nav (z-index 50). It fades
+       in and out over --dur-fast; the script moves it with transform. */
+    .work-preview{
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:40;
+      width:var(--work-preview-w);
+      aspect-ratio:16/10;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--r-md);
+      background:var(--surface);
+      box-shadow:var(--shadow-float);
+      pointer-events:none;
+      opacity:0;
+      visibility:hidden;
+      transition:opacity var(--dur-fast) var(--ease), visibility 0s linear var(--dur-fast);
+    }
+    .work-preview.is-visible{
+      opacity:1;
+      visibility:visible;
+      transition:opacity var(--dur-fast) var(--ease), visibility 0s;
+    }
+    .work-preview__shot{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      visibility:hidden;
+    }
+    .work-preview__shot.is-current{visibility:visible;}
+    /* Reduced motion: the preview appears and disappears at once, beside the row. */
+    @media (prefers-reduced-motion:reduce){
+      .work-preview,
+      .work-preview.is-visible{transition:none;}
+    }
+
+    /* ---------- Experience ---------- */
+
+    /* Below 768px, only the first EXPERIENCE_SHOWN_ON_PHONES entries show until "Show full
+       history" is pressed; the script marks the rest. Wider screens always show all. */
+    @media (max-width:767.98px){
+      .timeline.is-collapsed .timeline-item--extra{display:none;}
+    }
+    .timeline-more{margin-top:var(--sp-5);}
+    @media (min-width:768px){
+      .timeline-more{display:none;}
     }
 
     /* ---------- Services ---------- */
 
+    /* Plain columns, not cards: hairline rules between them, no surface, border, or
+       radius (DESIGN.md §6, §11). One column with rules between below 768px; a two-by-two
+       block from 768px, rules between the columns and between the rows; four across from
+       1180px (at 1024px, four would leave each column too narrow to read). */
     .services-grid{
       display:grid;
       grid-template-columns:minmax(0,1fr);
-      gap:var(--sp-5);
+      padding:0;
+      list-style:none;
     }
-    @media (min-width:1024px){
-      .services-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .service{padding-block:var(--sp-4);}
+    .service:first-child{padding-top:0;}
+    .service + .service{border-top:1px solid var(--line);}
+    @media (min-width:768px) and (max-width:1179.98px){
+      .services-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .service{padding:var(--sp-4) 0;}
+      .service:nth-child(-n+2){padding-top:0;}
+      .service:nth-child(odd){padding-right:var(--sp-5);}
+      .service:nth-child(even){padding-left:var(--sp-5);border-left:1px solid var(--line);}
+      .service + .service{border-top:0;}
+      .service:nth-child(n+3){border-top:1px solid var(--line);}
+    }
+    @media (min-width:1180px){
+      .services-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+      .service{padding:0 var(--sp-5);}
+      .service:first-child{padding-left:0;}
+      .service:last-child{padding-right:0;}
+      .service + .service{border-top:0;border-left:1px solid var(--line);}
     }
 
     .service__title{
@@ -1088,32 +1601,30 @@
     /* ---------- About ---------- */
 
     .about .prose p{color:var(--muted);}
-    .about .prose strong{color:var(--text);font-weight:var(--fw-medium);}
-    /* Links inside running text are underlined: colour alone isn't enough to tell
-       them apart from the words around them. */
-    .about .prose a{text-decoration:underline;text-underline-offset:0.2em;}
-    .about__tools{font-size:var(--fs-small);}
-    .prose > .about__tools{margin-top:var(--sp-4);}
+    .about .prose em{color:var(--text);}
+    .about__aside{align-self:start;}
+    .about__aside .cluster{margin-top:var(--sp-4);}
+    /* Joshua's illustration, at the top of the side column (below the copy once the columns
+       stack). Uncropped, in its own colours, at a height where the linework reads. It's black
+       lines with nothing filled between them, so it sits on a light tile (--illustration-ground);
+       on the dark page alone the lines would be about 1.03:1. */
+    .about__illustration{
+      width:max-content;
+      margin:0 0 var(--sp-5);
+      padding:var(--sp-3);
+      border-radius:var(--r-lg);
+      background:var(--illustration-ground);
+    }
+    .about__illustration img{
+      width:auto;
+      height:var(--about-illustration-h);
+    }
 
     /* ---------- Stack ---------- */
 
-    /* One row per group: the group label, then its tool chips. Label beside the chips
-       from 768px, above them on phones. */
-    .stack-list{border-top:1px solid var(--line);}
-    .stack-list__group{
-      display:grid;
-      gap:var(--sp-2);
-      padding-block:var(--sp-4);
-      border-bottom:1px solid var(--line);
-    }
-    @media (min-width:768px){
-      .stack-list__group{
-        grid-template-columns:var(--label-col) minmax(0,1fr);
-        align-items:center;
-        gap:var(--sp-4);
-      }
-    }
-    .stack-list__group .label{margin-bottom:0;}
+    /* Each group: its label, then a grid of tool tiles. */
+    .stack-group + .stack-group{margin-top:var(--sp-5);}
+    .stack-group .label{margin-bottom:var(--sp-3);}
 
     /* ---------- Certifications ---------- */
 
@@ -1159,42 +1670,18 @@
 
     /* ---------- Contact ---------- */
 
-    .contact-block{
-      padding:var(--sp-6) var(--sp-4);
-      border-radius:var(--r-lg);
+    /* Plain text on the page background with a hairline rule above, like Services. Not a
+       card: cards are for content with a thumbnail or an image (DESIGN.md §11). */
+    .contact{
+      padding-top:var(--sp-6);
+      border-top:1px solid var(--line);
     }
-    @media (min-width:768px){
-      .contact-block{padding:var(--sp-6) var(--sp-5);}
-    }
-    @media (min-width:1024px){
-      .contact-block{padding:var(--sp-7) var(--sp-6);}
-    }
-    .contact-block .section-head{margin-bottom:var(--sp-5);}
-
-    .contact__actions{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      gap:var(--sp-4);
-    }
-    @media (min-width:768px){
-      .contact__actions{flex-direction:row;flex-wrap:wrap;align-items:center;gap:var(--sp-2) var(--sp-4);}
-    }
-
-    .contact__socials{
-      display:flex;
-      flex-wrap:wrap;
-      gap:var(--sp-3);
-      font-size:var(--fs-small);
-    }
-    @media (min-width:768px){
-      .contact__socials{gap:var(--sp-4);}
-    }
-    .contact__socials a{color:var(--muted);}
-    .contact__socials a:hover{color:var(--text);}
+    .contact .section-head{margin-bottom:0;}
 
     /* ---------- Footer ---------- */
 
+    /* Name with the year beneath on the left; the place with the links beneath on
+       the right. Stacked on phones. No middle dots (DESIGN.md §11). */
     .footer{
       padding-block:var(--sp-5) var(--sp-6);
       border-top:1px solid var(--line);
@@ -1203,13 +1690,24 @@
       display:flex;
       flex-wrap:wrap;
       justify-content:space-between;
-      gap:var(--sp-2) var(--sp-5);
-      color:var(--muted);
+      gap:var(--sp-4) var(--sp-5);
       font-size:var(--fs-small);
     }
-    .footer__inner a{color:var(--muted);}
-    .footer__inner a:hover{color:var(--accent-text);}
+    .footer__col{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--sp-0);
+    }
+    @media (min-width:768px){
+      .footer__col--end{align-items:flex-end;text-align:right;}
+    }
+    .footer__name,
+    .footer__place{color:var(--text);}
+    .footer__year{color:var(--muted);}
     .footer__links{display:flex;flex-wrap:wrap;gap:var(--sp-3);}
+    .footer__links a{color:var(--muted);}
+    .footer__links a:hover{color:var(--accent-text);}
   }
 
   /* ================================================================
@@ -1275,18 +1773,6 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="nav-sentinel" aria-hidden="true"></div>
 
-<!-- Tool icons: Simple Icons 16.31.0 (CC0), fetched once and inlined so the page makes no
-     icon requests. The marks remain trademarks of their owners. Used as <use href="#icon-name">. -->
-<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="icon-figma" viewBox="0 0 24 24"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></symbol>
-  <symbol id="icon-html5" viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></symbol>
-  <symbol id="icon-css" viewBox="0 0 24 24"><path d="M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"/></symbol>
-  <symbol id="icon-javascript" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></symbol>
-  <symbol id="icon-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
-  <symbol id="icon-github" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
-  <symbol id="icon-vercel" viewBox="0 0 24 24"><path d="m12 1.608 12 20.784H0Z"/></symbol>
-</svg>
-
 <header class="nav" id="nav">
   <div class="container nav__bar">
     <a class="nav__name" href="#top">Joshua Jalandoni</a>
@@ -1295,6 +1781,7 @@
       <a class="nav__link" href="#work">Work</a>
       <a class="nav__link" href="#about">About</a>
       <a class="nav__link" href="#stack">Stack</a>
+      <a class="nav__link" href="#experience">Experience</a>
       <a class="nav__link" href="#certifications">Certifications</a>
       <a class="nav__link" href="#services">Services</a>
       <a class="nav__link" href="#contact">Contact</a>
@@ -1322,6 +1809,7 @@
     <a class="nav__sheet-link" href="#work">Work</a>
     <a class="nav__sheet-link" href="#about">About</a>
     <a class="nav__sheet-link" href="#stack">Stack</a>
+    <a class="nav__sheet-link" href="#experience">Experience</a>
     <a class="nav__sheet-link" href="#certifications">Certifications</a>
     <a class="nav__sheet-link" href="#services">Services</a>
     <a class="nav__sheet-link" href="#contact">Contact</a>
@@ -1337,106 +1825,86 @@
   <section class="section hero">
     <div class="container hero__grid">
       <div class="hero__copy">
-        <h1 class="hero__title"><span class="l1">I design websites</span><span class="l2">that make small businesses look legit.</span></h1>
-        <p class="hero__sub">Fast, clean sites for restaurants, service businesses, and creators. Designed, built, and launched from Bacolod City, Philippines.</p>
+        <h1 class="hero__title"><span class="l1">Websites and automations</span><span class="l2">for small businesses.</span></h1>
+        <p class="hero__sub">Fast, clean sites for restaurants, service businesses, and creators &mdash; plus the automations that run behind them. Designed, built, and launched from Bacolod City, Philippines.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="#work">See my work</a>
           <a class="btn btn--secondary" href="#contact">Let&rsquo;s talk</a>
           <a class="btn btn--secondary" href="public/files/joshua-jalandoni-resume.pdf" target="_blank" rel="noopener">Resume <span class="arrow" aria-hidden="true">&#8599;</span></a>
         </div>
         <p class="availability"><span class="availability__dot" aria-hidden="true"></span>Available for new projects</p>
+        <!-- Drawn from STATS in the script. -->
+        <ul class="stat-strip" data-render="hero-stats" data-requires-js></ul>
       </div>
 
       <div class="hero__visual">
-        <div class="hero-stack">
-          <div class="hero-stack__shot hero-stack__shot--a">
-            <img src="public/images/projects/rusty-mule-pizza-desktop.webp" width="1200" height="750" alt="The Rusty Mule Pizza website, showing the wood-fired oven hero and ordering buttons.">
-          </div>
-          <div class="hero-stack__shot hero-stack__shot--b">
-            <img src="public/images/projects/rubens-removal-desktop.webp" width="1200" height="750" alt="The Rubens Removal LLC website, showing the land clearing hero and quote buttons.">
-          </div>
-          <div class="hero-stack__photo">
-            <img src="public/images/hero/headshot.webp" width="640" height="800" fetchpriority="high" alt="Joshua Jalandoni, web designer and developer.">
-          </div>
-
-          <div class="hero-badge hero-badge--yrs">
-            <strong>4+ years</strong>
-            <span>building sites and automations</span>
-          </div>
-          <!-- Not a link: the certifications section it pointed to isn't built yet. -->
-          <div class="hero-badge hero-badge--certs">
-            <strong>12 certifications</strong>
-            <span>Anthropic and Google</span>
-          </div>
+        <div class="hero__photo">
+          <img src="public/images/hero/joshua-at-desk.webp" width="736" height="920" fetchpriority="high" alt="Joshua Jalandoni at his desk, with code on the monitor behind him and his PC and laptop on either side.">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Selected clients. Drawn from CLIENTS in the script. -->
+  <!-- GitHub graph, then Tools and platforms, in one band.
+       The graph comes from ghchart.rshah.org, a third-party service: if the image fails to load,
+       the whole block (label, graph, link) hides. That needs JS, so without JS it's hidden.
+       Its color is in the URL, copied from the light --accent (DESIGN.md §6): change it with
+       the tokens. The label's mark is Octicons 19.36.0 mark-github-16 (MIT, github.com/primer/octicons).
+       Tools are drawn from TOOL_LOGOS in the script, twice for a seamless loop (the copy hidden
+       from screen readers). Tools Joshua uses, not clients or endorsements: never label this
+       "Trusted by". -->
   <div class="container">
-    <section class="clients" aria-labelledby="clientsLabel" data-requires-js>
-      <h2 class="label" id="clientsLabel">Selected clients</h2>
-      <ul class="logo-strip" data-render="clients"></ul>
+    <section class="activity" aria-labelledby="activityLabel" data-activity data-requires-js>
+      <div class="activity__group">
+        <h2 class="label" id="activityLabel"><svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg><svg class="activity__mark" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/></svg>GitHub</h2>
+        <div class="activity__scroll" data-activity-scroll>
+          <div class="activity__graph">
+            <img src="https://ghchart.rshah.org/5A7042/joshuajalandoni-sketch" width="663" height="104" alt="GitHub contribution graph for joshuajalandoni-sketch" loading="lazy" onerror="this.closest('[data-activity]').hidden=true">
+          </div>
+        </div>
+        <a class="activity__link" href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener noreferrer">View GitHub profile</a>
+      </div>
+    </section>
+    <section class="tools" aria-labelledby="toolsLabel" data-requires-js>
+      <div class="band-head">
+        <h2 class="label" id="toolsLabel"><svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg>Tools and platforms I work with</h2>
+        <button class="icon-btn marquee-toggle" type="button" aria-pressed="false" aria-controls="tools-marquee" aria-label="Pause the logo animation" data-marquee-toggle>
+          <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+          <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+        </button>
+      </div>
+      <div class="marquee" id="tools-marquee">
+        <div class="marquee__track">
+          <ul class="marquee__set" data-render="tool-logos"></ul>
+          <ul class="marquee__set" aria-hidden="true" data-render="tool-logos-copy"></ul>
+        </div>
+      </div>
     </section>
   </div>
 
-  <!-- Selected work -->
-  <section class="section" id="work">
+  <!-- Selected work. Client projects are drawn from PROJECTS in the script, twice: a list with a
+       hover preview for wide screens with a mouse or trackpad, and cards everywhere else. The
+       CSS shows one. The filter tabs come from the client projects' categories and filter both.
+       Personal projects sit on their own line below, outside the filters. -->
+  <section class="section" id="work" data-requires-js>
     <div class="container">
       <header class="section-head">
         <h2 class="section-head__title">Selected work</h2>
       </header>
-
-      <div class="work-grid">
-
-        <article class="project">
-          <a class="project__shot" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img loading="lazy" decoding="async" src="public/images/projects/rusty-mule-pizza-desktop.webp" width="1200" height="750" alt="">
-          </a>
-          <h3 class="project__title">Rusty Mule Pizza</h3>
-          <p class="project__text">A wood-fired pizzeria in Karnack, Texas that needed its menu, hours, and phone orders in one place.</p>
-          <a class="project__link" href="https://rustymulepizza.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Rusty Mule Pizza)</span></a>
-        </article>
-
-        <article class="project">
-          <a class="project__shot" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img loading="lazy" decoding="async" src="public/images/projects/rubens-removal-desktop.webp" width="1200" height="750" alt="">
-          </a>
-          <h3 class="project__title">Rubens Removal LLC</h3>
-          <p class="project__text">A Florida land-clearing company that needed local visitors to turn into quote requests and calls.</p>
-          <a class="project__link" href="https://rubensremoval-llc.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Rubens Removal LLC)</span></a>
-        </article>
-
-        <article class="project">
-          <a class="project__shot" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img loading="lazy" decoding="async" src="public/images/projects/pinoy-eats-desktop.webp" width="1200" height="750" alt="">
-          </a>
-          <h3 class="project__title">Pinoy Eats</h3>
-          <p class="project__text">A Filipino home kitchen in Greenville, Texas that needed its made-to-order story to sell the food.</p>
-          <a class="project__link" href="https://pinoyeats.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Pinoy Eats)</span></a>
-        </article>
-
-        <article class="project">
-          <a class="project__shot" href="https://manncayona.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img loading="lazy" decoding="async" src="public/images/projects/mann-cayona-desktop.webp" width="1200" height="750" alt="">
-          </a>
-          <h3 class="project__title">Mann Cayona</h3>
-          <p class="project__text">An Iloilo visual artist who needed her woven canvas work shown the way it deserves.</p>
-          <a class="project__link" href="https://manncayona.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Mann Cayona)</span></a>
-        </article>
-
-        <article class="project">
-          <a class="project__shot" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-            <img loading="lazy" decoding="async" src="public/images/projects/berserk-desktop.webp" width="1200" height="750" alt="">
-          </a>
-          <h3 class="project__title">Berserk</h3>
-          <p class="project__text">A personal project: a dark, atmospheric tribute site built to push layout and mood further than client work allows.</p>
-          <a class="project__link" href="https://berserk-jj.vercel.app/" target="_blank" rel="noopener">Visit site <span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (Berserk)</span></a>
-        </article>
-
+      <div class="filters" role="group" aria-label="Filter projects" data-render="project-filters"></div>
+      <ul class="work-list" id="projects-list" data-render="project-rows"></ul>
+      <ul class="work-grid is-collapsed" id="projects-grid" data-render="projects"></ul>
+      <div class="work-more" hidden>
+        <button class="btn btn--secondary" type="button" aria-expanded="false" aria-controls="projects-grid" data-show-all-projects>Show all projects</button>
+      </div>
+      <div class="personal-work">
+        <h3 class="label"><svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg>Personal projects</h3>
+        <ul class="personal-work__list" data-render="personal-projects"></ul>
       </div>
     </div>
+    <!-- The list's preview: every desktop screenshot, stacked, one shown at a time. Decorative
+         (the row already names the project), so hidden from screen readers. -->
+    <div class="work-preview" aria-hidden="true" data-render="project-previews"></div>
   </section>
 
   <!-- About -->
@@ -1445,10 +1913,31 @@
       <header class="section-head">
         <h2 class="section-head__title">About</h2>
       </header>
-      <div class="prose">
-        <p>I am <strong>Joshua Jalandoni</strong>, a web designer and developer in Bacolod City, Philippines. I have spent four years building sites, apps, and automations, backed by a background in digital operations and AI ops that keeps every project clean and considered.</p>
-        <p>I work best with small businesses. I listen first, ask the questions that matter, and ship something finished rather than something clever. Most of my clients are restaurants, service businesses, and creators who need to look credible online and start getting calls.</p>
-        <p class="about__tools">Tools I use: Figma, Claude Code, GitHub, Vercel. Certified in AI Fluency and the Claude platform through <a href="https://verify.skilljar.com/c/b76djp8gn6yd" target="_blank" rel="noopener">Anthropic</a>, and in AI through the <a href="https://coursera.org/verify/professional-cert/21JAF4EYINPJ" target="_blank" rel="noopener">Google AI Professional Certificate</a>.</p>
+      <div class="split">
+        <div class="prose">
+          <p>I&rsquo;m Joshua Jalandoni, a web designer and developer in Bacolod City, Philippines. I build websites and automations for small businesses &mdash; restaurants, service companies, and creators who need to look credible online and start getting calls.</p>
+          <p>I didn&rsquo;t come to this from design school. I spent years in customer support for Capital One and American Express, moved into sales, and now work as a Claude Operator testing live AI systems for Lion Sales Funnels. That&rsquo;s an unusual path for someone who builds websites, and it&rsquo;s the reason I think about your site as a thing that has to <em>work</em> &mdash; bring in calls, answer the questions people actually ask &mdash; rather than a thing that has to look impressive.</p>
+          <p>Most of my work lately is automation: the systems that run quietly behind a business so the owner isn&rsquo;t doing the same task by hand every week.</p>
+          <p>I work fair, and I&rsquo;d rather do good work for the right people than chase everyone.</p>
+          <p>On the side I make animations and 3D models, mostly for fun.</p>
+        </div>
+        <div class="about__aside">
+          <figure class="about__illustration">
+            <img src="public/images/jj-illustration.webp" width="295" height="400" alt="Line illustration of Joshua in glasses and a red, yellow, and green cap." loading="lazy" decoding="async">
+          </figure>
+          <blockquote class="pull-quote">
+            <p>I&rsquo;d rather build something that gets you calls than something that wins awards.</p>
+          </blockquote>
+          <ul class="cluster">
+            <li class="chip chip--lg">Websites</li>
+            <li class="chip chip--lg">Landing pages</li>
+            <li class="chip chip--lg">Automations</li>
+            <li class="chip chip--lg">Redesigns</li>
+            <li class="chip chip--lg">Data annotation</li>
+            <li class="chip chip--lg">Quality review</li>
+            <li class="chip chip--lg">Community management</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -1459,9 +1948,31 @@
       <header class="section-head">
         <h2 class="section-head__title">Stack</h2>
       </header>
-      <div class="stack-list" data-render="stack"></div>
+      <div class="stack" data-render="stack"></div>
     </div>
   </section>
+
+  <!-- Experience. Drawn from EXPERIENCE in the script, newest first. -->
+  <section class="section" id="experience" data-requires-js>
+    <div class="container">
+      <header class="section-head">
+        <h2 class="section-head__title">Experience</h2>
+      </header>
+      <ol class="timeline is-collapsed" id="experience-list" data-render="experience"></ol>
+      <div class="timeline-more" hidden>
+        <button class="btn btn--secondary" type="button" aria-expanded="false" aria-controls="experience-list" data-show-full-history>Show full history</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brands. Drawn from BRANDS in the script. Starts hidden; the script shows it only when
+       the list has at least one logo, so an empty list never shows a bare heading. -->
+  <div class="container">
+    <section class="brands" aria-labelledby="brandsLabel" data-requires-js hidden>
+      <h2 class="label" id="brandsLabel"><svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg>Brands I&rsquo;ve worked with</h2>
+      <ul class="brand-grid" data-render="brands"></ul>
+    </section>
+  </div>
 
   <!-- Certifications. Drawn from CERTIFICATES in the script; the count comes from the
        same array, so it can't drift from the cards. -->
@@ -1482,41 +1993,48 @@
   <section class="section" id="services">
     <div class="container">
       <header class="section-head">
-        <h2 class="section-head__title">What I do</h2>
+        <h2 class="section-head__title">Services</h2>
       </header>
-      <div class="services-grid">
-        <div class="service">
-          <h3 class="service__title">Website design</h3>
-          <p class="service__text">A layout that fits your business and your customers, not a template everyone else is already using.</p>
-        </div>
-        <div class="service">
-          <h3 class="service__title">Build and launch</h3>
-          <p class="service__text">Fast, mobile-friendly sites, deployed and live, with the domain and hosting sorted out for you.</p>
-        </div>
-        <div class="service">
-          <h3 class="service__title">Automation</h3>
-          <p class="service__text">Workflows that handle the repetitive parts of running your business, so you spend less time on admin.</p>
-        </div>
-      </div>
+      <ul class="services-grid">
+        <li class="service">
+          <h3 class="service__title">New website</h3>
+          <p class="service__text">A site built from scratch for a business that doesn&rsquo;t have one, or has one that isn&rsquo;t working. Menu, services, hours, contact &mdash; whatever your customers actually need to find.</p>
+        </li>
+        <li class="service">
+          <h3 class="service__title">Redesign</h3>
+          <p class="service__text">You have a site. It looks dated, it&rsquo;s slow, or it doesn&rsquo;t work on a phone. I rebuild it without losing what&rsquo;s already working.</p>
+        </li>
+        <li class="service">
+          <h3 class="service__title">Automations</h3>
+          <p class="service__text">The repetitive work running your business that shouldn&rsquo;t need a person doing it by hand every week.</p>
+        </li>
+        <li class="service">
+          <h3 class="service__title">Virtual assistance</h3>
+          <p class="service__text">Ongoing support for business owners who need an extra pair of hands &mdash; inbox, scheduling, data, and the admin work that piles up.</p>
+        </li>
+      </ul>
     </div>
   </section>
 
   <!-- Contact -->
   <section class="section" id="contact">
     <div class="container">
-      <div class="card contact-block">
+      <div class="contact split">
         <header class="section-head">
-          <h2 class="section-head__title">Need a website? Let&rsquo;s build it.</h2>
-          <p class="section-head__deck">Tell me about your business and what you need it to do. I reply to every message.</p>
+          <h2 class="section-head__title">Let&rsquo;s talk about your project</h2>
+          <p class="section-head__deck">Tell me about your business and what you need the site to do. I&rsquo;d rather get on a video call than trade emails &mdash; I&rsquo;ll walk you through what I&rsquo;d build and why, and you can decide from there.</p>
         </header>
-        <div class="contact__actions">
+        <div class="contact-details">
+          <p class="availability"><span class="availability__dot" aria-hidden="true"></span>Available for new projects</p>
+          <p class="contact-details__line">I usually reply within 24 hours</p>
+          <p class="contact-details__line"><span>Bacolod City, Philippines</span><span>Remote worldwide</span></p>
           <a class="btn btn--primary" href="mailto:joshuajalandoni@gmail.com">Email me</a>
-          <div class="contact__socials">
-            <a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.youtube.com/@JoshuaJAutomation" target="_blank" rel="noopener">YouTube</a>
-            <a href="https://www.facebook.com/profile.php?id=61592087012874" target="_blank" rel="noopener">Facebook</a>
-          </div>
+          <ul class="contact-details__channels">
+            <li><a href="mailto:joshuajalandoni@gmail.com">joshuajalandoni@gmail.com</a></li>
+            <li><a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://www.youtube.com/@JoshuaJAutomation" target="_blank" rel="noopener">YouTube</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1526,12 +2044,18 @@
 
 <footer class="footer">
   <div class="container footer__inner">
-    <div>Joshua Jalandoni &middot; 2026 &middot; Bacolod City, Philippines</div>
-    <div class="footer__links">
-      <a href="mailto:joshuajalandoni@gmail.com">joshuajalandoni@gmail.com</a>
-      <a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.youtube.com/@JoshuaJAutomation" target="_blank" rel="noopener">YouTube</a>
+    <div class="footer__col">
+      <p class="footer__name">Joshua Jalandoni</p>
+      <p class="footer__year">2026</p>
+    </div>
+    <div class="footer__col footer__col--end">
+      <p class="footer__place">Bacolod City, Philippines</p>
+      <div class="footer__links">
+        <a href="mailto:joshuajalandoni@gmail.com">joshuajalandoni@gmail.com</a>
+        <a href="https://www.linkedin.com/in/joshua-jalandoni-50ba0a202/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/joshuajalandoni-sketch" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@JoshuaJAutomation" target="_blank" rel="noopener">YouTube</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -1547,6 +2071,7 @@
     <figcaption class="lightbox__caption">
       <p class="lightbox__title" id="lightboxTitle"></p>
       <div class="cluster lightbox__meta" id="lightboxMeta"></div>
+      <div id="lightboxVerify" hidden></div>
     </figcaption>
   </figure>
 </dialog>
@@ -1554,46 +2079,87 @@
 <script>
   /* Everything the page needs at runtime: the content data and the templates that draw
      it, the theme toggle, the nav's scrolled state, active-section highlighting, the
-     mobile menu, the certificate lightbox, and the stat count-up hook. Sections written
-     as plain HTML stay fully readable with JS off; the three drawn from data (Selected
-     clients, Stack, Certifications) are hidden in that case rather than shown empty. */
+     mobile menu, the certificate lightbox, the marquee's pause button, and the stat count-up
+     hook. Sections written as plain HTML stay fully readable with JS off; the parts drawn
+     from data (the hero stats, the tools marquee, Selected work, Stack, Experience, Brands,
+     Certifications) are hidden in that case rather than shown empty. */
   (function(){
 
     /* ==========================================================================
        CONTENT DATA: edit here.
-       Adding a client, a tool, or a certificate means adding one object to its list.
+       Adding a tool, a brand, or a certificate means adding one object to its list.
        Nothing below this block needs to change.
        ========================================================================== */
 
-    /* Web design clients, in display order. logo: null shows the name as a text
-       wordmark. To use a logo file instead, put it in public/images/clients/ and set
-       logo: { src: 'public/images/clients/file-name.png', width: 000, height: 000 }. */
-    var CLIENTS = [
-      { name: 'Rusty Mule Pizza',   logo: null },
-      { name: 'Rubens Removal LLC', logo: null },
-      { name: 'Pinoy Eats',         logo: null },
-      { name: 'Mann Cayona',        logo: null }
+    /* The tools marquee: tools and platforms Joshua works with, in display order. Not clients
+       and not endorsements; never add a logo beyond the approved list, and never merge this
+       with BRANDS.
+       - icon: a symbol in the icon sprite at the bottom of <body> (the part after "icon-").
+       - box: the mark's drawn extent inside its 24x24 symbol (x, y, width, height), so the
+         logo is cropped to the mark rather than its padding.
+       - scale: sizes the mark by eye against --band-logo-h, measured once from the mark's shape
+         and ink: every logo gets the same visual weight, not the same box.
+       OpenAI and Google Workspace are on the approved list but have no icon in Simple Icons
+       or Devicon, so they're not shown. */
+    var TOOL_LOGOS = [
+      { name: 'Cloudflare', icon: 'cloudflare',   box: [-0.25, 6.32, 24.5, 11.35],   scale: 0.638 },
+      { name: 'Figma',      icon: 'figma',        box: [3.41, -0.25, 17.18, 24.5],   scale: 1.143 },
+      { name: 'GitHub',     icon: 'github',       box: [-0.25, 0.05, 24.5, 23.91],   scale: 1.004 },
+      { name: 'Vercel',     icon: 'vercel',       box: [-0.25, 1.36, 24.5, 21.28],   scale: 0.918 },
+      { name: 'Claude',     icon: 'claude',       box: [-0.24, -0.25, 24.48, 24.5],  scale: 1.042 },
+      { name: 'Gemini',     icon: 'googlegemini', box: [-0.25, -0.25, 24.5, 24.5],   scale: 1.143 },
+      { name: 'n8n',        icon: 'n8n',          box: [-0.25, 5.43, 24.5, 13.13],   scale: 0.848 },
+      { name: 'Docker',     icon: 'docker',       box: [-0.25, 3.14, 24.5, 17.72],   scale: 0.827 },
+      { name: 'Slack',      icon: 'slack',        box: [-0.17, -0.17, 24.33, 24.33], scale: 0.98 },
+      { name: 'Leaflet',    icon: 'leaflet',      box: [3.98, -0.25, 16.04, 24.5],   scale: 1.135 }
     ];
 
-    /* Tools, in groups. icon is the name of a symbol in the icon sprite at the top of
-       <body> (the part after "icon-"); icon: null gives a text-only chip. */
+    /* Brands Joshua has worked for or with, one logo each, in display order. Empty until he
+       supplies the files, and while it's empty the whole band stays hidden. Only add a logo he
+       supplied, of a company he worked for or with and has permission to show; never merge
+       this with TOOL_LOGOS ("I worked with these" is a different claim from "I use these").
+       - name: the company's name, read out by screen readers.
+       - src: 'public/images/brands/{brand-slug}.svg' (or .png). It's painted in --muted through
+         a mask, so it must be a one-color SVG or a PNG with a transparent background; a JPG,
+         or a logo on a solid background, would show as a solid rectangle.
+       - width, height: the file's real dimensions, which set the logo's shape.
+       - scale: optional, default 1. Evens out visual weight, e.g. 0.9 for a dense square mark,
+         1.1 for a light wordmark. */
+    var BRANDS = [];
+
+    /* Tools, in groups, in display order. icon is the name of a symbol in the icon sprite
+       at the bottom of <body> (the part after "icon-"). A tool with no official icon uses
+       'placeholder'; never draw an approximation of a company's logo. */
     var STACK = [
-      { group: 'Design', tools: [
-        { name: 'Figma', icon: 'figma' }
-      ]},
       { group: 'Build', tools: [
+        { name: 'JavaScript', icon: 'javascript' },
         { name: 'HTML',       icon: 'html5' },
         { name: 'CSS',        icon: 'css' },
-        { name: 'JavaScript', icon: 'javascript' }
+        { name: 'React',      icon: 'react' },
+        { name: 'Tailwind',   icon: 'tailwindcss' },
+        { name: 'VS Code',    icon: 'vscode' }
       ]},
-      { group: 'AI', tools: [
-        { name: 'Claude Code',     icon: 'claude' },
-        { name: 'Claude Platform', icon: 'claude' },
-        { name: 'Claude Cowork',   icon: 'claude' }
+      { group: 'Automation & AI', tools: [
+        { name: 'n8n',             icon: 'n8n' },
+        { name: 'Claude API',      icon: 'claude' },
+        { name: 'OpenAI API',      icon: 'placeholder' },
+        { name: 'Gemini API',      icon: 'googlegemini' },
+        { name: 'Grok',            icon: 'placeholder' },
+        { name: 'Google Sheets',   icon: 'googlesheets' },
+        { name: 'Google Drive',    icon: 'googledrive' }
       ]},
-      { group: 'Ship', tools: [
-        { name: 'GitHub', icon: 'github' },
-        { name: 'Vercel', icon: 'vercel' }
+      { group: 'Ship & infrastructure', tools: [
+        { name: 'Vercel',     icon: 'vercel' },
+        { name: 'Cloudflare', icon: 'cloudflare' },
+        { name: 'Git',        icon: 'git' },
+        { name: 'Docker',     icon: 'docker' },
+        { name: 'Forgejo',    icon: 'forgejo' },
+        { name: 'Authentik',  icon: 'authentik' },
+        { name: 'pgAdmin',    icon: 'placeholder' }
+      ]},
+      { group: 'Design & tools', tools: [
+        { name: 'Figma',   icon: 'figma' },
+        { name: 'Slack',   icon: 'slack' }
       ]}
     ];
 
@@ -1604,11 +2170,14 @@
        - image: the full certificate in public/images/certifications/, with its real
          width and height. The card uses a 600px WebP of the same name in thumbs/.
        - feature: true shows the wide card, with courses listed if given.
+       - verifyUrl: the issuer's public page that verifies this certificate, shown as a
+         "Verify" link on the card and in the lightbox. '' until there is one: no link shows.
        Below the list, CERTIFICATES_SHOWN sets how many grid cards per issuer show before
-       the "Show all certificates" button. */
+       the button, for each column count. */
     var CERTIFICATES = [
       { title: 'Google AI Professional Certificate', issuer: 'Google', date: '2026-06-03', feature: true,
         image: 'google-ai-professional-certificate.jpg', width: 1200, height: 928,
+        verifyUrl: 'https://www.coursera.org/account/accomplishments/specialization/21JAF4EYINPJ',
         courses: [
           'AI Fundamentals',
           'AI for Brainstorming and Planning',
@@ -1620,31 +2189,158 @@
         ] },
 
       { title: 'Claude 101', issuer: 'Anthropic', date: null,
-        image: 'anthropic-claude-101.png', width: 935, height: 714 },
+        image: 'anthropic-claude-101.png', width: 935, height: 714,
+        verifyUrl: 'https://verify.skilljar.com/c/zqdziqqvtse4' },
       { title: 'Claude Code 101', issuer: 'Anthropic', date: null,
-        image: 'anthropic-claude-code-101.png', width: 949, height: 719 },
+        image: 'anthropic-claude-code-101.png', width: 949, height: 719,
+        verifyUrl: 'https://verify.skilljar.com/c/proev752y8dc' },
       { title: 'Claude Platform 101', issuer: 'Anthropic', date: null,
-        image: 'anthropic-claude-platform-101.png', width: 950, height: 563 },
+        image: 'anthropic-claude-platform-101.jpg', width: 1200, height: 909,
+        verifyUrl: 'https://verify.skilljar.com/c/tasao5euiu3h' },
       { title: 'Claude with the Anthropic API', issuer: 'Anthropic', date: null,
-        image: 'anthropic-claude-with-the-anthropic-api.png', width: 946, height: 717 },
+        image: 'anthropic-claude-with-the-anthropic-api.png', width: 946, height: 717,
+        verifyUrl: 'https://verify.skilljar.com/c/nzyooxtn522z' },
       { title: 'Introduction to Claude Cowork', issuer: 'Anthropic', date: null,
-        image: 'anthropic-claude-cowork-intro.png', width: 949, height: 718 },
+        image: 'anthropic-claude-cowork-intro.png', width: 949, height: 718,
+        verifyUrl: 'https://verify.skilljar.com/c/b76djp8gn6yd' },
       { title: 'AI Fluency: AI Capabilities & Limitations', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-ai-capabilities-and-limitations.png', width: 948, height: 718 },
+        image: 'anthropic-ai-fluency-ai-capabilities-and-limitations.png', width: 948, height: 718,
+        verifyUrl: 'https://verify.skilljar.com/c/84yk6ts8fv5s' },
       { title: 'AI Fluency for Builders', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-for-builders.png', width: 949, height: 718 },
+        image: 'anthropic-ai-fluency-for-builders.png', width: 949, height: 718,
+        verifyUrl: 'https://verify.skilljar.com/c/ud7m4sa6vrwr' },
       { title: 'AI Fluency for Small Businesses', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-for-small-businesses.png', width: 949, height: 718 },
+        image: 'anthropic-ai-fluency-for-small-businesses.png', width: 949, height: 718,
+        verifyUrl: 'https://verify.skilljar.com/c/rdbrnq3s5kqe' },
       { title: 'AI Fluency for educators', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-for-educators.png', width: 948, height: 720 },
+        image: 'anthropic-ai-fluency-for-educators.png', width: 948, height: 720,
+        verifyUrl: 'https://verify.skilljar.com/c/xowiuxaistif' },
       { title: 'AI Fluency for students', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-for-students.png', width: 950, height: 718 },
+        image: 'anthropic-ai-fluency-for-students.png', width: 950, height: 718,
+        verifyUrl: 'https://verify.skilljar.com/c/7qxu2v5wbztf' },
       { title: 'AI Fluency for nonprofits', issuer: 'Anthropic', date: null,
-        image: 'anthropic-ai-fluency-for-nonprofits.png', width: 950, height: 719 }
+        image: 'anthropic-ai-fluency-for-nonprofits.png', width: 950, height: 719,
+        verifyUrl: 'https://verify.skilljar.com/c/xs3caguqkw8y' }
     ];
 
-    /* Grid cards shown per issuer before "Show all certificates". Feature cards always show. */
-    var CERTIFICATES_SHOWN = 4;
+    /* Grid cards shown per issuer before the button, keyed by the grid's column count at the
+       current width (one column below 768px, two from 768px, three from 1024px). Each count
+       fills complete rows, so a row is never left part-filled. Feature cards always show. */
+    var CERTIFICATES_SHOWN = { 1: 3, 2: 6, 3: 6 };
+
+    /* Projects for Selected work, in display order. Wording is verbatim from CONTENT.md;
+       write italics *like this*.
+       - category: also the filter tab it appears under. Tabs are "All" plus each category,
+         in the order the categories first appear here.
+       - year: shown in the desktop list, not on the cards.
+       - location: kept for reference; not shown on the card.
+       - problem / built / result: a client project's case study, shown as three labeled lines
+         (Problem, What I built, Result) on the card and the list row.
+       - description: Personal projects only, shown on the Personal projects line below the
+         grid. Personal projects get no card, row, screenshot, hover preview, or filter tab.
+       - desktop / mobile: client projects only. Screenshots in public/images/projects/ with
+         their real sizes. The desktop one is also the list's hover preview. mobile: null
+         leaves the phone screenshot off. Personal projects carry neither.
+       - tech: the chips, as found in the live site's code.
+       - testimonial: optional, { quote, source, detail }. Shown under the project's card and in
+         its list row, with source linking to the project's url. Add one to any client project;
+         nothing else changes. Wording verbatim from CONTENT.md. */
+    var PROJECTS = [
+      { name: 'Rusty Mule Pizza', category: 'Restaurants', year: '2025', location: 'Karnack, Texas',
+        url: 'https://rustymulepizza.vercel.app',
+        problem: 'Every order came in by phone. No site, no online menu.',
+        built: 'A one-page site with the menu, hours, and a tap-to-call button.',
+        result: 'Customers can see the menu and call in one tap, without phoning to ask what’s on.',
+        desktop: { src: 'public/images/projects/rusty-mule-pizza-desktop.webp', width: 1200, height: 750 },
+        mobile: { src: 'public/images/projects/rusty-mule-pizza-mobile.webp', width: 360, height: 800 },
+        tech: ['React', 'Vite'] },
+      { name: 'Rubens Removal LLC', category: 'Service businesses', year: '2025', location: 'Florida',
+        url: 'https://rubensremoval-llc.vercel.app',
+        problem: 'A growing removal team with no online presence at all.',
+        built: 'A simple site showing their work, with a direct contact link.',
+        result: 'A findable home for the business, with enquiries coming straight to them.',
+        desktop: { src: 'public/images/projects/rubens-removal-desktop.webp', width: 1200, height: 750 },
+        mobile: { src: 'public/images/projects/rubens-removal-mobile.webp', width: 360, height: 800 },
+        tech: ['React', 'Vite'] },
+      { name: 'Pinoy Eats', category: 'Restaurants', year: '2025', location: 'Greenville, Texas',
+        url: 'https://pinoyeats.vercel.app',
+        problem: 'Menu and hours lived in scattered Facebook group posts. Nowhere to send a customer.',
+        built: 'A clean site with the full menu, hours, and contact details in one place.',
+        result: 'Menu, hours, and contact in one place instead of scattered posts.',
+        desktop: { src: 'public/images/projects/pinoy-eats-desktop.webp', width: 1200, height: 750 },
+        mobile: { src: 'public/images/projects/pinoy-eats-mobile.webp', width: 360, height: 800 },
+        tech: ['Tailwind', 'JavaScript'] },
+      { name: 'Mann Cayona', category: 'Creators', year: '2025', location: 'Iloilo City, Philippines',
+        url: 'https://manncayona.vercel.app',
+        problem: 'An artist selling by word of mouth alone, with no way for buyers to find him or get in touch.',
+        built: 'A gallery-style site that showcases the work and gives buyers a direct way to reach him.',
+        result: 'Three paying clients have come through the site.',
+        desktop: { src: 'public/images/projects/mann-cayona-desktop.webp', width: 1200, height: 750 },
+        mobile: { src: 'public/images/projects/mann-cayona-mobile.webp', width: 360, height: 800 },
+        tech: ['React'],
+        testimonial: { quote: 'It helped me get new clients, made it easier to showcase and sell my art business, and helped me make more connections. It’s been a really valuable tool for getting my work out there and making the business look more professional.',
+          source: 'Mann Cayona', detail: 'artist' } },
+      { name: 'Berserk Tribute', category: 'Personal', year: '2024', location: null,
+        url: 'https://berserk-jj.vercel.app',
+        description: 'A personal tribute to Kentaro Miura’s *Berserk*. Built to push my own limits on motion, dark-theme typography, and pacing — the techniques here end up in client work later.',
+        tech: ['React', 'Tailwind'] }
+    ];
+
+    /* Client work fills the list, the cards, and the filter tabs; Personal projects get their
+       own line below the grid. */
+    var CLIENT_PROJECTS = PROJECTS.filter(function(p){ return p.category !== 'Personal'; });
+    var PERSONAL_PROJECTS = PROJECTS.filter(function(p){ return p.category === 'Personal'; });
+
+    /* Project cards shown on phones (below 768px) before "Show all projects". */
+    var PROJECTS_SHOWN_ON_PHONES = 3;
+
+    /* Experience, newest first. Wording and dates are verbatim from CONTENT.md.
+       org: null when no organization is named. logo: null for none, { glyph: 'monitor' } for the
+       section-label icon, or { src, width, height, kind } for a company logo from
+       public/logos/: the file's real size (which gives its shape), and kind 'wordmark' for a logo
+       that is mostly lettering, which needs more height to read; anything else is sized as a mark.
+       The logos were supplied by Joshua; confirm permission to show each one before this deploys
+       (DESIGN.md §12).
+       review: optional, { quote, source, detail }, shown under the entry's description, smaller
+       and quieter. Words only: never a star rating, rate, or hours. */
+    var EXPERIENCE = [
+      { role: 'Claude Operator', org: 'Lion Sales Funnels', dates: 'July 2026 – Present',
+        description: 'QA and delivery for live AI systems: structured verification sweeps, cross-checking AI-generated output against source records, version audits, and data-integrity checks.',
+        logo: { src: 'public/logos/lion-sales-funnels.png', width: 306, height: 426 } },
+      { role: 'Freelance Web Designer & Developer', org: null, dates: '2022 – Present',
+        description: 'Websites and automations for small businesses in the US and the Philippines. Four client sites shipped across restaurants, service companies, and creators.',
+        logo: { glyph: 'monitor' } },
+      { role: 'Digital Engagement & Operations Strategist', org: null, dates: 'Aug 2024 – June 2026',
+        description: 'Managed high-volume conversational channels, tracked engagement data, and ran quality and linguistic reviews on outbound communication.',
+        logo: null },
+      { role: 'Game Advisor & Quality Reviewer', org: 'Roblox', dates: 'Jul 2024 – Aug 2024',
+        description: 'Reviewed user-generated content and platform data against compliance and quality standards.',
+        logo: { src: 'public/logos/roblox.png', width: 512, height: 512 },
+        review: { quote: 'Joshua was a fantastic game ambassador, bringing a lot of enthusiasm and a proactive attitude to the role. He consistently went the extra mile and was a great asset to the team.',
+          source: 'Upwork client', detail: '2024' } },
+      { role: 'Virtual Assistant & Content Specialist', org: 'VA House PH', dates: 'Jan 2020 – Mar 2024',
+        description: 'Managed digital assets and content pipelines for distributed businesses.',
+        logo: { src: 'public/logos/va-house.png', width: 357, height: 174 } },
+      { role: 'Customer Data & Support Representative', org: 'American Express', dates: 'Jun 2020 – Jul 2022',
+        description: 'Reviewed sensitive financial profiles under strict accuracy and compliance requirements, then moved into sales.',
+        /* A square box, so a mark, even though it holds lettering: the letters are 15.7% of the
+           box's height, about 3.5px at 22px, too small to read at any size that fits the line. */
+        logo: { src: 'public/logos/amex.svg', width: 1000, height: 998 } },
+      { role: 'Customer Service Specialist', org: 'Capital One', dates: 'Mar 2019 – Jun 2020',
+        description: 'Managed high-volume data queues using structured problem-solving and pattern recognition.',
+        logo: { src: 'public/logos/capital-one.png', width: 960, height: 345, kind: 'wordmark' } }
+    ];
+
+    /* Experience entries shown on phones (below 768px) before "Show full history". */
+    var EXPERIENCE_SHOWN_ON_PHONES = 3;
+
+    /* The hero stat strip, in order. Two numbers count the lists above, so they can't
+       drift from what the page shows: client sites are projects that aren't Personal. */
+    var STATS = [
+      { value: '4+', caption: 'years building' },
+      { value: String(CLIENT_PROJECTS.length), caption: 'client sites shipped' },
+      { value: String(CERTIFICATES.length), caption: 'certificates earned' }
+    ];
 
     /* ==========================================================================
        TEMPLATES: one function per content type. Each takes one item from the data
@@ -1670,16 +2366,29 @@
       return MONTHS[Number(p[1]) - 1] + ' ' + Number(p[2]) + ', ' + p[0];
     }
 
-    function clientTemplate(client){
-      var inner = client.logo
-        ? '<img class="logo-strip__logo" src="' + esc(client.logo.src) + '" width="' + client.logo.width +
-          '" height="' + client.logo.height + '" alt="' + esc(client.name) + '" loading="lazy" decoding="async">'
-        : '<span class="logo-strip__wordmark">' + esc(client.name) + '</span>';
-      return '<li class="logo-strip__item">' + inner + '</li>';
+    /* One marquee logo, cropped to its mark. copy: true for the duplicate set, which screen
+       readers skip (its list is aria-hidden), so it carries no name. */
+    function toolLogoTemplate(logo, copy){
+      return '<li class="marquee__item">' +
+          '<svg class="marquee__logo" viewBox="' + logo.box.join(' ') + '" fill="currentColor" aria-hidden="true" focusable="false" style="--logo-scale:' + logo.scale + '">' +
+            '<use href="#icon-' + esc(logo.icon) + '" width="24" height="24"></use>' +
+          '</svg>' +
+          (copy ? '' : '<span class="sr-only">' + esc(logo.name) + '</span>') +
+        '</li>';
     }
 
-    /* large: true for chips that are the content (Stack); small chips suit notes
-       under a card. */
+    /* One brand logo, painted in --muted through a mask of its file. */
+    function brandTemplate(brand){
+      var style = '--logo-src:url(&quot;' + esc(brand.src) + '&quot;);' +
+        '--logo-ratio:' + (brand.width / brand.height) + ';' +
+        '--logo-scale:' + (brand.scale || 1);
+      return '<li class="brand-grid__item">' +
+          '<span class="brand-logo" role="img" aria-label="' + esc(brand.name) + '" style="' + style + '"></span>' +
+        '</li>';
+    }
+
+    /* large: true for chips that are the content; small chips suit notes under a card,
+       like the project cards' tech chips. */
     function toolChipTemplate(tool, large){
       var icon = tool.icon
         ? '<svg class="chip__icon" fill="currentColor" aria-hidden="true" focusable="false"><use href="#icon-' + esc(tool.icon) + '"></use></svg>'
@@ -1687,10 +2396,21 @@
       return '<li class="chip' + (large ? ' chip--lg' : '') + '">' + icon + esc(tool.name) + '</li>';
     }
 
+    /* One tool: its icon beside its name. Not a link and not focusable. */
+    function toolTileTemplate(tool){
+      return '<li class="tool-tile">' +
+          '<svg class="tool-tile__icon" fill="currentColor" aria-hidden="true" focusable="false"><use href="#icon-' + esc(tool.icon) + '"></use></svg>' +
+          '<span class="tool-tile__name">' + esc(tool.name) + '</span>' +
+        '</li>';
+    }
+
+    /* The monitor icon that starts every section label (DESIGN.md §3), for labels drawn here. */
+    var LABEL_ICON = '<svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg>';
+
     function stackGroupTemplate(group){
-      return '<div class="stack-list__group">' +
-          '<h3 class="label">' + esc(group.group) + '</h3>' +
-          '<ul class="cluster">' + group.tools.map(function(tool){ return toolChipTemplate(tool, true); }).join('') + '</ul>' +
+      return '<div class="stack-group">' +
+          '<h3 class="label">' + LABEL_ICON + esc(group.group) + '</h3>' +
+          '<ul class="tool-grid">' + group.tools.map(toolTileTemplate).join('') + '</ul>' +
         '</div>';
     }
 
@@ -1700,8 +2420,23 @@
         (cert.date ? '<p class="tag"><time datetime="' + esc(cert.date) + '">' + formatDate(cert.date) + '</time></p>' : '');
     }
 
-    /* hidden: true renders the card hidden until "Show all certificates" is pressed. */
-    function certificateCardTemplate(cert, hidden){
+    /* The certificate's name for screen readers: its title plus "certificate", unless the
+       title already ends in "Certificate" (so the Google one isn't "Certificate certificate"). */
+    function certificateName(cert){
+      return /certificate$/i.test(cert.title) ? cert.title : cert.title + ' certificate';
+    }
+
+    /* "Verify", linking to the issuer's verification page in a new tab. Nothing at all
+       when verifyUrl is empty. The label names the certificate, since a screen reader
+       listing the page's links would otherwise read twelve identical "Verify"s. Shared by
+       the card and the lightbox. */
+    function verifyLinkTemplate(cert){
+      if (!cert.verifyUrl) return '';
+      return '<a class="verify-link" href="' + esc(cert.verifyUrl) + '" target="_blank" rel="noopener noreferrer"' +
+        ' aria-label="' + esc('Verify ' + certificateName(cert)) + '" data-verify>Verify</a>';
+    }
+
+    function certificateCardTemplate(cert){
       var index = CERTIFICATES.indexOf(cert);
       var thumb = CERT_DIR + 'thumbs/' + cert.image.replace(/\.[a-z]+$/i, '.webp');
       var thumbHeight = Math.round(cert.height * THUMB_WIDTH / cert.width);
@@ -1709,8 +2444,7 @@
       var courses = cert.courses && cert.courses.length
         ? '<ul class="cert-card__courses">' + cert.courses.map(function(c){ return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>'
         : '';
-      return '<' + element + ' class="card card--interactive cert-card' + (cert.feature ? ' card--feature' : '') + '"' +
-          (hidden ? ' hidden' : '') + '>' +
+      return '<' + element + ' class="card card--interactive cert-card' + (cert.feature ? ' card--feature' : '') + '">' +
           '<div class="card__media card__media--contain">' +
             '<img src="' + esc(thumb) + '" width="' + THUMB_WIDTH + '" height="' + thumbHeight + '" alt="" loading="lazy" decoding="async">' +
           '</div>' +
@@ -1718,31 +2452,33 @@
             '<h4 class="card__title"><button class="card__trigger" type="button" aria-haspopup="dialog" data-certificate="' + index + '">' +
               esc(cert.title) + '</button></h4>' +
             '<div class="cluster cert-card__meta">' + certificateMetaTemplate(cert) + '</div>' +
+            verifyLinkTemplate(cert) +
             courses +
           '</div>' +
         '</' + element + '>';
     }
 
     /* One issuer's subhead and its certificates: feature cards full width, the rest in
-       the grid. Past CERTIFICATES_SHOWN, grid cards start hidden behind a button. */
+       the grid. Which grid cards show, and whether the button shows, is set by
+       updateCertificateLimit() once the grid is on the page and its columns are known. */
     function certificateGroupTemplate(group){
       var features = group.certs.filter(function(c){ return c.feature; });
       var others = group.certs.filter(function(c){ return !c.feature; });
       var gridId = 'certificates-' + group.issuer.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       var grid = others.length
-        ? '<ul class="cert-grid" id="' + esc(gridId) + '">' +
-            others.map(function(cert, i){ return certificateCardTemplate(cert, i >= CERTIFICATES_SHOWN); }).join('') +
+        ? '<ul class="cert-grid is-collapsed" id="' + esc(gridId) + '">' +
+            others.map(certificateCardTemplate).join('') +
           '</ul>'
         : '';
-      var more = others.length > CERTIFICATES_SHOWN
-        ? '<div class="cert-group__more">' +
+      var more = others.length
+        ? '<div class="cert-group__more" hidden>' +
             '<button class="btn btn--secondary" type="button" aria-expanded="false" aria-controls="' + esc(gridId) + '" data-show-all>' +
               'Show all certificates</button>' +
           '</div>'
         : '';
       return '<div class="cert-group">' +
-          '<h3 class="label">' + esc(group.issuer) + '</h3>' +
-          features.map(function(cert){ return certificateCardTemplate(cert, false); }).join('') +
+          '<h3 class="label">' + LABEL_ICON + esc(group.issuer) + '</h3>' +
+          features.map(certificateCardTemplate).join('') +
           grid + more +
         '</div>';
     }
@@ -1757,6 +2493,147 @@
       return groups;
     }
 
+    /* Italic words are written *like this* in the data, as in CONTENT.md. */
+    function withEmphasis(text){
+      return esc(text).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    }
+
+    /* "Service businesses" becomes "service-businesses", for filter keys and links. */
+    function slug(text){
+      return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    function statTemplate(stat){
+      return '<li class="stat stat--compact">' +
+          '<span class="stat__value" data-count-up>' + esc(stat.value) + '</span>' +
+          '<span class="stat__label">' + esc(stat.caption) + '</span>' +
+        '</li>';
+    }
+
+    /* The filter tabs: "All" first, then each client category in the order it first appears. */
+    function projectFilters(){
+      var filters = [{ key: '', label: 'All' }];
+      CLIENT_PROJECTS.forEach(function(p){
+        var key = slug(p.category);
+        if (!filters.some(function(f){ return f.key === key; })) filters.push({ key: key, label: p.category });
+      });
+      return filters;
+    }
+
+    function filterTemplate(filter){
+      return '<button class="filter" type="button" aria-pressed="' + (filter.key === '' ? 'true' : 'false') +
+        '" data-filter="' + esc(filter.key) + '">' + esc(filter.label) + '</button>';
+    }
+
+    /* A client project's case study: three labeled lines, the same on the card and the list row. */
+    function caseStudyTemplate(project, className){
+      var lines = [['Problem:', project.problem], ['What I built:', project.built], ['Result:', project.result]];
+      return '<dl class="case-study' + (className ? ' ' + className : '') + '">' +
+          lines.map(function(line){ return '<div><dt>' + line[0] + '</dt> <dd>' + withEmphasis(line[1]) + '</dd></div>'; }).join('') +
+        '</dl>';
+    }
+
+    /* Someone's words about the work: the quote, then "— source, detail", with the source linking
+       to url when there is one. Plain text: no card, border, quote-mark graphic, or avatar.
+       modifier 'quiet' is the smaller, all-muted version set under other text. */
+    function testimonialTemplate(t, url, modifier){
+      var source = url
+        ? '<a class="testimonial__link" href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(t.source) + '</a>'
+        : esc(t.source);
+      return '<figure class="testimonial' + (modifier ? ' testimonial--' + modifier : '') + '">' +
+          '<blockquote class="testimonial__quote"><p>“' + withEmphasis(t.quote) + '”</p></blockquote>' +
+          '<figcaption class="testimonial__source">— ' + source + (t.detail ? ', ' + esc(t.detail) : '') + '</figcaption>' +
+        '</figure>';
+    }
+
+    /* One project: its card, then the box under the card (a testimonial, or empty). Both sit in the
+       grid's rows so cards in a row share a height whatever hangs under them (see .project-card). */
+    function projectCardTemplate(project){
+      var phone = project.mobile
+        ? '<img class="card__phone" src="' + esc(project.mobile.src) + '" width="' + project.mobile.width +
+          '" height="' + project.mobile.height + '" alt="" loading="lazy" decoding="async">'
+        : '';
+      var chips = project.tech.map(function(name){ return toolChipTemplate({ name: name, icon: null }, false); }).join('');
+      return '<li class="project-card" data-category="' + esc(slug(project.category)) + '">' +
+          '<div class="card">' +
+            '<a class="card__media" href="' + esc(project.url) + '" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">' +
+              '<img class="project-card__shot" src="' + esc(project.desktop.src) + '" width="' + project.desktop.width +
+                '" height="' + project.desktop.height + '" alt="" loading="lazy" decoding="async">' +
+              phone +
+            '</a>' +
+            '<div class="card__body">' +
+              '<p class="tag">' + esc(project.category) + '</p>' +
+              '<h3 class="card__title">' + esc(project.name) + '</h3>' +
+              caseStudyTemplate(project) +
+              '<ul class="cluster">' + chips + '</ul>' +
+              '<a class="project-card__link" href="' + esc(project.url) + '" target="_blank" rel="noopener">Visit site ' +
+                '<span class="arrow" aria-hidden="true">&rarr;</span><span class="sr-only"> (' + esc(project.name) + ')</span></a>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card__after">' +
+            (project.testimonial ? testimonialTemplate(project.testimonial, project.url) : '') +
+          '</div>' +
+        '</li>';
+    }
+
+    /* One row of the desktop list. The name is the link, and its ::after covers the row, so
+       the whole row opens the live site while a screen reader hears just the name. The empty
+       slot holds the middle column where the preview sits beside the row. */
+    function projectRowTemplate(project, i){
+      var chips = project.tech.map(function(name){ return toolChipTemplate({ name: name, icon: null }, false); }).join('');
+      return '<li class="work-row" data-category="' + esc(slug(project.category)) + '" data-preview="' + i + '">' +
+          '<div>' +
+            '<h3 class="work-row__name"><a class="work-row__link" href="' + esc(project.url) + '" target="_blank" rel="noopener">' + esc(project.name) + '</a></h3>' +
+            caseStudyTemplate(project, 'work-row__description') +
+            (project.testimonial ? testimonialTemplate(project.testimonial, project.url) : '') +
+          '</div>' +
+          '<span class="work-row__slot" aria-hidden="true"></span>' +
+          '<div class="work-row__meta">' +
+            '<div class="cluster"><p class="tag">' + esc(project.category) + '</p><p class="tag">' + esc(project.year) + '</p></div>' +
+            '<ul class="cluster">' + chips + '</ul>' +
+          '</div>' +
+        '</li>';
+    }
+
+    /* The list's preview images. No src yet: the script fills it in after the page has
+       loaded, and only where the list shows, so phones and touch screens never fetch them. */
+    function projectPreviewTemplate(project){
+      return '<img class="work-preview__shot" data-src="' + esc(project.desktop.src) + '" width="' + project.desktop.width +
+        '" height="' + project.desktop.height + '" alt="" decoding="async">';
+    }
+
+    /* One personal project on the line below Selected work: the name links to the live site
+       (a new tab), with its short description beneath. */
+    function personalProjectTemplate(project){
+      return '<li class="personal-work__item">' +
+          '<a class="personal-work__name" href="' + esc(project.url) + '" target="_blank" rel="noopener">' + esc(project.name) + '</a>' +
+          '<p class="personal-work__description">' + withEmphasis(project.description) + '</p>' +
+        '</li>';
+    }
+
+    /* The mark that starts an entry's company and dates line: the company's logo, or a glyph
+       from the icon sprite. Decorative, since the company is named right beside it. */
+    function experienceMarkTemplate(logo){
+      if (!logo) return '';
+      if (logo.glyph){
+        return '<svg class="timeline-item__glyph" aria-hidden="true" focusable="false"><use href="#icon-' + esc(logo.glyph) + '"></use></svg>';
+      }
+      return '<img class="timeline-item__logo' + (logo.kind === 'wordmark' ? ' timeline-item__logo--wordmark' : '') + '" src="' + esc(logo.src) +
+        '" width="' + logo.width + '" height="' + logo.height + '" alt="" style="--logo-ratio:' + (Math.round(logo.width / logo.height * 10000) / 10000) + '"' +
+        ' loading="lazy" decoding="async">';
+    }
+
+    function experienceItemTemplate(item, i){
+      var meta = (item.org ? '<p class="tag">' + esc(item.org) + '</p>' : '') + '<p class="tag">' + esc(item.dates) + '</p>';
+      var extra = i >= EXPERIENCE_SHOWN_ON_PHONES ? ' timeline-item--extra' : '';
+      return '<li class="timeline-item' + extra + '">' +
+          '<h3 class="timeline-item__title">' + esc(item.role) + '</h3>' +
+          '<div class="cluster timeline-item__meta">' + experienceMarkTemplate(item.logo) + meta + '</div>' +
+          '<p class="timeline-item__body">' + esc(item.description) + '</p>' +
+          (item.review ? testimonialTemplate(item.review, null, 'quiet') : '') +
+        '</li>';
+    }
+
     /* ---------- Render: fill each [data-render] slot from its data ---------- */
 
     function render(name, html){
@@ -1764,8 +2641,23 @@
       if (slot) slot.innerHTML = html;
     }
 
-    render('clients', CLIENTS.map(clientTemplate).join(''));
+    render('hero-stats', STATS.map(statTemplate).join(''));
+    render('tool-logos', TOOL_LOGOS.map(function(logo){ return toolLogoTemplate(logo, false); }).join(''));
+    render('tool-logos-copy', TOOL_LOGOS.map(function(logo){ return toolLogoTemplate(logo, true); }).join(''));
+    render('brands', BRANDS.map(brandTemplate).join(''));
+    /* The brands band starts hidden, and shows only when there's at least one logo. */
+    var brandsBand = document.querySelector('.brands');
+    if (brandsBand) brandsBand.hidden = BRANDS.length === 0;
+    render('project-filters', projectFilters().map(filterTemplate).join(''));
+    render('project-rows', CLIENT_PROJECTS.map(projectRowTemplate).join(''));
+    render('project-previews', CLIENT_PROJECTS.map(projectPreviewTemplate).join(''));
+    render('projects', CLIENT_PROJECTS.map(projectCardTemplate).join(''));
+    render('personal-projects', PERSONAL_PROJECTS.map(personalProjectTemplate).join(''));
+    /* The Personal projects line shows only when there's at least one. */
+    var personalWork = document.querySelector('.personal-work');
+    if (personalWork) personalWork.hidden = PERSONAL_PROJECTS.length === 0;
     render('stack', STACK.map(stackGroupTemplate).join(''));
+    render('experience', EXPERIENCE.map(experienceItemTemplate).join(''));
     render('certificate-count', esc(CERTIFICATES.length));
     render('certificates', groupByIssuer(CERTIFICATES).map(certificateGroupTemplate).join(''));
 
@@ -1995,7 +2887,19 @@
     var lightboxImage = document.getElementById('lightboxImage');
     var lightboxTitle = document.getElementById('lightboxTitle');
     var lightboxMeta = document.getElementById('lightboxMeta');
+    var lightboxVerify = document.getElementById('lightboxVerify');
     var lightboxOpener = null;
+
+    /* A Verify link sits on top of a card whose click opens the lightbox. Each link's own
+       click handler stops the click there, so following it opens the verification page in
+       a new tab and nothing else. */
+    function stopVerifyClickPropagation(root){
+      if (!root) return;
+      [].slice.call(root.querySelectorAll('[data-verify]')).forEach(function(link){
+        link.addEventListener('click', function(e){ e.stopPropagation(); });
+      });
+    }
+    stopVerifyClickPropagation(document.getElementById('certifications'));
 
     if (lightbox && typeof lightbox.showModal === 'function'){
       document.addEventListener('click', function(e){
@@ -2008,9 +2912,12 @@
         lightboxImage.src = CERT_DIR + cert.image;
         lightboxImage.width = cert.width;
         lightboxImage.height = cert.height;
-        lightboxImage.alt = cert.title + ' certificate from ' + cert.issuer;
+        lightboxImage.alt = certificateName(cert) + ' from ' + cert.issuer;
         lightboxTitle.textContent = cert.title;
         lightboxMeta.innerHTML = certificateMetaTemplate(cert);
+        lightboxVerify.innerHTML = verifyLinkTemplate(cert);
+        lightboxVerify.hidden = !cert.verifyUrl;
+        stopVerifyClickPropagation(lightboxVerify);
 
         lightbox.showModal();
         document.body.classList.add('lightbox-open');
@@ -2035,9 +2942,38 @@
     }
 
     /* ---------- "Show all certificates" ----------
-       Reveals the hidden cards in one step (a plain height change, no animation), then
-       removes the button and moves focus to the first newly shown card, so keyboard
+       Until the button is pressed, each grid shows CERTIFICATES_SHOWN cards for its current
+       column count, read from the layout, so the visible cards fill complete rows and the
+       count follows the columns when the window is resized. The button says what it adds:
+       "Show 1 more" when a single card is left, since "all" would overstate one card.
+       Pressing it reveals the hidden cards in one step (a plain height change, no animation),
+       then removes the button and moves focus to the first newly shown card, so keyboard
        users land on the content they asked for instead of on nothing. */
+
+    var certificateGrids = [].slice.call(document.querySelectorAll('.cert-grid'));
+
+    function updateCertificateLimit(){
+      certificateGrids.forEach(function(grid){
+        var cards = [].slice.call(grid.children);
+        var columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+        var shown = grid.classList.contains('is-collapsed') && CERTIFICATES_SHOWN[columns]
+          ? Math.min(CERTIFICATES_SHOWN[columns], cards.length)
+          : cards.length;
+        /* Resize fires often: only touch the page when the count actually changes. */
+        if (grid.getAttribute('data-shown') === String(shown)) return;
+        grid.setAttribute('data-shown', shown);
+        cards.forEach(function(card, i){ card.hidden = i >= shown; });
+        var remaining = cards.length - shown;
+        var more = grid.parentNode.querySelector('.cert-group__more');
+        if (more){
+          more.hidden = remaining === 0;
+          more.querySelector('[data-show-all]').textContent = remaining === 1 ? 'Show 1 more' : 'Show all certificates';
+        }
+      });
+    }
+
+    updateCertificateLimit();
+    window.addEventListener('resize', updateCertificateLimit);
 
     document.addEventListener('click', function(e){
       var button = e.target.closest('[data-show-all]');
@@ -2045,12 +2981,360 @@
       var grid = document.getElementById(button.getAttribute('aria-controls'));
       if (!grid) return;
       var revealed = [].slice.call(grid.querySelectorAll('.cert-card[hidden]'));
-      revealed.forEach(function(card){ card.hidden = false; });
+      grid.classList.remove('is-collapsed');
+      updateCertificateLimit();
       button.setAttribute('aria-expanded', 'true');
-      button.parentNode.hidden = true;
       var firstNew = revealed.length ? revealed[0].querySelector('.card__trigger') : null;
       if (firstNew) firstNew.focus();
     });
+
+    /* ---------- Selected work filters ----------
+       Instant, no animation. The address records the filter (#work/restaurants), so a
+       filtered view can be linked. It's replaced in place, so clicking through filters
+       doesn't fill the browser's Back history. Following a plain #work link resets to All. */
+
+    var filterButtons = [].slice.call(document.querySelectorAll('.filter[data-filter]'));
+    var projectCards = [].slice.call(document.querySelectorAll('.project-card'));
+    var projectRows = [].slice.call(document.querySelectorAll('.work-row'));
+    var projectGrid = document.getElementById('projects-grid');
+    var projectsMore = document.querySelector('.work-more');
+    var projectsCollapsed = true;
+
+    /* Below 768px, only the first PROJECTS_SHOWN_ON_PHONES cards of the current filter show
+       until "Show all projects" is pressed (the CSS does the hiding, at phone widths only).
+       Counting within the filter means a filter never looks empty. */
+    function updateProjectLimit(){
+      var visible = 0;
+      projectCards.forEach(function(card){
+        if (card.hidden){ card.classList.remove('project-card--extra'); return; }
+        card.classList.toggle('project-card--extra', visible >= PROJECTS_SHOWN_ON_PHONES);
+        visible++;
+      });
+      if (projectGrid) projectGrid.classList.toggle('is-collapsed', projectsCollapsed);
+      if (projectsMore) projectsMore.hidden = !(projectsCollapsed && visible > PROJECTS_SHOWN_ON_PHONES);
+    }
+
+    function applyFilter(key, updateAddress){
+      var known = filterButtons.some(function(b){ return b.getAttribute('data-filter') === key; });
+      if (!known) key = '';
+      filterButtons.forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-filter') === key ? 'true' : 'false');
+      });
+      projectCards.concat(projectRows).forEach(function(item){
+        item.hidden = key !== '' && item.getAttribute('data-category') !== key;
+      });
+      if (previewRow && previewRow.hidden) hidePreview();
+      updateProjectLimit();
+      if (updateAddress && window.history && history.replaceState){
+        history.replaceState(null, '', key ? '#work/' + key : '#work');
+      }
+    }
+
+    /* "Show all projects": reveals the rest in one step, removes the button, and moves focus
+       to the first card that was hidden, so keyboard users land on new content. */
+    document.addEventListener('click', function(e){
+      var button = e.target.closest('[data-show-all-projects]');
+      if (!button) return;
+      var firstHidden = projectGrid ? projectGrid.querySelector('.project-card--extra') : null;
+      projectsCollapsed = false;
+      button.setAttribute('aria-expanded', 'true');
+      updateProjectLimit();
+      var link = firstHidden ? firstHidden.querySelector('.project-card__link') : null;
+      if (link) link.focus();
+    });
+
+    updateProjectLimit();
+
+    /* ---------- Selected work list: the preview ----------
+       Only where the list shows: a wide screen with a mouse or trackpad (the same query as the
+       CSS). Pointing at a row shows its desktop screenshot in a preview that follows the cursor
+       with a slight lag. Keyboard focus shows the same preview held still in the row's empty
+       middle column, and so does pointing under reduced motion. Whichever was used last wins.
+       The fade is CSS (--dur-fast both ways). The preview is fixed and moved with transform,
+       kept inside the window and below the nav, so it never touches layout or scrolling. */
+
+    var listMedia = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)');
+    var projectList = document.getElementById('projects-list');
+    var preview = document.querySelector('.work-preview');
+    var previewShots = preview ? [].slice.call(preview.querySelectorAll('.work-preview__shot')) : [];
+    /* The share of the remaining distance the preview covers each frame at 60fps: the lag. */
+    var PREVIEW_FOLLOW = 0.2;
+    var previewRow = null;
+    var previewSource = null; /* 'pointer' or 'focus' */
+    var previewPos = { x: 0, y: 0 };
+    var previewTarget = { x: 0, y: 0 };
+    var previewFrame = 0;
+    var previewLastTime = 0;
+    var pointerX = 0;
+    var pointerY = 0;
+
+    /* A spacing token in px, for positioning in script ('2rem' becomes 32). */
+    function tokenPx(name){
+      var value = getComputedStyle(root).getPropertyValue(name).trim();
+      return parseFloat(value) * (/rem$/.test(value) ? parseFloat(getComputedStyle(root).fontSize) : 1);
+    }
+
+    function keepInWindow(x, y){
+      var edge = tokenPx('--sp-3');
+      var nav = document.querySelector('.nav');
+      var top = (nav ? nav.getBoundingClientRect().bottom : 0) + edge;
+      return {
+        x: Math.max(edge, Math.min(x, root.clientWidth - preview.offsetWidth - edge)),
+        y: Math.max(top, Math.min(y, root.clientHeight - preview.offsetHeight - edge))
+      };
+    }
+
+    /* Beside the row: its empty middle column, centred on the row. */
+    function stillPosition(row){
+      var slot = row.querySelector('.work-row__slot').getBoundingClientRect();
+      var box = row.getBoundingClientRect();
+      return keepInWindow(slot.left, box.top + (box.height - preview.offsetHeight) / 2);
+    }
+
+    /* Right of the cursor, or left of it when there's no room on the right. */
+    function pointerPosition(){
+      var gap = tokenPx('--sp-5');
+      var x = pointerX + gap;
+      if (x + preview.offsetWidth > root.clientWidth - tokenPx('--sp-3')) x = pointerX - gap - preview.offsetWidth;
+      return keepInWindow(x, pointerY - preview.offsetHeight / 2);
+    }
+
+    function placePreview(){
+      preview.style.transform = 'translate3d(' + Math.round(previewPos.x) + 'px,' + Math.round(previewPos.y) + 'px,0)';
+    }
+
+    function stopFollowing(){
+      if (previewFrame) cancelAnimationFrame(previewFrame);
+      previewFrame = 0;
+      previewLastTime = 0;
+    }
+
+    function followStep(now){
+      var elapsed = previewLastTime ? Math.min(now - previewLastTime, 64) : 16.7;
+      var share = 1 - Math.pow(1 - PREVIEW_FOLLOW, elapsed / 16.7);
+      previewLastTime = now;
+      previewPos.x += (previewTarget.x - previewPos.x) * share;
+      previewPos.y += (previewTarget.y - previewPos.y) * share;
+      if (Math.abs(previewTarget.x - previewPos.x) < 0.5 && Math.abs(previewTarget.y - previewPos.y) < 0.5){
+        previewPos = { x: previewTarget.x, y: previewTarget.y };
+        previewFrame = 0;
+        previewLastTime = 0;
+      } else {
+        previewFrame = requestAnimationFrame(followStep);
+      }
+      placePreview();
+    }
+
+    /* glide: follow with the lag; otherwise jump there. */
+    function movePreview(target, glide){
+      previewTarget = target;
+      if (glide){
+        if (!previewFrame) previewFrame = requestAnimationFrame(followStep);
+        return;
+      }
+      stopFollowing();
+      previewPos = { x: target.x, y: target.y };
+      placePreview();
+    }
+
+    function showPreview(row, source){
+      if (!preview || !listMedia.matches) return;
+      var still = source === 'focus' || reducedMotion.matches;
+      /* A preview that's already showing glides to the cursor; a new one appears in place. */
+      var glide = !still && preview.classList.contains('is-visible');
+      if (row !== previewRow){
+        if (previewRow) previewRow.classList.remove('is-active');
+        row.classList.add('is-active');
+        var index = Number(row.getAttribute('data-preview'));
+        previewShots.forEach(function(shot, i){ shot.classList.toggle('is-current', i === index); });
+        previewRow = row;
+      }
+      previewSource = source;
+      projectList.classList.add('is-previewing');
+      movePreview(still ? stillPosition(row) : pointerPosition(), glide);
+      preview.classList.add('is-visible');
+    }
+
+    function hidePreview(){
+      if (!previewRow) return;
+      previewRow.classList.remove('is-active');
+      previewRow = null;
+      previewSource = null;
+      projectList.classList.remove('is-previewing');
+      preview.classList.remove('is-visible');
+      stopFollowing();
+    }
+
+    /* Mouse clicks focus links too; only keyboard focus should move the preview. */
+    function isKeyboardFocus(el){
+      try{ return el.matches(':focus-visible'); }catch(e){ return true; }
+    }
+
+    function focusedRow(){
+      var el = document.activeElement;
+      var row = el && el.closest ? el.closest('.work-row') : null;
+      return row && projectList.contains(row) && isKeyboardFocus(el) ? row : null;
+    }
+
+    /* After load, so they don't compete with the first screen; only where the list shows,
+       so phones and touch screens never download them. decode() readies them to paint. */
+    function preloadPreviews(){
+      if (!listMedia.matches) return;
+      previewShots.forEach(function(shot){
+        if (shot.getAttribute('src')) return;
+        shot.setAttribute('src', shot.getAttribute('data-src'));
+        if (shot.decode) shot.decode().catch(function(){});
+      });
+    }
+
+    if (projectList && preview){
+      projectList.addEventListener('pointermove', function(e){
+        if (e.pointerType === 'touch') return;
+        pointerX = e.clientX;
+        pointerY = e.clientY;
+        var row = e.target.closest('.work-row');
+        if (row) showPreview(row, 'pointer');
+      });
+
+      projectList.addEventListener('pointerleave', function(e){
+        if (e.pointerType === 'touch') return;
+        var row = focusedRow();
+        if (row) showPreview(row, 'focus');
+        else hidePreview();
+      });
+
+      projectList.addEventListener('focusin', function(e){
+        var row = e.target.closest('.work-row');
+        if (row && isKeyboardFocus(e.target)) showPreview(row, 'focus');
+      });
+
+      projectList.addEventListener('focusout', function(e){
+        if (previewSource === 'focus' && !projectList.contains(e.relatedTarget)) hidePreview();
+      });
+
+      /* The page moves under a still cursor without a pointermove: re-read what's under it. */
+      window.addEventListener('scroll', function(){
+        if (!previewRow) return;
+        if (previewSource === 'pointer'){
+          var hit = document.elementFromPoint(pointerX, pointerY);
+          var row = hit ? hit.closest('.work-row') : null;
+          if (row && projectList.contains(row)) showPreview(row, 'pointer');
+          else hidePreview();
+        } else {
+          movePreview(stillPosition(previewRow), false);
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', function(){
+        if (previewRow) movePreview(previewSource === 'focus' || reducedMotion.matches ? stillPosition(previewRow) : pointerPosition(), false);
+      });
+
+      /* Switching layouts (a narrower window, a mouse unplugged) drops any preview, and
+       switching to the list loads the images if that hasn't happened yet. */
+      listMedia.addEventListener('change', function(){
+        hidePreview();
+        preloadPreviews();
+      });
+
+      if (document.readyState === 'complete') preloadPreviews();
+      else window.addEventListener('load', preloadPreviews);
+    }
+
+    /* ---------- Tools marquee: pause and play ----------
+       Motion that runs longer than five seconds needs a way to stop it (WCAG 2.2.2), and hover
+       does nothing on a touch screen, so the button is always there. aria-pressed="true" means
+       paused. Under reduced motion the CSS shows a static row and hides the button. */
+    var marquee = document.getElementById('tools-marquee');
+    var marqueeToggle = document.querySelector('[data-marquee-toggle]');
+    if (marquee && marqueeToggle){
+      marqueeToggle.addEventListener('click', function(){
+        var paused = marquee.classList.toggle('is-paused');
+        marqueeToggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      });
+    }
+
+    /* ---------- GitHub graph: sideways scroll on narrow screens ----------
+       Where the container is narrower than the graph, the graph scrolls inside its own box
+       (DESIGN.md §6). It opens at the newest weeks, as GitHub's own graph does, and only takes a
+       Tab stop while there's something to scroll. The box is sized before the image loads, so
+       this doesn't wait for it. */
+    var activityScroll = document.querySelector('[data-activity-scroll]');
+    if (activityScroll && window.ResizeObserver){
+      var activityScrolls = false;
+      new ResizeObserver(function(){
+        var scrolls = activityScroll.scrollWidth > activityScroll.clientWidth;
+        if (scrolls && !activityScrolls) activityScroll.scrollLeft = activityScroll.scrollWidth;
+        if (scrolls) activityScroll.setAttribute('tabindex', '0');
+        else activityScroll.removeAttribute('tabindex');
+        activityScrolls = scrolls;
+      }).observe(activityScroll);
+    }
+
+    /* ---------- "Show full history" ----------
+       Phones only: below 768px the CSS hides entries past EXPERIENCE_SHOWN_ON_PHONES.
+       Reveals the rest in one step and removes the button. Entries have nothing to click,
+       so the first newly shown entry's title takes focus for this one move (tabindex -1
+       keeps it out of the normal Tab order), and keyboard users land on the new content. */
+    var experienceList = document.getElementById('experience-list');
+    var experienceMore = document.querySelector('.timeline-more');
+    if (experienceList && experienceMore){
+      experienceMore.hidden = EXPERIENCE.length <= EXPERIENCE_SHOWN_ON_PHONES;
+      document.addEventListener('click', function(e){
+        var button = e.target.closest('[data-show-full-history]');
+        if (!button) return;
+        var firstHidden = experienceList.querySelector('.timeline-item--extra .timeline-item__title');
+        experienceList.classList.remove('is-collapsed');
+        button.setAttribute('aria-expanded', 'true');
+        experienceMore.hidden = true;
+        if (firstHidden){
+          firstHidden.setAttribute('tabindex', '-1');
+          firstHidden.focus();
+        }
+      });
+    }
+
+    /* '#work/creators' gives 'creators', '#work' gives '' (All), anything else null. */
+    function filterFromAddress(){
+      var match = location.hash.match(/^#work\/([a-z0-9-]+)$/);
+      if (match) return match[1];
+      return location.hash === '#work' ? '' : null;
+    }
+
+    if (filterButtons.length){
+      document.addEventListener('click', function(e){
+        var button = e.target.closest('.filter[data-filter]');
+        if (button) applyFilter(button.getAttribute('data-filter'), true);
+      });
+
+      window.addEventListener('hashchange', function(){
+        var key = filterFromAddress();
+        if (key !== null) applyFilter(key, false);
+      });
+
+      /* Phones: the tabs scroll sideways, and a browser won't scroll a tab that's already
+         partly in view when it gets focus, so its focus ring gets cut off at the edge. Slide
+         the row (only the row, never the page) until the whole tab clears the row's scroll
+         padding. Nothing happens once the tabs wrap and the row can't scroll. */
+      var filterRow = document.querySelector('.filters');
+      if (filterRow){
+        filterRow.addEventListener('focusin', function(e){
+          var tab = e.target.closest('.filter');
+          if (!tab || filterRow.scrollWidth <= filterRow.clientWidth) return;
+          var pad = parseFloat(getComputedStyle(filterRow).scrollPaddingInlineStart) || 0;
+          var row = filterRow.getBoundingClientRect(), box = tab.getBoundingClientRect();
+          if (box.left < row.left + pad) filterRow.scrollLeft -= row.left + pad - box.left;
+          else if (box.right > row.right - pad) filterRow.scrollLeft += box.right - (row.right - pad);
+        });
+      }
+
+      /* Arriving on a filtered link: apply it and bring Selected work into view. */
+      var initialFilter = filterFromAddress();
+      if (initialFilter){
+        applyFilter(initialFilter, false);
+        var workSection = document.getElementById('work');
+        if (workSection) workSection.scrollIntoView();
+      }
+    }
   })();
 </script>
 
@@ -2066,7 +3350,7 @@
   <div class="container flow">
 
     <header class="section-head">
-      <p class="label">Selected work</p>
+      <p class="label"><svg class="label__icon" aria-hidden="true" focusable="false"><use href="#icon-monitor"></use></svg>Selected work</p>
       <h2 class="section-head__title">Sites that ship and get used.</h2>
       <p class="section-head__deck">Fast, clean sites for restaurants, service businesses, and creators.</p>
     </header>
@@ -2108,18 +3392,49 @@
 
     <ol class="timeline">
       <li class="timeline-item">
-        <span class="timeline-item__index">01</span>
-        <div>
-          <h3 class="timeline-item__title">[role]</h3>
-          <p class="timeline-item__meta">Lion Sales Funnels, [start date]</p>
-          <p class="timeline-item__body">[what the role involved]</p>
-        </div>
+        <h3 class="timeline-item__title">[role]</h3>
+        <p class="timeline-item__meta">Lion Sales Funnels, [start date]</p>
+        <p class="timeline-item__body">[what the role involved]</p>
       </li>
     </ol>
 
   </div>
 </section>
 DEMO END -->
+
+<!-- Tool icons for Stack and the tools marquee, used as <use href="#icon-name">. Downloaded once and inlined, so the
+     page makes no icon requests. Simple Icons 16.31.0: CC0, except JavaScript (MIT, from
+     github.com/voodootikigod/logo.js), Git (CC BY 3.0, from git-scm.com/community/logos) and
+     Forgejo (CC BY-SA 4.0, from codeberg.org/forgejo/meta). Slack and VS Code (vscode-plain):
+     Devicon 2.17.0 (MIT).
+     icon-placeholder is a neutral dashed circle drawn for this site, for tools with no
+     official icon. icon-monitor, also drawn for this site, is the section-label icon
+     (DESIGN.md §3), outlined in currentColor. Every mark remains a trademark of its owner. -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-javascript" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/></symbol>
+  <symbol id="icon-html5" viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></symbol>
+  <symbol id="icon-css" viewBox="0 0 24 24"><path d="M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"/></symbol>
+  <symbol id="icon-react" viewBox="0 0 24 24"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/></symbol>
+  <symbol id="icon-tailwindcss" viewBox="0 0 24 24"><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/></symbol>
+  <symbol id="icon-n8n" viewBox="0 0 24 24"><path d="M21.4737 5.6842c-1.1772 0-2.1663.8051-2.4468 1.8947h-2.8955c-1.235 0-2.289.893-2.492 2.111l-.1038.623a1.263 1.263 0 0 1-1.246 1.0555H11.289c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947s-2.1663.8051-2.4467 1.8947H4.973c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947C1.1311 9.4737 0 10.6047 0 12s1.131 2.5263 2.5263 2.5263c1.1772 0 2.1663-.8051 2.4468-1.8947h1.4223c.2804 1.0896 1.2696 1.8947 2.4467 1.8947 1.1772 0 2.1663-.8051 2.4468-1.8947h1.0008a1.263 1.263 0 0 1 1.2459 1.0555l.1038.623c.203 1.218 1.257 2.111 2.492 2.111h.3692c.2804 1.0895 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263c-1.1772 0-2.1664.805-2.4468 1.8947h-.3692a1.263 1.263 0 0 1-1.246-1.0555l-.1037-.623A2.52 2.52 0 0 0 13.9607 12a2.52 2.52 0 0 0 .821-1.4794l.1038-.623a1.263 1.263 0 0 1 1.2459-1.0555h2.8955c.2805 1.0896 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263m0 1.2632a1.263 1.263 0 0 1 1.2631 1.2631 1.263 1.263 0 0 1-1.2631 1.2632 1.263 1.263 0 0 1-1.2632-1.2632 1.263 1.263 0 0 1 1.2632-1.2631M2.5263 10.7368A1.263 1.263 0 0 1 3.7895 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 1.2632 12a1.263 1.263 0 0 1 1.2631-1.2632m6.3158 0A1.263 1.263 0 0 1 10.1053 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 7.579 12a1.263 1.263 0 0 1 1.2632-1.2632m10.1053 3.7895a1.263 1.263 0 0 1 1.2631 1.2632 1.263 1.263 0 0 1-1.2631 1.2631 1.263 1.263 0 0 1-1.2632-1.2631 1.263 1.263 0 0 1 1.2632-1.2632"/></symbol>
+  <symbol id="icon-claude" viewBox="0 0 24 24"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></symbol>
+  <symbol id="icon-googlegemini" viewBox="0 0 24 24"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/></symbol>
+  <symbol id="icon-googlesheets" viewBox="0 0 24 24"><path d="M11.318 12.545H7.91v-1.909h3.41v1.91zM14.728 0v6h6l-6-6zm1.363 10.636h-3.41v1.91h3.41v-1.91zm0 3.273h-3.41v1.91h3.41v-1.91zM20.727 6.5v15.864c0 .904-.732 1.636-1.636 1.636H4.909a1.636 1.636 0 0 1-1.636-1.636V1.636C3.273.732 4.005 0 4.909 0h9.318v6.5h6.5zm-3.273 2.773H6.545v7.909h10.91v-7.91zm-6.136 4.636H7.91v1.91h3.41v-1.91z"/></symbol>
+  <symbol id="icon-googledrive" viewBox="0 0 24 24"><path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z"/></symbol>
+  <symbol id="icon-vercel" viewBox="0 0 24 24"><path d="m12 1.608 12 20.784H0Z"/></symbol>
+  <symbol id="icon-cloudflare" viewBox="0 0 24 24"><path d="M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268zm2.7568-5.5634c-.0771 0-.1611 0-.2383.0112-.0566 0-.1054.0415-.127.0976l-.3378 1.1744c-.1475.5068-.0918.9707.1543 1.3164.2256.3164.6055.498 1.0625.5195l1.8437.1133c.0557 0 .1055.0263.1329.0703.0283.043.0351.1074.0214.1562-.0283.084-.1132.1485-.204.1553l-1.921.1123c-1.041.0488-2.1582.8867-2.5527 1.914l-.1406.3585c-.0283.0713.0215.1416.0986.1416h6.5977c.0771 0 .1474-.0489.169-.126.1122-.4082.1757-.837.1757-1.2803 0-2.6025-2.125-4.727-4.7344-4.727"/></symbol>
+  <symbol id="icon-git" viewBox="0 0 24 24"><path d="M13.09 23.549a1.54 1.54 0 0 1-2.18 0L.451 13.089a1.54 1.54 0 0 1 0-2.179l7.191-7.19 2.733 2.733a1.85 1.85 0 0 0 .964 2.326v6.66a1.849 1.849 0 1 0 1.54 0V8.957l2.508 2.508a1.85 1.85 0 1 0 1.09-1.09l-2.634-2.634a1.85 1.85 0 0 0-2.378-2.377L8.73 2.63 10.91.451a1.54 1.54 0 0 1 2.179 0l10.459 10.46a1.54 1.54 0 0 1 0 2.179z"/></symbol>
+  <symbol id="icon-github" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+  <symbol id="icon-docker" viewBox="0 0 24 24"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></symbol>
+  <symbol id="icon-forgejo" viewBox="0 0 24 24"><path d="M16.7773 0c1.6018 0 2.9004 1.2986 2.9004 2.9005s-1.2986 2.9004-2.9004 2.9004c-1.0854 0-2.0315-.596-2.5288-1.4787H12.91c-2.3322 0-4.2272 1.8718-4.2649 4.195l-.0007 2.1175a7.0759 7.0759 0 0 1 4.148-1.4205l.1176-.001 1.3385.0002c.4973-.8827 1.4434-1.4788 2.5288-1.4788 1.6018 0 2.9004 1.2986 2.9004 2.9005s-1.2986 2.9004-2.9004 2.9004c-1.0854 0-2.0315-.596-2.5288-1.4787H12.91c-2.3322 0-4.2272 1.8718-4.2649 4.195l-.0007 2.319c.8827.4973 1.4788 1.4434 1.4788 2.5287 0 1.602-1.2986 2.9005-2.9005 2.9005-1.6018 0-2.9004-1.2986-2.9004-2.9005 0-1.0853.596-2.0314 1.4788-2.5287l-.0002-9.9831c0-3.887 3.1195-7.0453 6.9915-7.108l.1176-.001h1.3385C14.7458.5962 15.692 0 16.7773 0ZM7.2227 19.9052c-.6596 0-1.1943.5347-1.1943 1.1943s.5347 1.1943 1.1943 1.1943 1.1944-.5347 1.1944-1.1943-.5348-1.1943-1.1944-1.1943Zm9.5546-10.4644c-.6596 0-1.1944.5347-1.1944 1.1943s.5348 1.1943 1.1944 1.1943c.6596 0 1.1943-.5347 1.1943-1.1943s-.5347-1.1943-1.1943-1.1943Zm0-7.7346c-.6596 0-1.1944.5347-1.1944 1.1943s.5348 1.1943 1.1944 1.1943c.6596 0 1.1943-.5347 1.1943-1.1943s-.5347-1.1943-1.1943-1.1943Z"/></symbol>
+  <symbol id="icon-authentik" viewBox="0 0 24 24"><path d="M13.96 9.01h-.84V7.492h-1.234v3.663H5.722c.34.517.538.982.538 1.152 0 .46-1.445 3.059-3.197 3.059C.8 15.427-.745 12.8.372 10.855a3.062 3.062 0 0 1 2.691-1.606c1.04 0 1.971.915 2.557 1.755V6.577a3.773 3.773 0 0 1 3.77-3.769h10.84C22.31 2.808 24 4.5 24 6.577v10.845a3.773 3.773 0 0 1-3.77 3.769h-1.6V17.5h-7.64v3.692h-1.6a3.773 3.773 0 0 1-3.77-3.769v-3.41h12.114v-6.52h-1.59v.893h-.84v-.893H13.96v1.516Zm-9.956 1.845c-.662-.703-1.578-.544-2.209 0-2.105 2.054 1.338 5.553 3.302 1.447a5.395 5.395 0 0 0-1.093-1.447Z"/></symbol>
+  <symbol id="icon-figma" viewBox="0 0 24 24"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></symbol>
+  <symbol id="icon-leaflet" viewBox="0 0 24 24"><path d="M17.69 0c-.355.574-8.432 4.74-10.856 8.649-2.424 3.91-3.116 6.988-2.237 9.882.879 2.893 2.559 2.763 3.516 3.717.958.954 2.257 2.113 4.332 1.645 2.717-.613 5.335-2.426 6.638-7.508 1.302-5.082.448-9.533-.103-11.99A35.395 35.395 0 0 0 17.69 0zm-.138.858l-9.22 21.585-.574-.577Z"/></symbol>
+  <symbol id="icon-slack" viewBox="0 0 128 128"><path d="M27.15 80.766c0 7.351-5.994 13.355-13.345 13.355C6.454 94.12.45 88.117.45 80.766c0-7.351 6.004-13.355 13.355-13.355H27.15zm6.73 0c0-7.351 6.003-13.355 13.354-13.355 7.351 0 13.355 6.004 13.355 13.355v33.43c0 7.35-6.004 13.354-13.355 13.354-7.351 0-13.355-6.004-13.355-13.355v-33.43zM47.234 27.15c-7.351 0-13.355-5.994-13.355-13.345C33.88 6.454 39.883.45 47.234.45c7.351 0 13.355 6.004 13.355 13.355V27.15zm0 6.73c7.351 0 13.355 6.003 13.355 13.354 0 7.351-6.004 13.355-13.355 13.355h-33.43C6.455 60.589.45 54.585.45 47.234c0-7.351 6.004-13.355 13.355-13.355h33.43zm53.616 13.354c0-7.351 5.994-13.355 13.345-13.355 7.351 0 13.355 6.004 13.355 13.355 0 7.351-6.004 13.355-13.355 13.355H100.85zm-6.73 0c0 7.351-6.003 13.355-13.354 13.355-7.351 0-13.355-6.004-13.355-13.355v-33.43C67.411 6.455 73.415.45 80.766.45c7.351 0 13.355 6.004 13.355 13.355zM80.766 100.85c7.351 0 13.355 5.994 13.355 13.345 0 7.351-6.004 13.355-13.355 13.355-7.351 0-13.355-6.004-13.355-13.355V100.85zm0-6.73c-7.351 0-13.355-6.003-13.355-13.354 0-7.351 6.004-13.355 13.355-13.355h33.43c7.35 0 13.354 6.004 13.354 13.355 0 7.351-6.004 13.355-13.355 13.355zm0 0"/></symbol>
+  <symbol id="icon-vscode" viewBox="0 0 128 128"><path fill-rule="evenodd" d="M90.767 127.126a7.968 7.968 0 0 0 6.35-.244l26.353-12.681a8 8 0 0 0 4.53-7.209V21.009a8 8 0 0 0-4.53-7.21L97.117 1.12a7.97 7.97 0 0 0-9.093 1.548l-50.45 46.026L15.6 32.013a5.328 5.328 0 0 0-6.807.302l-7.048 6.411a5.335 5.335 0 0 0-.006 7.888L20.796 64 1.74 81.387a5.336 5.336 0 0 0 .006 7.887l7.048 6.411a5.327 5.327 0 0 0 6.807.303l21.974-16.68 50.45 46.025a7.96 7.96 0 0 0 2.743 1.793Zm5.252-92.183L57.74 64l38.28 29.058V34.943Z" clip-rule="evenodd"/></symbol>
+  <symbol id="icon-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></g></symbol>
+  <symbol id="icon-placeholder" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="3.1416 3.1416" d="M12 4a8 8 0 1 1 0 16a8 8 0 1 1 0-16Z"/></symbol>
+</svg>
 
 </body>
 </html>
